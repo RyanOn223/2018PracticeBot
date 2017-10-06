@@ -1,8 +1,4 @@
 package org.usfirst.frc.team223.robot;
-
-import com.ctre.CANTalon;
-
-
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -30,10 +26,7 @@ public class RobotMap {
 	public static int shooter0=18;
 	public static int shooter1=21;
 	public static int shooter2=24;
-	
-	
-	
-	
+
 	public static int pcmID=52;
 	public static int frontSolenoid=0;
 	public static int backSolenoid=1;

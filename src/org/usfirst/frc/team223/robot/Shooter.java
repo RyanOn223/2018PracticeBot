@@ -22,27 +22,46 @@ public class Shooter extends Subsystem
 		this.intake=new CANTalon(intake);
 	}
 	
+	
+	
+	
 	public void set(double speed)
 	{
-		//talon0.set(speed);
+		
+		
+		
+		
+		
 		talon1.set(speed);
 		talon2.set(speed);
-	}
-	public void blend(boolean blend)
-	{
-		blender.set(blend?-1:0);
-	}
-	public void intake(boolean b)
-	{
-		intake.set(b?1:0);
 		
-	}
-	@Override
-	protected void initDefaultCommand()
-	{
-		// TODO Auto-generated method stub
 		
+		
+	
 	}
+	
+	
+	int ek=1;
+	int dk=1;
+	int ik=1;
+	
+	double prevError=0;
+	double i=0;
+	public double shootPID(double target,double actual)
+	{
+		double error=actual-target;
+		double d=prevError-error;
+		i+=error;
+		
+		prevError=error;
+		
+		return(error*ek+d*dk+i*ik);
+	}
+	
+	
+	public void blend(boolean blend){blender.set(blend?-1:0);}
+	public void intake(boolean b){intake.set(b?1:0);}
+	protected void initDefaultCommand(){}
 
 
 }
