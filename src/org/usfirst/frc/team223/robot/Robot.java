@@ -1,6 +1,6 @@
-package org.usfirst.frc.team265.robot;
+package org.usfirst.frc.team223.robot;
 
-import org.usfirst.frc.team265.robot.config.Config;
+import org.usfirst.frc.team223.robot.config.Config;
 
 import com.ctre.CANTalon;
 

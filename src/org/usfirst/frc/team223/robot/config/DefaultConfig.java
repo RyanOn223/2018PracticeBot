@@ -1,4 +1,4 @@
-package org.usfirst.frc.team265.robot.config;
+package org.usfirst.frc.team223.robot.config;
 
 public class DefaultConfig
 {
