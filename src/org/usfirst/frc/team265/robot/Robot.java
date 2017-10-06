@@ -1,5 +1,7 @@
 package org.usfirst.frc.team265.robot;
 
+import org.usfirst.frc.team265.robot.config.Config;
+
 import com.ctre.CANTalon;
 
 import edu.wpi.first.wpilibj.Compressor;
@@ -10,6 +12,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
+
+//TESTING FOR GIT HUB AND STUFF
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
@@ -19,6 +23,8 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
  */
 public class Robot extends IterativeRobot
 {
+	Config config;
+	
 	boolean mec=false;
 	Drive drive;
 	Timer timer = new Timer();
@@ -35,8 +41,10 @@ public class Robot extends IterativeRobot
 	@Override
 	public void robotInit()
 	{
-		drive=new Drive(RobotMap.driveFL,RobotMap.driveFR,RobotMap.driveBL,RobotMap.driveBR);
+		config=new Config();
 		
+		
+		drive=new Drive(RobotMap.driveFL,RobotMap.driveFR,RobotMap.driveBL,RobotMap.driveBR);
 		c= new Compressor(52);
 		c.setClosedLoopControl(true);
 		
@@ -45,14 +53,14 @@ public class Robot extends IterativeRobot
 		jaws=new Solenoid(RobotMap.pcmID,RobotMap.jaws);
 		shooter=new Shooter(RobotMap.shooter0,RobotMap.shooter1,RobotMap.shooter2,RobotMap.blender,RobotMap.intake);
 		
-	
+		
 	}
 
 	/**
 	 * This function is run once each time the robot enters autonomous mode
 	 */
 	@Override
-	public void autonomousInit(){}
+	public void autonomousInit(){generalInit();}
 
 	/**
 	 * This function is called periodically during autonomous
@@ -67,7 +75,7 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopInit()
 	{
-		
+		generalInit();
 	}
 
 	/**
@@ -145,6 +153,11 @@ public class Robot extends IterativeRobot
 		}
 		bs1prev = b1curr;
 		bs2prev = b2curr;
+	}
+	
+	public void generalInit()
+	{
+		config.init();
 	}
 }
 
