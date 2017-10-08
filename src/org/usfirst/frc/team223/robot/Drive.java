@@ -26,8 +26,7 @@ public class Drive extends Subsystem
 		talonBR=new CANTalon(BRight);
 	}
 
-	//Set the controllers based on joystick axis inputs.
-	//TODO fix  
+	//Set the controllers based on joystick axis inputs. 
 	public void cheese(Joystick stick)
 	{
 		talonFL.set(-(stick.getRawAxis(OI.leftYAxis)+stick.getRawAxis(OI.rightXAxis)) /2);
@@ -36,11 +35,9 @@ public class Drive extends Subsystem
 		talonBR.set( (stick.getRawAxis(OI.leftYAxis)-stick.getRawAxis(OI.rightXAxis)) /2);	
 	}
 	@Override
-	protected void initDefaultCommand()
-	{
-		// TODO Auto-generated method stub
-		
-	}
+	protected void initDefaultCommand(){}
+	
+	
 	public void mec(Joystick stick)
 	{
 		double leftX=stick.getRawAxis(OI.leftXAxis);

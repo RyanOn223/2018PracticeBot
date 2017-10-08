@@ -6,14 +6,12 @@ import com.ctre.CANTalon;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 
-//TESTING FOR GIT HUB AND STUFF
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
@@ -84,7 +82,6 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopPeriodic()
 	{
-		
 		shootLatch(OI.shootOn,OI.shootOff);
 		shiftLatch(OI.shiftMec,OI.shiftCheese);
 		
@@ -144,7 +141,7 @@ public class Robot extends IterativeRobot
 		
 		if(!bs1prev && b1curr) // button 1 rising
 		{
-			shooter.set(-.835);
+			shooter.set(config.shooterSpeed);
 		}
 		
 		else if(!bs2prev && b2curr) // button 2 rising
@@ -155,6 +152,9 @@ public class Robot extends IterativeRobot
 		bs2prev = b2curr;
 	}
 	
+	/**
+	 * Called Whenever robot is initialized
+	 */
 	public void generalInit()
 	{
 		config.init();

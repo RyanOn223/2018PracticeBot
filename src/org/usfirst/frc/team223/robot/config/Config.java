@@ -1,54 +1,72 @@
 package org.usfirst.frc.team223.robot.config;
 
-import java.io.BufferedReader;
+
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.Properties;
 
 public class Config
 {
-	public static String robotDir = System.getProperty("user.home") + "/2018Robot/";
-	public static File config = new File(robotDir + "FRCConfig.txt");
+	public double shooterSpeed;
 	
-	static PrintWriter writer;
-	static BufferedReader reader;
-	public static double shooterSpeed;
-	
-	String[] fileText = new String[1];
-	
+	private static final String robotDir = System.getProperty("user.home") + "/2018Robot/";
+	private final static File config = new File(robotDir + "FRCConfig.txt");
+	private Properties prop;
+	private FileOutputStream writer;
+	private FileInputStream reader;
+
 	
 	public Config()
 	{
 		new File(robotDir).mkdirs();
+		Properties pdefault=new Properties();
+		
+		pdefault.setProperty("Shooter Speed", Double.toString(DefaultConfig.shooterSpeed));
+		prop=new Properties(pdefault);
+		
 		try
 		{
 			if (!config.exists())
 			{
 				config.createNewFile();
-				writer=new PrintWriter(config);
+				writer=new FileOutputStream(config);
 				
-				writer.write("Shooter Speed= "+ DefaultConfig.shooterSpeed);
+				prop.setProperty("Shooter Speed", Double.toString(DefaultConfig.shooterSpeed));
+				prop.store(writer,null);
 				
 				writer.close();
 			}
-			reader =new BufferedReader(new FileReader(config));
-			int i=0;
-			while(reader.ready())
+			else
 			{
-				fileText[i]=reader.readLine();
-				i++;
+				
 			}
 		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		catch (FileNotFoundException e){e.printStackTrace();}
+		catch (IOException e){e.printStackTrace();}
 	}
 
-	public static void init()
+	public void init()
 	{
-
+		try
+		{
+			reader=new FileInputStream(config);
+			prop.load(reader);
+		}
+		catch (FileNotFoundException e){e.printStackTrace();}
+		catch (IOException e){e.printStackTrace();}
+		
+		try
+		{
+			shooterSpeed=Double.parseDouble(prop.getProperty("Shooter Speed"));
+		}
+		catch (java.lang.NumberFormatException g)
+		{
+			System.out.println("Number Formatt exception: Loading Defaults");
+			shooterSpeed=DefaultConfig.shooterSpeed;
+		}
 	}
 
 }

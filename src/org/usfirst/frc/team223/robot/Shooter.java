@@ -1,5 +1,4 @@
 package org.usfirst.frc.team223.robot;
-
 import com.ctre.CANTalon;
 
 import edu.wpi.first.wpilibj.Talon;
@@ -35,7 +34,6 @@ public class Shooter extends Subsystem
 	public void intake(boolean b)
 	{
 		intake.set(b?1:0);
-		
 	}
 	@Override
 	protected void initDefaultCommand()
