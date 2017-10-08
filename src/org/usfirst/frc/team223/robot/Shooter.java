@@ -2,11 +2,18 @@ package org.usfirst.frc.team223.robot;
 
 import com.ctre.CANTalon;
 
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class Shooter extends Subsystem
 {
+	private int ek=1;
+	private int dk=1;
+	private int ik=1;
+	AnalogInput potentiometer=new AnalogInput(RobotMap.shooterInput);
+	
 	Talon blender;
 	CANTalon intake;
 	
@@ -22,28 +29,13 @@ public class Shooter extends Subsystem
 		this.intake=new CANTalon(intake);
 	}
 	
-	
-	
-	
 	public void set(double speed)
 	{
+		double a=shootPID(speed,potentiometer.pidGet());
 		
-		
-		
-		
-		
-		talon1.set(speed);
-		talon2.set(speed);
-		
-		
-		
-	
+		talon1.set(a);
+		talon2.set(a);	
 	}
-	
-	
-	int ek=1;
-	int dk=1;
-	int ik=1;
 	
 	double prevError=0;
 	double i=0;
