@@ -21,7 +21,7 @@ public class RobotMap
 	static int gearPiston = 2;
 	static int jaws = 3;
 	
-	public static int shooterInput=1;
+
 	public static int shooter0 = 18;
 	public static int shooter1 = 21;
 	public static int shooter2 = 24;
