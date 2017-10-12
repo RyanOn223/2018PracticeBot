@@ -37,6 +37,7 @@ public class Shooter extends Subsystem
 		talon2.set(a);	
 	}
 	
+	
 	double prevError=0;
 	double i=0;
 	public double shootPID(double target,double actual)
