@@ -7,35 +7,12 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
-public class Shooter extends Subsystem
+public class Shooter// extends PIDSubsystem
 {
-	private int ek = 1;
-	private int dk = 1;
-	private int ik = 1;
 
-	PIDSource p = new PIDSource() {
-
-		@Override
-		public void setPIDSourceType(PIDSourceType pidSource)
-		{
-		}
-
-		@Override
-		public PIDSourceType getPIDSourceType()
-		{
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public double pidGet()
-		{
-			
-			return 0;
-		}
-	};
 
 	Talon blender;
 	CANTalon intake;
@@ -46,6 +23,7 @@ public class Shooter extends Subsystem
 
 	public Shooter(int a, int b, int c, int blender, int intake)
 	{
+		//super("shooter",pk,ik,dk,100);
 		talon0 = new CANTalon(a);
 		talon1 = new CANTalon(b);
 		talon2 = new CANTalon(c);
@@ -53,27 +31,41 @@ public class Shooter extends Subsystem
 		this.intake = new CANTalon(intake);
 	}
 
+	public void write()
+	{
+		System.out.println(talon2.getSpeed());
+	}
 	public void set(double speed)
 	{
 
-		double a = shootPID(speed, talon0.getSpeed());
+		double a = shootPID(speed, talon2.getSpeed());
 
 		talon1.set(a);
 		talon2.set(a);
+		
 	}
 
+	private static double pk =.001;
+	private static double dk = 0;
+	private static double ik = 0;
+	
+	
+	private static double fk=.001;
 	double prevError = 0;
 	double i = 0;
 
 	public double shootPID(double target, double actual)
 	{
-		double error = actual - target;
+		double error = target-actual;
 		double d = prevError - error;
 		i += error;
 
 		prevError = error;
 
-		return (error * ek + d * dk + i * ik);
+		double output=pk * error + ik * i + dk * (error - prevError) + fk * target;
+		
+		return output;
+		//return (error * pk + d * dk + i * ik);
 	}
 
 	public void blend(boolean blend)
@@ -86,8 +78,20 @@ public class Shooter extends Subsystem
 		intake.set(b ? 1 : 0);
 	}
 
-	protected void initDefaultCommand()
+	protected void initDefaultCommand(){}
+
+/*	@Override
+	protected double returnPIDInput()
 	{
+		// TODO Auto-generated method stub
+		return 0;
 	}
+
+	@Override
+	protected void usePIDOutput(double output)
+	{
+		// TODO Auto-generated method stub
+		
+	}*/
 
 }

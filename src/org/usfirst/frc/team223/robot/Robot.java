@@ -46,6 +46,7 @@ public class Robot extends IterativeRobot
 		
 	
 	}
+	
 
 	/**
 	 * This function is run once each time the robot enters autonomous mode
@@ -90,6 +91,11 @@ public class Robot extends IterativeRobot
 		climb.set(OI.operator.getRawAxis(OI.climb));
 		gearPiston.set(OI.gearPiston.get());
 		jaws.set(OI.jaws.get());
+		
+		
+		shooter.write();
+		System.out.println(shooter.talon2.getOutputVoltage());
+		System.out.println();
 	}
 
 	/**
@@ -135,7 +141,7 @@ public class Robot extends IterativeRobot
 		
 		if(!bs1prev && b1curr) // button 1 rising
 		{
-			shooter.set(-.835);
+			shooter.set(-100);
 		}
 		
 		else if(!bs2prev && b2curr) // button 2 rising
