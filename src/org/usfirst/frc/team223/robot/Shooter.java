@@ -1,16 +1,20 @@
 package org.usfirst.frc.team223.robot;
 
 import com.ctre.CANTalon;
+import com.ctre.CANTalon.FeedbackDevice;
+import com.ctre.CANTalon.TalonControlMode;
 
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Shooter// extends PIDSubsystem
+
+public class Shooter
 {
 
 
@@ -23,33 +27,33 @@ public class Shooter// extends PIDSubsystem
 
 	public Shooter(int a, int b, int c, int blender, int intake)
 	{
-		//super("shooter",pk,ik,dk,100);
-		talon0 = new CANTalon(a);
+		//talon0 = new CANTalon(a);
 		talon1 = new CANTalon(b);
 		talon2 = new CANTalon(c);
 		this.blender = new Talon(blender);
 		this.intake = new CANTalon(intake);
 	}
 
-	public void write()
-	{
-		System.out.println(talon2.getSpeed());
-	}
 	public void set(double speed)
 	{
-
-		double a = shootPID(speed, talon2.getSpeed());
-
-		talon1.set(a);
-		talon2.set(a);
 		
+		if(speed==0)
+		{
+			talon1.set(0);
+			talon2.set(0);
+			return;
+		}
+		double a = shootPID(speed, talon2.getSpeed());
+		System.out.println("adawd");
+
+		
+		talon2.set(-10);
+		//talon1.set(-.1);
 	}
 
-	private static double pk =.001;
-	private static double dk = 0;
-	private static double ik = 0;
-	
-	
+	private static double pk =.1;
+	private static double ik = .1;
+	private static double dk = .1;
 	private static double fk=.001;
 	double prevError = 0;
 	double i = 0;
@@ -60,6 +64,7 @@ public class Shooter// extends PIDSubsystem
 		double d = prevError - error;
 		i += error;
 
+		
 		prevError = error;
 
 		double output=pk * error + ik * i + dk * (error - prevError) + fk * target;
@@ -83,15 +88,14 @@ public class Shooter// extends PIDSubsystem
 /*	@Override
 	protected double returnPIDInput()
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		return talon2.getSpeed();
 	}
 
 	@Override
 	protected void usePIDOutput(double output)
 	{
-		// TODO Auto-generated method stub
+		talon1.pidWrite(output);
+		talon2.pidWrite(output);
 		
 	}*/
-
 }
