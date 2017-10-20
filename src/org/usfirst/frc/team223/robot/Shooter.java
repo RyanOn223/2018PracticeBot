@@ -35,13 +35,10 @@ public class Shooter
 		this.blender = new Talon(blender);
 		this.intake = new CANTalon(intake);
 	}
-
 	public void set(double speed)
 	{
-		
 		if(speed==0)
-		{
-			
+		{	
 			talon1.set(0);
 			talon2.set(0);
 			return;
@@ -86,18 +83,4 @@ public class Shooter
 		this.shootSpeed =speed;
 		
 	}
-
-/*	@Override
-	protected double returnPIDInput()
-	{
-		return talon2.getSpeed();
-	}
-
-	@Override
-	protected void usePIDOutput(double output)
-	{
-		talon1.pidWrite(output);
-		talon2.pidWrite(output);
-		
-	}*/
 }
