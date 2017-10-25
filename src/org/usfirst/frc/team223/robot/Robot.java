@@ -151,12 +151,12 @@ public class Robot extends IterativeRobot
 		
 		if(!bs1prev && b1curr) // button 1 rising
 		{
-			shooter.set(-10);
+			shooter.setSpeed(500);
 		}
 		
 		else if(!bs2prev && b2curr) // button 2 rising
 		{
-			shooter.set(0);
+			shooter.stopPID();
 		}
 		bs1prev = b1curr;
 		bs2prev = b2curr;
