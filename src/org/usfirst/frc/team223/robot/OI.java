@@ -23,6 +23,11 @@ public class OI
 	public OI()
 	{
 	}
+	public static void set()
+	{
+		
+	}
+	
 	
 	static int leftYAxis=1;
 	static int leftXAxis=0;

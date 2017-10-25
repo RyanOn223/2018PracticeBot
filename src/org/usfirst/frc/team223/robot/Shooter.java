@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Talon;
 
-
 public class Shooter
 {
 	Talon blender;
@@ -34,12 +33,8 @@ public class Shooter
 		@Override public void pidWrite(double output) { setShooterOutput(output); }
 	};
 	
-	
 	private PIDController controller;
 	
-	
-	
-
 	public Shooter(int a, int b, int c, int blender, int intake)
 	{
 		//talon0 = new CANTalon(a);
@@ -62,18 +57,15 @@ public class Shooter
 		talon1.set(out);
 		talon2.set(out);
 	}
-	
-	
-	
-	
-	public void setSpeed(double rpm) {
+
+	public void setSpeed(double rpm)
+	{
 		controller.setSetpoint(rpm);
 		controller.enable();
 	}
 	
-	
-	
-	public void stopPID() {
+	public void stopPID()
+	{
 		controller.disable();
 		setShooterOutput(0);
 	}
@@ -96,6 +88,5 @@ public class Shooter
 	{
 		intake.set(b ? 1 : 0);
 	}
-
 	protected void initDefaultCommand(){}
 }
