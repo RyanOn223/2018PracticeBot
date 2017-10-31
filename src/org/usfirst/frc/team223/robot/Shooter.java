@@ -17,9 +17,9 @@ public class Shooter
 	CANTalon talon1;
 	CANTalon talon2;
 	
-	private static double pk =.0001;
+	private static double pk =.00005;
 	private static double ik = .000001;
-	private static double dk = .0007;
+	private static double dk = .00004;
 	
 	private PIDSource src = new PIDSource()
 	{
@@ -89,4 +89,9 @@ public class Shooter
 		intake.set(b ? 1 : 0);
 	}
 	protected void initDefaultCommand(){}
+
+	public PIDController getController()
+	{
+		return controller;
+	}
 }

@@ -96,9 +96,7 @@ public class Robot extends IterativeRobot
 	}
 	public void writeToDash()
 	{
-		SmartDashboard.putNumber("RPM",shooter.talon2.getSpeed());
-		SmartDashboard.putNumber("Voltage 1", shooter.talon1.getOutputVoltage());
-		SmartDashboard.putNumber("Voltage 2", shooter.talon2.getOutputVoltage());
+		SmartDashboard.putNumber("RPM",-shooter.talon2.getSpeed());
 	}
 	
 	
@@ -146,7 +144,7 @@ public class Robot extends IterativeRobot
 		
 		if(!bs1prev && b1curr) // button 1 rising
 		{
-			shooter.setSpeed(500);
+			shooter.setSpeed(-500);
 		}
 		
 		else if(!bs2prev && b2curr) // button 2 rising
@@ -162,5 +160,9 @@ public class Robot extends IterativeRobot
 	 */
 	public void generalInit()
 	{
+		shooter.getController().reset();
+		shooter.stopPID();
+		shooter.getController().setPID(p.getDouble("pk", .0001), p.getDouble("ik", .0000001),p.getDouble("dk", .0007));
+		System.out.println(shooter.getController().getP()+" "+shooter.getController().getI()+" "+shooter.getController().getD());
 	}
 }
