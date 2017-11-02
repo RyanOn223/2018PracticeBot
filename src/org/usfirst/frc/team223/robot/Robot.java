@@ -1,5 +1,7 @@
 package org.usfirst.frc.team223.robot;
 
+import org.usfirst.frc.team223.vision.VisionServer;
+
 import com.ctre.CANTalon;
 
 import edu.wpi.first.wpilibj.Compressor;
@@ -37,6 +39,7 @@ public class Robot extends IterativeRobot
 	@Override
 	public void robotInit()
 	{
+		new VisionServer();
 		p=Preferences.getInstance();
 		
 		drive=new Drive(RobotMap.driveFL,RobotMap.driveFR,RobotMap.driveBL,RobotMap.driveBR);
