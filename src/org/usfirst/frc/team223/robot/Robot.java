@@ -39,7 +39,6 @@ public class Robot extends IterativeRobot
 	@Override
 	public void robotInit()
 	{
-		new VisionServer();
 		p=Preferences.getInstance();
 		
 		drive=new Drive(RobotMap.driveFL,RobotMap.driveFR,RobotMap.driveBL,RobotMap.driveBR);
@@ -55,7 +54,7 @@ public class Robot extends IterativeRobot
 	 * This function is run once each time the robot enters autonomous mode
 	 */
 	@Override
-	public void autonomousInit(){generalInit();}
+	public void autonomousInit(){new VisionServer();}
 
 	/**
 	 * This function is called periodically during autonomous

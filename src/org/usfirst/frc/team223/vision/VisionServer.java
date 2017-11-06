@@ -8,6 +8,5 @@ public class VisionServer
 	{
 		RIOdroid.init();
 		RIOadb.forward(3800, 8080);
-		RIOadb.screencap("~/");
 	}
 }
