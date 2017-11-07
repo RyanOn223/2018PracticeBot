@@ -1,11 +1,13 @@
 package org.usfirst.frc.team223.robot;
 
 import com.ctre.CANTalon;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -22,6 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot
 {
 	Preferences p;
+	AHRS ahrs;
 	boolean mec=false;
 	Drive drive;
 	Shooter shooter;
@@ -38,10 +41,10 @@ public class Robot extends IterativeRobot
 	public void robotInit()
 	{
 		p=Preferences.getInstance();
-		
-		drive=new Drive(RobotMap.driveFL,RobotMap.driveFR,RobotMap.driveBL,RobotMap.driveBR);
+		ahrs = new AHRS(SPI.Port.kMXP); 
 		c= new Compressor(52);
 		c.setClosedLoopControl(true);
+		drive=new Drive(RobotMap.driveFL,RobotMap.driveFR,RobotMap.driveBL,RobotMap.driveBR);
 		climb=new CANTalon(RobotMap.climb);
 		gearPiston=new Solenoid(RobotMap.pcmID,RobotMap.gearPiston);
 		jaws=new Solenoid(RobotMap.pcmID,RobotMap.jaws);
@@ -80,6 +83,7 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopPeriodic()
 	{
+		
 		shootLatch(OI.shootOn,OI.shootOff);
 		shiftLatch(OI.shiftMec,OI.shiftCheese);
 		
@@ -104,8 +108,8 @@ public class Robot extends IterativeRobot
 	public void writeToDash()
 	{
 		SmartDashboard.putNumber("RPM",shooter.talon2.getSpeed());
-		SmartDashboard.putNumber("Voltage 1", shooter.talon1.getOutputVoltage());
-		SmartDashboard.putNumber("Voltage 2", shooter.talon2.getOutputVoltage());
+		
+		SmartDashboard.putNumber("angel", ahrs.getAngle());
 	}
 	
 	
