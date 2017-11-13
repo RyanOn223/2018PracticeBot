@@ -19,15 +19,6 @@ public class OI
 	// Button button = new JoystickButton(stick, buttonNumber);
 	static Joystick driver = new Joystick(0);
 	static Joystick operator = new Joystick(1);
-
-	public OI()
-	{
-	}
-	public static void set()
-	{
-		
-	}
-	
 	
 	static int leftYAxis=1;
 	static int leftXAxis=0;
@@ -40,11 +31,10 @@ public class OI
 	
 	static JoystickButton shootOn =new JoystickButton(operator,4);
 	static JoystickButton shootOff =new JoystickButton(operator,1);
-	static JoystickButton blend =new JoystickButton(operator,6);
-	static JoystickButton intake =new JoystickButton(operator,5);
 	static JoystickButton gearPiston =new JoystickButton(operator,3);
 	static JoystickButton jaws =new JoystickButton(operator,2);
-	
+	static JoystickButton blend =new JoystickButton(operator,6);
+	static JoystickButton intake =new JoystickButton(operator,5);
 	
 	
 	// There are a few additional built in buttons you can use. Additionally,

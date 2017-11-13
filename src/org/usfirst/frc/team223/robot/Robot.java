@@ -41,7 +41,7 @@ public class Robot extends IterativeRobot
 	public void robotInit()
 	{
 		p=Preferences.getInstance();
-		ahrs = new AHRS(SPI.Port.kMXP); 
+		ahrs = new AHRS(SPI.Port.kMXP);
 		c= new Compressor(52);
 		c.setClosedLoopControl(true);
 		drive=new Drive(RobotMap.driveFL,RobotMap.driveFR,RobotMap.driveBL,RobotMap.driveBR);
@@ -83,7 +83,6 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopPeriodic()
 	{
-		
 		shootLatch(OI.shootOn,OI.shootOff);
 		shiftLatch(OI.shiftMec,OI.shiftCheese);
 		
@@ -108,8 +107,7 @@ public class Robot extends IterativeRobot
 	public void writeToDash()
 	{
 		SmartDashboard.putNumber("RPM",shooter.talon2.getSpeed());
-		
-		SmartDashboard.putNumber("angel", ahrs.getAngle());
+		SmartDashboard.putNumber("angle", ahrs.getAngle());
 	}
 	
 	
