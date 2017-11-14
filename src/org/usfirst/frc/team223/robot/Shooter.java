@@ -2,6 +2,10 @@ package org.usfirst.frc.team223.robot;
 
 import com.ctre.CANTalon;
 
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Talon;
 
 public class Shooter
@@ -12,10 +16,24 @@ public class Shooter
 	CANTalon talon0;
 	CANTalon talon1;
 	CANTalon talon2;
-
-	private int shootSpeed=0;
-
-	public void setSpeed(int speed){this.shootSpeed =speed;}
+	
+	private static double pk =.00005;
+	private static double ik = .000001;
+	private static double dk = .00004;
+	
+	private PIDSource src = new PIDSource()
+	{
+		@Override public void setPIDSourceType(PIDSourceType pidSource) {}
+		@Override public double pidGet() { return getShooterSpeed(); }
+		@Override public PIDSourceType getPIDSourceType() { return PIDSourceType.kRate; }
+	};
+	
+	private PIDOutput out = new PIDOutput()
+	{
+		@Override public void pidWrite(double output) { setShooterOutput(output); }
+	};
+	
+	private PIDController controller;
 	
 	public Shooter(int a, int b, int c, int blender, int intake)
 	{
@@ -24,37 +42,42 @@ public class Shooter
 		talon2 = new CANTalon(c);
 		this.blender = new Talon(blender);
 		this.intake = new CANTalon(intake);
-	}
-	public void set(double speed)
-	{
-		if(speed==0)
-		{	
-			talon1.set(0);
-			talon2.set(0);
-			return;
-		}
-		double a = shootPID(speed, talon2.getSpeed());
-		talon2.set(shootSpeed);
-		//talon1.set(-.1);
+		
+		// setup the pid controller
+		controller = new PIDController(pk, ik, dk, src, out);
+		
 	}
 
-	private static double pk =.1;
-	private static double ik = .1;
-	private static double dk = .1;
-	private static double fk=.001;
-	double prevError = 0;
-	double i = 0;
-
-	public double shootPID(double target, double actual)
+	/**
+	 * sends the raw output to the motors
+	 */
+	public void setShooterOutput(double out)
 	{
-		double error = target-actual;
-		double d = prevError - error;
-		i += error;
-		prevError = error;
-		double output=pk * error + ik * i + dk * (error - prevError) + fk * target;
-		return output;
-		//return (error * pk + d * dk + i * ik);
+		// talon0.set(out);
+		talon1.set(out);
+		talon2.set(out);
 	}
+
+	public void setSpeed(double rpm)
+	{
+		controller.setSetpoint(rpm);
+		controller.enable();
+	}
+	
+	public void stopPID()
+	{
+		controller.disable();
+		setShooterOutput(0);
+	}
+	
+	/**
+	 * @return the current speed of the shooter
+	 */
+	public double getShooterSpeed()
+	{
+		return talon2.getSpeed();
+	}
+
 
 	public void blend(boolean blend)
 	{
@@ -65,6 +88,10 @@ public class Shooter
 	{
 		intake.set(b ? 1 : 0);
 	}
-
 	protected void initDefaultCommand(){}
+
+	public PIDController getController()
+	{
+		return controller;
+	}
 }

@@ -12,8 +12,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
@@ -50,6 +48,7 @@ public class Robot extends IterativeRobot
 		jaws=new Solenoid(RobotMap.pcmID,RobotMap.jaws);
 		shooter=new Shooter(RobotMap.shooter0,RobotMap.shooter1,RobotMap.shooter2,RobotMap.blender,RobotMap.intake);
 	}
+	
 
 	/**
 	 * This function is run once each time the robot enters autonomous mode
@@ -73,8 +72,7 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopInit()
 	{
-		shooter.setSpeed(p.getInt("shootSpeed", 0));
-	//	generalInit();
+		generalInit();
 	}
 
 	/**
@@ -99,15 +97,10 @@ public class Robot extends IterativeRobot
 		jaws.set(OI.jaws.get());
 		writeToDash();
 	}
-
-	
-	
-	
-	
 	public void writeToDash()
 	{
-		SmartDashboard.putNumber("RPM",shooter.talon2.getSpeed());
 		SmartDashboard.putNumber("angle", ahrs.getAngle());
+		SmartDashboard.putNumber("RPM",-shooter.talon2.getSpeed());
 	}
 	
 	
@@ -155,12 +148,12 @@ public class Robot extends IterativeRobot
 		
 		if(!bs1prev && b1curr) // button 1 rising
 		{
-			shooter.set(-10);
+			shooter.setSpeed(-500);
 		}
 		
 		else if(!bs2prev && b2curr) // button 2 rising
 		{
-			shooter.set(0);
+			shooter.stopPID();
 		}
 		bs1prev = b1curr;
 		bs2prev = b2curr;
@@ -171,14 +164,9 @@ public class Robot extends IterativeRobot
 	 */
 	public void generalInit()
 	{
+		shooter.getController().reset();
+		shooter.stopPID();
+		shooter.getController().setPID(p.getDouble("pk", .0001), p.getDouble("ik", .0000001),p.getDouble("dk", .0007));
+		System.out.println(shooter.getController().getP()+" "+shooter.getController().getI()+" "+shooter.getController().getD());
 	}
 }
-
-
-
-
-
-
-
-
-
