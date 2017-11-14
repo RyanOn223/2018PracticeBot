@@ -20,9 +20,9 @@ public class OI
 	static Joystick driver = new Joystick(0);
 	static Joystick operator = new Joystick(1);
 	
-	static int leftYAxis=1;
-	static int leftXAxis=0;
-	static int rightXAxis=4;
+	public static int leftYAxis=1;
+	public static int leftXAxis=0;
+	public static int rightXAxis=4;
 	
 	static int climb =3;
 	
