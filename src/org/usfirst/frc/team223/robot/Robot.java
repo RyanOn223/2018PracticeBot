@@ -1,6 +1,7 @@
 package org.usfirst.frc.team223.robot;
 
-import org.usfirst.frc.team223.robot.drive.DriveAuto;
+import org.usfirst.frc.team223.robot.drive.DriveBase;
+import org.usfirst.frc.team223.robot.drive.DriveControl;
 import org.usfirst.frc.team223.robot.drive.DriveTelop;
 
 import com.ctre.CANTalon;
@@ -28,7 +29,7 @@ public class Robot extends IterativeRobot
 	AHRS ahrs;
 	boolean mec = false;
 	DriveTelop driveTelop;
-	DriveAuto driveAuto;
+	DriveControl driveControl;
 	Shooter shooter;
 	Compressor c;
 
@@ -37,8 +38,8 @@ public class Robot extends IterativeRobot
 	Solenoid jaws;
 
 	/**
-	 * This function is run when the robot is first started up and should be
-	 * used for any initialization code.
+	 * This function is run when the robot is first started up and should be used
+	 * for any initialization code.
 	 */
 	@Override
 	public void robotInit()
@@ -47,12 +48,11 @@ public class Robot extends IterativeRobot
 		ahrs = new AHRS(SPI.Port.kMXP);
 		c = new Compressor(52);
 		c.setClosedLoopControl(true);
-		driveTelop = new DriveTelop();
+		/// drive = new DriveBase();
 		climb = new CANTalon(RobotMap.climb);
 		gearPiston = new Solenoid(RobotMap.pcmID, RobotMap.gearPiston);
 		jaws = new Solenoid(RobotMap.pcmID, RobotMap.jaws);
-		shooter = new Shooter(RobotMap.shooter0, RobotMap.shooter1, RobotMap.shooter2, RobotMap.blender,
-				RobotMap.intake);
+		shooter = new Shooter(RobotMap.shooter0, RobotMap.shooter1, RobotMap.shooter2, RobotMap.blender, RobotMap.intake);
 	}
 
 	/**
@@ -61,9 +61,6 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousInit()
 	{
-		generalInit();
-		driveAuto = new DriveAuto(ahrs);
-		driveAuto.setTargetAngle(90);
 	}
 
 	/**
@@ -80,15 +77,17 @@ public class Robot extends IterativeRobot
 	@Override
 	public void disabledInit()
 	{
+
 	}
 
 	/**
-	 * This function is called once each time the robot enters tele-operated
-	 * mode
+	 * This function is called once each time the robot enters tele-operated mode
 	 */
 	@Override
 	public void teleopInit()
 	{
+		driveTelop = new DriveTelop();
+		driveControl = new DriveControl(ahrs, driveTelop);
 		generalInit();
 	}
 
@@ -100,9 +99,11 @@ public class Robot extends IterativeRobot
 	{
 		shootLatch(OI.shootOn, OI.shootOff);
 		shiftLatch(OI.shiftMec, OI.shiftCheese);
-
-		if (mec) driveTelop.mec(OI.driver);
-		else driveTelop.cheese(OI.driver);
+		if (!pidLatch(OI.startAngle, OI.stopAngle))
+			if (mec)
+				driveTelop.mec(OI.driver);
+			else
+				driveTelop.cheese(OI.driver);
 
 		shooter.intake(OI.intake.get());
 		shooter.blend(OI.blend.get());
@@ -172,6 +173,32 @@ public class Robot extends IterativeRobot
 		}
 		bs1prev = b1curr;
 		bs2prev = b2curr;
+	}
+
+	private boolean bp1prev = false;
+	private boolean bp2prev = false;
+	private boolean on = false;
+
+	public boolean pidLatch(JoystickButton b1, JoystickButton b2)
+	{
+		boolean b1curr = b1.get();
+		boolean b2curr = b2.get();
+
+		if (!bp1prev && b1curr) // button 1 rising
+		{
+			if (!driveControl.isEnabled())
+				driveControl.startPID(90);
+			on = true;
+		}
+
+		else if (!bp2prev && b2curr) // button 2 rising
+		{
+			driveControl.stopPID();
+			on = false;
+		}
+		bp1prev = b1curr;
+		bp2prev = b2curr;
+		return on;
 	}
 
 	/**

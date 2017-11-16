@@ -7,8 +7,9 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
-public class DriveAuto extends DriveBase
+public class DriveControl
 {
+	DriveBase drive;
 	private PIDSource src = new PIDSource()
 	{
 		@Override public void setPIDSourceType(PIDSourceType pidSource) {}
@@ -29,23 +30,34 @@ public class DriveAuto extends DriveBase
 
 	private AHRS ahrs;
 	
-	public DriveAuto(AHRS ahrs)
+	public DriveControl(AHRS ahrs, DriveBase drive)
 	{
+		this.drive=drive;
 		this.ahrs=ahrs;
 		controller = new PIDController(pk, ik, dk, ahrs, out);
 	}
 	
+	
 	public void rotate(double amount)
 	{
-		talonFL.set(amount);
-		talonFR.set(amount);
-		talonBL.set(amount);
-		talonBR.set(amount);
+		drive.talonFL.set(amount);
+		drive.talonFR.set(amount);
+		drive.talonBL.set(amount);
+		drive.talonBR.set(amount);
 	}
 	public void stopPID()
 	{
 		controller.disable();
-		stopMotors();
+		drive.stopMotors();
+	}
+	public boolean isEnabled()
+	{
+		return controller.isEnabled();
+	}
+	public void startPID(double startPoint)
+	{
+		controller.setSetpoint(startPoint);
+		controller.enable();
 	}
 	
 	public void setTargetAngle(double out)

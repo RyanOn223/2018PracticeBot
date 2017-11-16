@@ -28,6 +28,8 @@ public class OI
 	
 	static JoystickButton shiftMec =new JoystickButton(driver, 3);
 	static JoystickButton shiftCheese =new JoystickButton(driver, 2);
+	static JoystickButton startAngle =new JoystickButton(driver, 1);
+	static JoystickButton stopAngle =new JoystickButton(driver, 4);
 	
 	static JoystickButton shootOn =new JoystickButton(operator,4);
 	static JoystickButton shootOff =new JoystickButton(operator,1);

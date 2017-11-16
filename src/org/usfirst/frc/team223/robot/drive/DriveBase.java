@@ -12,8 +12,8 @@ public class DriveBase
 	CANTalon talonBL=new CANTalon(RobotMap.driveBL);
 	CANTalon talonBR=new CANTalon(RobotMap.driveBR);
 
-	public static Solenoid solenoidF = new Solenoid(RobotMap.pcmID, RobotMap.frontSolenoid);
-	public static Solenoid solenoidB = new Solenoid(RobotMap.pcmID, RobotMap.backSolenoid);
+	public Solenoid solenoidF = new Solenoid(RobotMap.pcmID, RobotMap.frontSolenoid);
+	public Solenoid solenoidB = new Solenoid(RobotMap.pcmID, RobotMap.backSolenoid);
 
 	public DriveBase()
 	{
