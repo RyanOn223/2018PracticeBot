@@ -1,6 +1,5 @@
 package org.usfirst.frc.team223.robot;
 
-import org.usfirst.frc.team223.robot.drive.DriveBase;
 import org.usfirst.frc.team223.robot.drive.DriveControl;
 import org.usfirst.frc.team223.robot.drive.DriveTelop;
 import org.usfirst.frc.team223.robot.Utils.Latch;
@@ -13,7 +12,6 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -40,6 +38,7 @@ public class Robot extends IterativeRobot
 
 	Latch shootLatch;
 	Latch shiftLatch;
+	Latch pidLatch;
 
 	/**
 	 * This function is run when the robot is first started up and should be used
@@ -108,22 +107,39 @@ public class Robot extends IterativeRobot
 			}
 
 		};
-		shiftLatch = new Latch(OI.shootOn, OI.shootOff) {
+		shiftLatch = new Latch(OI.shiftMec, OI.shiftCheese) {
 
 			@Override
 			public void go()
 			{
-				drive.solenoidB.set(true);
-				drive.solenoidF.set(true);
+				driveTelop.solenoidB.set(true);
+				driveTelop.solenoidF.set(true);
 				mec = true;
 			}
 
 			@Override
 			public void stop()
 			{
-				drive.solenoidF.set(false);
-				drive.solenoidB.set(false);
+				driveTelop.solenoidF.set(false);
+				driveTelop.solenoidB.set(false);
 				mec = false;
+			}
+
+		};
+		pidLatch = new Latch(OI.startAngle, OI.stopAngle) {
+
+			@Override
+			public void go()
+			{
+				if (!driveControl.isEnabled())
+					driveControl.startPID(90);
+			}
+
+			@Override
+			public void stop()
+			{
+				shooter.stopPID();
+				driveControl.stopPID();
 			}
 
 		};
@@ -136,13 +152,14 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopPeriodic()
 	{
-		if (!pidLatch(OI.startAngle, OI.stopAngle))
+		shootLatch.get();
+		shiftLatch.get();
+		if (!pidLatch.get())
 			if (mec)
 				driveTelop.mec(OI.driver);
 			else
 				driveTelop.cheese(OI.driver);
-		shootLatch.get();
-		shiftLatch.get();
+		
 
 		shooter.intake(OI.intake.get());
 		shooter.blend(OI.blend.get());
@@ -166,32 +183,6 @@ public class Robot extends IterativeRobot
 	public void testPeriodic()
 	{
 		LiveWindow.run();
-	}
-
-	private boolean bp1prev = false;
-	private boolean bp2prev = false;
-	private boolean on = false;
-
-	public boolean pidLatch(JoystickButton b1, JoystickButton b2)
-	{
-		boolean b1curr = b1.get();
-		boolean b2curr = b2.get();
-
-		if (!bp1prev && b1curr) // button 1 rising
-		{
-			if (!driveControl.isEnabled())
-				driveControl.startPID(90);
-			on = true;
-		}
-
-		else if (!bp2prev && b2curr) // button 2 rising
-		{
-			driveControl.stopPID();
-			on = false;
-		}
-		bp1prev = b1curr;
-		bp2prev = b2curr;
-		return on;
 	}
 
 	/**
