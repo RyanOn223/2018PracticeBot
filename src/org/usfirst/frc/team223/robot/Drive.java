@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
-public class Drive extends Subsystem
+public class Drive
 {
 	//Speed Controllers controlling the Drive train.
 	CANTalon talonFL;
@@ -34,9 +34,6 @@ public class Drive extends Subsystem
 		talonBL.set(-(stick.getRawAxis(OI.leftYAxis)+stick.getRawAxis(OI.rightXAxis)) /2);
 		talonBR.set( (stick.getRawAxis(OI.leftYAxis)-stick.getRawAxis(OI.rightXAxis)) /2);	
 	}
-	@Override
-	protected void initDefaultCommand(){}
-	
 	
 	public void mec(Joystick stick)
 	{
@@ -47,14 +44,6 @@ public class Drive extends Subsystem
 		talonFL.set( -(leftY+rightX+leftX)/3);
 		talonFR.set(  (leftY-rightX-leftX)/3);
 		talonBL.set( -(leftY+rightX-leftX)/3);
-		talonBR.set(  (leftY-rightX+leftX)/3);
-		
+		talonBR.set(  (leftY-rightX+leftX)/3);		
 	}
 }
-
-
-
-
-
-
-
