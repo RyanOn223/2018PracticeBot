@@ -9,8 +9,6 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -35,6 +33,7 @@ public class Robot extends IterativeRobot
 
 	Latch shootLatch;
 	Latch shiftLatch;
+	VisionServer visionServer;
 
 	/**
 	 * This function is run when the robot is first started up and should be used
@@ -52,6 +51,8 @@ public class Robot extends IterativeRobot
 		gearPiston = new Solenoid(RobotMap.pcmID, RobotMap.gearPiston);
 		jaws = new Solenoid(RobotMap.pcmID, RobotMap.jaws);
 		shooter = new Shooter(RobotMap.shooter0, RobotMap.shooter1, RobotMap.shooter2, RobotMap.blender, RobotMap.intake);
+		visionServer = new VisionServer(50);
+		visionServer.start();
 	}
 
 	/**
@@ -131,7 +132,7 @@ public class Robot extends IterativeRobot
 		shootLatch.get();
 		shiftLatch.get();
 
-		if(mec)
+		if (mec)
 			drive.mec(OI.driver);
 		else
 			drive.cheese(OI.driver);
