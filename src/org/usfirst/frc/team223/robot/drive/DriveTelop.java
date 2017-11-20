@@ -25,8 +25,8 @@ public class DriveTelop extends DriveBase
 		double rightX = stick.getRawAxis(OI.rightXAxis);
 
 		talonFL.set(-(leftY + rightX + leftX) / 3);
-		talonFR.set((leftY - rightX - leftX) / 3);
+		talonFR.set( (leftY - rightX - leftX) / 3);
 		talonBL.set(-(leftY + rightX - leftX) / 3);
-		talonBR.set((leftY - rightX + leftX) / 3);
+		talonBR.set( (leftY - rightX + leftX) / 3);
 	}
 }

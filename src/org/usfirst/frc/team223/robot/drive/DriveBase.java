@@ -12,8 +12,8 @@ public class DriveBase
 	CANTalon talonBL=new CANTalon(RobotMap.driveBL);
 	CANTalon talonBR=new CANTalon(RobotMap.driveBR);
 
-	public Solenoid solenoidF = new Solenoid(RobotMap.pcmID, RobotMap.frontSolenoid);
-	public Solenoid solenoidB = new Solenoid(RobotMap.pcmID, RobotMap.backSolenoid);
+	Solenoid solenoidF = new Solenoid(RobotMap.pcmID, RobotMap.frontSolenoid);
+	Solenoid solenoidB = new Solenoid(RobotMap.pcmID, RobotMap.backSolenoid);
 
 	public DriveBase()
 	{
@@ -27,12 +27,28 @@ public class DriveBase
 		talonBL.set(-amount);
 		talonBR.set(amount);
 	}
-	
+	public void setAllMotors(double FL,double FR,double BL,double BR)
+	{
+		talonFL.set(-FL);
+		talonFR.set(FR);
+		talonBL.set(-BL);
+		talonBR.set(BR);
+	}
 	/**
 	 *  set speed of all motors to zero
 	 */
 	public void stopMotors()
 	{
 		setMotors(0);
+	}
+	public void setPistons(boolean yes)
+	{
+		solenoidB.set(yes);
+		solenoidF.set(yes);
+	}
+	public void free()
+	{
+		solenoidF.free();
+		solenoidB.free();
 	}
 }

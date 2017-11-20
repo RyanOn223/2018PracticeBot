@@ -41,8 +41,8 @@ public class Robot extends IterativeRobot
 	Latch pidLatch;
 
 	/**
-	 * This function is run when the robot is first started up and should be used
-	 * for any initialization code.
+	 * This function is run when the robot is first started up and should be
+	 * used for any initialization code.
 	 */
 	@Override
 	public void robotInit()
@@ -52,11 +52,12 @@ public class Robot extends IterativeRobot
 		ahrs = new AHRS(SPI.Port.kMXP);
 		c = new Compressor(52);
 		c.setClosedLoopControl(true);
-		
+		driveTelop = new DriveTelop();
 		climb = new CANTalon(RobotMap.climb);
 		gearPiston = new Solenoid(RobotMap.pcmID, RobotMap.gearPiston);
 		jaws = new Solenoid(RobotMap.pcmID, RobotMap.jaws);
-		shooter = new Shooter(RobotMap.shooter0, RobotMap.shooter1, RobotMap.shooter2, RobotMap.blender, RobotMap.intake);
+		shooter = new Shooter(RobotMap.shooter0, RobotMap.shooter1, RobotMap.shooter2, RobotMap.blender,
+				RobotMap.intake);
 	}
 
 	/**
@@ -84,15 +85,16 @@ public class Robot extends IterativeRobot
 	}
 
 	/**
-	 * This function is called once each time the robot enters tele-operated mode
+	 * This function is called once each time the robot enters tele-operated
+	 * mode
 	 */
 	@Override
 	public void teleopInit()
 	{
-		driveTelop = new DriveTelop();
 		driveControl = new DriveControl(ahrs, driveTelop);
 
-		shootLatch = new Latch(OI.shootOn, OI.shootOff) {
+		shootLatch = new Latch(OI.shootOn, OI.shootOff)
+		{
 
 			@Override
 			public void go()
@@ -107,38 +109,36 @@ public class Robot extends IterativeRobot
 			}
 
 		};
-		shiftLatch = new Latch(OI.shiftMec, OI.shiftCheese) {
+		shiftLatch = new Latch(OI.shiftMec, OI.shiftCheese)
+		{
 
 			@Override
 			public void go()
 			{
-				driveTelop.solenoidB.set(true);
-				driveTelop.solenoidF.set(true);
+				driveTelop.setPistons(true);
 				mec = true;
 			}
 
 			@Override
 			public void stop()
 			{
-				driveTelop.solenoidF.set(false);
-				driveTelop.solenoidB.set(false);
+				driveTelop.setPistons(false);
 				mec = false;
 			}
 
 		};
-		pidLatch = new Latch(OI.startAngle, OI.stopAngle) {
+		pidLatch = new Latch(OI.startAngle, OI.stopAngle)
+		{
 
 			@Override
 			public void go()
 			{
-				if (!driveControl.isEnabled())
-					driveControl.startPID(90);
+				if (!driveControl.isEnabled()) driveControl.startPID(ahrs.getAngle());
 			}
 
 			@Override
 			public void stop()
 			{
-				shooter.stopPID();
 				driveControl.stopPID();
 			}
 
@@ -149,17 +149,18 @@ public class Robot extends IterativeRobot
 	/**
 	 * This function is called periodically during operator control
 	 */
+	int i = 0;
+
 	@Override
 	public void teleopPeriodic()
 	{
 		shootLatch.get();
 		shiftLatch.get();
 		if (!pidLatch.get())
-			if (mec)
-				driveTelop.mec(OI.driver);
-			else
-				driveTelop.cheese(OI.driver);
-		
+		{
+			if (mec) driveTelop.mec(OI.driver);
+			else driveTelop.cheese(OI.driver);
+		}
 
 		shooter.intake(OI.intake.get());
 		shooter.blend(OI.blend.get());
@@ -190,10 +191,7 @@ public class Robot extends IterativeRobot
 	 */
 	public void generalInit()
 	{
-		shooter.getController().reset();
-		shooter.stopPID();
-		shooter.getController().setPID(p.getDouble("pk", .0001), p.getDouble("ik", .0000001), p.getDouble("dk", .0007));
-		System.out.println(shooter.getController().getP() + " " + shooter.getController().getI() + " "
-				+ shooter.getController().getD());
+		driveControl.stopPID();
+		driveControl.setPID(p.getDouble("pk", .05), p.getDouble("ik", .1), p.getDouble("dk", .0));
 	}
 }
