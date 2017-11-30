@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot
 {
 	Preferences p;
-	boolean mec = false;
 	Drive drive;
 	Shooter shooter;
 	Compressor c;
@@ -34,24 +33,28 @@ public class Robot extends IterativeRobot
 
 	Latch shootLatch;
 	Latch shiftLatch;
+	boolean fast = false;
 
 	/**
-	 * This function is run when the robot is first started up and should be used
-	 * for any initialization code.
+	 * This function is run when the robot is first started up and should be
+	 * used for any initialization code.
 	 */
 	@Override
 	public void robotInit()
 	{
 		p = Preferences.getInstance();
 
-		drive = new Drive(RobotMap.driveFL, RobotMap.driveFR, RobotMap.driveBL, RobotMap.driveBR);
-		c = new Compressor(52);
+		drive = new Drive(RobotMap.driveR0, RobotMap.driveR1, RobotMap.driveL0, RobotMap.driveL1);
+		c = new Compressor(RobotMap.pcmID);
 		c.setClosedLoopControl(true);
-		climb = new CANTalon(RobotMap.climb);
-		gearPiston = new Solenoid(RobotMap.pcmID, RobotMap.gearPiston);
-		jaws = new Solenoid(RobotMap.pcmID, RobotMap.jaws);
-		shooter = new Shooter(RobotMap.shooter0, RobotMap.shooter1, RobotMap.shooter2, RobotMap.blender, RobotMap.intake);
-	}
+
+		/*
+		 * climb = new CANTalon(RobotMap.climb); gearPiston = new
+		 * Solenoid(RobotMap.pcmID, RobotMap.gearPiston); jaws = new
+		 * Solenoid(RobotMap.pcmID, RobotMap.jaws); shooter = new
+		 * Shooter(RobotMap.shooter0, RobotMap.shooter1, RobotMap.shooter2,
+		 * RobotMap.blender, RobotMap.intake);
+		 */}
 
 	/**
 	 * This function is run once each time the robot enters autonomous mode
@@ -79,46 +82,42 @@ public class Robot extends IterativeRobot
 	}
 
 	/**
-	 * This function is called once each time the robot enters tele-operated mode
+	 * This function is called once each time the robot enters tele-operated
+	 * mode
 	 */
 	@Override
 	public void teleopInit()
 	{
-		shootLatch = new Latch(OI.shootOn, OI.shootOff) {
+		/*
+		 * shootLatch = new Latch(OI.shootOn, OI.shootOff) {
+		 * 
+		 * @Override public void go() { shooter.setSpeed(-500); }
+		 * 
+		 * @Override public void stop() { shooter.stopPID(); }
+		 * 
+		 * };
+		 */
+		shiftLatch = new Latch(OI.shiftCheese, OI.shiftMec)
+		{
 
 			@Override
 			public void go()
 			{
-				shooter.setSpeed(-500);
+				System.out.println("tyfyfyrfyfytftyf");
+				drive.solenoidR.set(true);
+				drive.solenoidL.set(true);
 			}
 
 			@Override
 			public void stop()
 			{
-				shooter.stopPID();
+				System.out.println("ah");
+				drive.solenoidR.set(false);
+				drive.solenoidL.set(false);
 			}
 
 		};
-		shiftLatch = new Latch(OI.shootOn, OI.shootOff) {
-
-			@Override
-			public void go()
-			{
-				drive.solenoidB.set(true);
-				drive.solenoidF.set(true);
-				mec = true;
-			}
-
-			@Override
-			public void stop()
-			{
-				drive.solenoidF.set(false);
-				drive.solenoidB.set(false);
-				mec = false;
-			}
-
-		};
-		generalInit();
+		// generalInit();*/
 	}
 
 	/**
@@ -127,21 +126,33 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopPeriodic()
 	{
-		shootLatch.get();
-		shiftLatch.get();
+		/* shootLatch.get(); */
 
-		if (mec)
-			drive.mec(OI.driver);
-		else
-			drive.cheese(OI.driver);
+		if (OI.shiftCheese.get())
+		{
+			if (!fast)
+			{
+				drive.solenoidR.set(true);
+				drive.solenoidL.set(true);
+				fast = true;
+			}
+		}
+		else if (fast)
+		{
+			drive.solenoidR.set(false);
+			drive.solenoidL.set(false);
+			fast = false;
+		}
 
-		shooter.intake(OI.intake.get());
-		shooter.blend(OI.blend.get());
+		drive.cheese(OI.driver);
 
-		climb.set(OI.operator.getRawAxis(OI.climb));
-		gearPiston.set(OI.gearPiston.get());
-		jaws.set(OI.jaws.get());
-		writeToDash();
+		/*
+		 * shooter.intake(OI.intake.get()); shooter.blend(OI.blend.get());
+		 * 
+		 * climb.set(OI.operator.getRawAxis(OI.climb));
+		 * gearPiston.set(OI.gearPiston.get()); jaws.set(OI.jaws.get());
+		 * writeToDash();
+		 */
 	}
 
 	public void writeToDash()

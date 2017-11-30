@@ -27,7 +27,6 @@ public abstract class Latch
 			go();
 			go = true;
 		}
-
 		else if (!b2prev && b2curr) // button 2 rising
 		{
 			stop();
