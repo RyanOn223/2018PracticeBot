@@ -35,7 +35,7 @@ public class DriveControl
 		@Override
 		public void pidWrite(double output)
 		{
-			mec(output);
+		//	mec(output);
 		}
 	};
 
@@ -56,13 +56,10 @@ public class DriveControl
 
 	public void rotate(double amount)
 	{
-		drive.setAllMotors(amount, -amount, amount, -amount);
+		drive.setSides(amount, -amount);
 	}
 	
-	public void mec(double amount)
-	{
-		drive.setAllMotors(amount, -.5, -amount, .5);
-	}
+
 	public void stopPID()
 	{
 		controller.disable();

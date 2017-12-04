@@ -36,8 +36,6 @@ public class Robot extends IterativeRobot
 	Shooter shooter;
 	Compressor c;
 	CANTalon climb;
-	Solenoid gearPiston;
-	Solenoid jaws;
 
 	Latch shootLatch;
 	Latch shiftLatch;
@@ -65,14 +63,14 @@ public class Robot extends IterativeRobot
 		 * Shooter(RobotMap.shooter0, RobotMap.shooter1, RobotMap.shooter2,
 		 * RobotMap.blender, RobotMap.intake);
 		 */
-		ahrs = new AHRS(SPI.Port.kMXP);
+		//ahrs = new AHRS(SPI.Port.kMXP);
 		driveTelop = new DriveTelop();
 		
 //		gearPiston = new Solenoid(RobotMap.pcmID, RobotMap.gearPiston);
 //		jaws = new Solenoid(RobotMap.pcmID, RobotMap.jaws);
 
-		visionServer = new VisionServer(50);
-		visionServer.start();
+		/*visionServer = new VisionServer(50);
+		visionServer.start();*/
 	}
 
 	/**
@@ -106,36 +104,21 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopInit()
 	{
-
-		/*
-		 * shootLatch = new Latch(OI.shootOn, OI.shootOff) {
-		 * 
-		 * @Override public void go() { shooter.setSpeed(-500); }
-		 * 
-		 * @Override public void stop() { shooter.stopPID(); }
-		 * 
-		 * };
-		 */
-
-		driveControl = new DriveControl(ahrs, driveTelop);
-
-		siftLatch = new Latch(OI.shiftCheese, OI.shiftMec)
+		shiftLatch = new Latch(OI.shiftFast, OI.shiftSlow)
 		{
 
 			@Override
 			public void go()
 			{
 				System.out.println("tyfyfyrfyfytftyf");
-				drive.solenoidR.set(true);
-				drive.solenoidL.set(true);
+				driveTelop.setPistons(true);
 			}
 
 			@Override
 			public void stop()
 			{
 				System.out.println("ah");
-				drive.solenoidR.set(false);
-				drive.solenoidL.set(false);
+				driveTelop.setPistons(false);
 			}
 
 		};
@@ -166,26 +149,23 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopPeriodic()
 	{
-<<<<<<< HEAD
 		/* shootLatch.get(); */
 
-		if (OI.shiftCheese.get())
+		if (OI.shiftFast.get())
 		{
 			if (!fast)
 			{
-				drive.solenoidR.set(true);
-				drive.solenoidL.set(true);
+				driveTelop.setPistons(true);
 				fast = true;
 			}
 		}
 		else if (fast)
 		{
-			drive.solenoidR.set(false);
-			drive.solenoidL.set(false);
+			driveTelop.setPistons(false);
 			fast = false;
 		}
 
-		drive.cheese(OI.driver);
+		driveTelop.cheese(OI.driver);
 
 		/*
 		 * shooter.intake(OI.intake.get()); shooter.blend(OI.blend.get());
@@ -195,14 +175,13 @@ public class Robot extends IterativeRobot
 		 * writeToDash();
 		 */
 
-		jaws.set(OI.jaws.get());
 		writeToDash();
 	}
 
 	public void writeToDash()
 	{
-		SmartDashboard.putNumber("angle", ahrs.getAngle());
-		SmartDashboard.putNumber("RPM", -shooter.talon2.getSpeed());
+	//	SmartDashboard.putNumber("angle", ahrs.getAngle());
+		//SmartDashboard.putNumber("RPM", -shooter.talon2.getSpeed());
 	}
 
 	/**
@@ -219,7 +198,7 @@ public class Robot extends IterativeRobot
 	 */
 	public void generalInit()
 	{
-		driveControl.stopPID();
-		driveControl.setPID(p.getDouble("pk", .05), p.getDouble("ik", .1), p.getDouble("dk", .0));
+		/*driveControl.stopPID();
+		driveControl.setPID(p.getDouble("pk", .05), p.getDouble("ik", .1), p.getDouble("dk", .0));*/
 	}
 }
