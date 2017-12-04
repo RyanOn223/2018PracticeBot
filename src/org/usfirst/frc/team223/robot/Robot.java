@@ -2,6 +2,7 @@ package org.usfirst.frc.team223.robot;
 
 import org.usfirst.frc.team223.robot.drive.DriveControl;
 import org.usfirst.frc.team223.robot.drive.DriveTelop;
+import org.usfirst.frc.team223.vision.VisionServer;
 import org.usfirst.frc.team223.robot.Utils.Latch;
 
 import com.ctre.CANTalon;
@@ -39,6 +40,7 @@ public class Robot extends IterativeRobot
 	Latch shootLatch;
 	Latch shiftLatch;
 	Latch pidLatch;
+	VisionServer visionServer;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -56,8 +58,10 @@ public class Robot extends IterativeRobot
 		climb = new CANTalon(RobotMap.climb);
 		gearPiston = new Solenoid(RobotMap.pcmID, RobotMap.gearPiston);
 		jaws = new Solenoid(RobotMap.pcmID, RobotMap.jaws);
-		shooter = new Shooter(RobotMap.shooter0, RobotMap.shooter1, RobotMap.shooter2, RobotMap.blender,
-				RobotMap.intake);
+
+		shooter = new Shooter(RobotMap.shooter0, RobotMap.shooter1, RobotMap.shooter2, RobotMap.blender, RobotMap.intake);
+		visionServer = new VisionServer(50);
+		visionServer.start();
 	}
 
 	/**
