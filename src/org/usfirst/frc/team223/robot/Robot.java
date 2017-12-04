@@ -1,15 +1,18 @@
 package org.usfirst.frc.team223.robot;
 
+import org.usfirst.frc.team223.robot.drive.DriveControl;
+import org.usfirst.frc.team223.robot.drive.DriveTelop;
+import org.usfirst.frc.team223.vision.VisionServer;
 import org.usfirst.frc.team223.robot.Utils.Latch;
 
 import com.ctre.CANTalon;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -23,17 +26,24 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot
 {
 	Preferences p;
-	Drive drive;
+
+	DriveTelop driveTelop;
+
+	AHRS ahrs;
+	
+	DriveControl driveControl;
+
 	Shooter shooter;
 	Compressor c;
-
 	CANTalon climb;
 	Solenoid gearPiston;
 	Solenoid jaws;
 
 	Latch shootLatch;
 	Latch shiftLatch;
+	Latch pidLatch;
 	boolean fast = false;
+	VisionServer visionServer;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -44,7 +54,7 @@ public class Robot extends IterativeRobot
 	{
 		p = Preferences.getInstance();
 
-		drive = new Drive(RobotMap.driveR0, RobotMap.driveR1, RobotMap.driveL0, RobotMap.driveL1);
+		//drive = new Drive(RobotMap.driveR0, RobotMap.driveR1, RobotMap.driveL0, RobotMap.driveL1);
 		c = new Compressor(RobotMap.pcmID);
 		c.setClosedLoopControl(true);
 
@@ -54,7 +64,16 @@ public class Robot extends IterativeRobot
 		 * Solenoid(RobotMap.pcmID, RobotMap.jaws); shooter = new
 		 * Shooter(RobotMap.shooter0, RobotMap.shooter1, RobotMap.shooter2,
 		 * RobotMap.blender, RobotMap.intake);
-		 */}
+		 */
+		ahrs = new AHRS(SPI.Port.kMXP);
+		driveTelop = new DriveTelop();
+		
+//		gearPiston = new Solenoid(RobotMap.pcmID, RobotMap.gearPiston);
+//		jaws = new Solenoid(RobotMap.pcmID, RobotMap.jaws);
+
+		visionServer = new VisionServer(50);
+		visionServer.start();
+	}
 
 	/**
 	 * This function is run once each time the robot enters autonomous mode
@@ -62,7 +81,6 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousInit()
 	{
-		generalInit();
 	}
 
 	/**
@@ -88,6 +106,7 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopInit()
 	{
+
 		/*
 		 * shootLatch = new Latch(OI.shootOn, OI.shootOff) {
 		 * 
@@ -97,7 +116,10 @@ public class Robot extends IterativeRobot
 		 * 
 		 * };
 		 */
-		shiftLatch = new Latch(OI.shiftCheese, OI.shiftMec)
+
+		driveControl = new DriveControl(ahrs, driveTelop);
+
+		siftLatch = new Latch(OI.shiftCheese, OI.shiftMec)
 		{
 
 			@Override
@@ -117,15 +139,34 @@ public class Robot extends IterativeRobot
 			}
 
 		};
-		// generalInit();*/
+		pidLatch = new Latch(OI.startAngle, OI.stopAngle)
+		{
+
+			@Override
+			public void go()
+			{
+				if (!driveControl.isEnabled()) driveControl.startPID(ahrs.getAngle());
+			}
+
+			@Override
+			public void stop()
+			{
+				driveControl.stopPID();
+			}
+
+		};
+		generalInit();
 	}
 
 	/**
 	 * This function is called periodically during operator control
 	 */
+	int i = 0;
+
 	@Override
 	public void teleopPeriodic()
 	{
+<<<<<<< HEAD
 		/* shootLatch.get(); */
 
 		if (OI.shiftCheese.get())
@@ -153,10 +194,14 @@ public class Robot extends IterativeRobot
 		 * gearPiston.set(OI.gearPiston.get()); jaws.set(OI.jaws.get());
 		 * writeToDash();
 		 */
+
+		jaws.set(OI.jaws.get());
+		writeToDash();
 	}
 
 	public void writeToDash()
 	{
+		SmartDashboard.putNumber("angle", ahrs.getAngle());
 		SmartDashboard.putNumber("RPM", -shooter.talon2.getSpeed());
 	}
 
@@ -174,10 +219,7 @@ public class Robot extends IterativeRobot
 	 */
 	public void generalInit()
 	{
-		shooter.getController().reset();
-		shooter.stopPID();
-		shooter.getController().setPID(p.getDouble("pk", .0001), p.getDouble("ik", .0000001), p.getDouble("dk", .0007));
-		System.out.println(shooter.getController().getP() + " " + shooter.getController().getI() + " "
-				+ shooter.getController().getD());
+		driveControl.stopPID();
+		driveControl.setPID(p.getDouble("pk", .05), p.getDouble("ik", .1), p.getDouble("dk", .0));
 	}
 }
