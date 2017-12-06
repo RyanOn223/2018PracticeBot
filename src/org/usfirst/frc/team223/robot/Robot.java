@@ -1,7 +1,6 @@
 package org.usfirst.frc.team223.robot;
 
-import org.usfirst.frc.team223.robot.drive.DriveControl;
-import org.usfirst.frc.team223.robot.drive.DriveTelop;
+import org.usfirst.frc.team223.robot.drive.*;
 import org.usfirst.frc.team223.vision.VisionServer;
 import org.usfirst.frc.team223.robot.Utils.Latch;
 
@@ -11,7 +10,6 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,11 +24,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot
 {
 	Preferences p;
-
+	
 	DriveTelop driveTelop;
 
 	AHRS ahrs;
-	
+
 	DriveControl driveControl;
 
 	Shooter shooter;
@@ -52,7 +50,8 @@ public class Robot extends IterativeRobot
 	{
 		p = Preferences.getInstance();
 
-		//drive = new Drive(RobotMap.driveR0, RobotMap.driveR1, RobotMap.driveL0, RobotMap.driveL1);
+		// drive = new Drive(RobotMap.driveR0, RobotMap.driveR1,
+		// RobotMap.driveL0, RobotMap.driveL1);
 		c = new Compressor(RobotMap.pcmID);
 		c.setClosedLoopControl(true);
 
@@ -63,14 +62,15 @@ public class Robot extends IterativeRobot
 		 * Shooter(RobotMap.shooter0, RobotMap.shooter1, RobotMap.shooter2,
 		 * RobotMap.blender, RobotMap.intake);
 		 */
-		//ahrs = new AHRS(SPI.Port.kMXP);
+		ahrs = new AHRS(SPI.Port.kMXP);
 		driveTelop = new DriveTelop();
-		
-//		gearPiston = new Solenoid(RobotMap.pcmID, RobotMap.gearPiston);
-//		jaws = new Solenoid(RobotMap.pcmID, RobotMap.jaws);
 
-		/*visionServer = new VisionServer(50);
-		visionServer.start();*/
+		// gearPiston = new Solenoid(RobotMap.pcmID, RobotMap.gearPiston);
+		// jaws = new Solenoid(RobotMap.pcmID, RobotMap.jaws);
+
+		/*
+		 * visionServer = new VisionServer(50); visionServer.start();
+		 */
 	}
 
 	/**
@@ -144,28 +144,30 @@ public class Robot extends IterativeRobot
 	/**
 	 * This function is called periodically during operator control
 	 */
-	int i = 0;
 
 	@Override
 	public void teleopPeriodic()
 	{
 		/* shootLatch.get(); */
-
+		boolean i = true;
 		if (OI.shiftFast.get())
 		{
 			if (!fast)
 			{
 				driveTelop.setPistons(true);
 				fast = true;
+				/*driveTelop.stopMotors();
+				i = false;*/
 			}
 		}
 		else if (fast)
 		{
 			driveTelop.setPistons(false);
+			/*driveTelop.stopMotors();
+			i = false;*/
 			fast = false;
 		}
-
-		driveTelop.cheese(OI.driver);
+		if (i) driveTelop.cheese(OI.driver);
 
 		/*
 		 * shooter.intake(OI.intake.get()); shooter.blend(OI.blend.get());
@@ -180,8 +182,8 @@ public class Robot extends IterativeRobot
 
 	public void writeToDash()
 	{
-	//	SmartDashboard.putNumber("angle", ahrs.getAngle());
-		//SmartDashboard.putNumber("RPM", -shooter.talon2.getSpeed());
+		SmartDashboard.putNumber("angle", ahrs.getAngle());
+		// SmartDashboard.putNumber("RPM", -shooter.talon2.getSpeed());
 	}
 
 	/**
@@ -198,7 +200,9 @@ public class Robot extends IterativeRobot
 	 */
 	public void generalInit()
 	{
-		/*driveControl.stopPID();
-		driveControl.setPID(p.getDouble("pk", .05), p.getDouble("ik", .1), p.getDouble("dk", .0));*/
+		/*
+		 * driveControl.stopPID(); driveControl.setPID(p.getDouble("pk", .05),
+		 * p.getDouble("ik", .1), p.getDouble("dk", .0));
+		 */
 	}
 }
