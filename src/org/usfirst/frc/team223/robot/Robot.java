@@ -24,14 +24,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot
 {
 	Preferences p;
-	
-	DriveTelop driveTelop;
 
 	AHRS ahrs;
 
-	DriveControl driveControl;
+	DriveBase drive;
+	DriveTelop driveTelop;
+	DriveAuto driveAuto;
 
-	Shooter shooter;
 	Compressor c;
 	CANTalon climb;
 
@@ -50,24 +49,13 @@ public class Robot extends IterativeRobot
 	{
 		p = Preferences.getInstance();
 
-		// drive = new Drive(RobotMap.driveR0, RobotMap.driveR1,
-		// RobotMap.driveL0, RobotMap.driveL1);
 		c = new Compressor(RobotMap.pcmID);
 		c.setClosedLoopControl(true);
 
-		/*
-		 * climb = new CANTalon(RobotMap.climb); gearPiston = new
-		 * Solenoid(RobotMap.pcmID, RobotMap.gearPiston); jaws = new
-		 * Solenoid(RobotMap.pcmID, RobotMap.jaws); shooter = new
-		 * Shooter(RobotMap.shooter0, RobotMap.shooter1, RobotMap.shooter2,
-		 * RobotMap.blender, RobotMap.intake);
-		 */
 		ahrs = new AHRS(SPI.Port.kMXP);
-		driveTelop = new DriveTelop();
-
-		// gearPiston = new Solenoid(RobotMap.pcmID, RobotMap.gearPiston);
-		// jaws = new Solenoid(RobotMap.pcmID, RobotMap.jaws);
-
+		drive = new DriveBase();
+		driveTelop = new DriveTelop(drive);
+		driveAuto = new DriveAuto(drive,ahrs);
 		/*
 		 * visionServer = new VisionServer(50); visionServer.start();
 		 */
@@ -79,6 +67,14 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousInit()
 	{
+		new Thread()
+		{
+			@Override
+			public void run()
+			{
+				driveAuto.set(90);
+			}
+		}.start();
 	}
 
 	/**
@@ -104,6 +100,7 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopInit()
 	{
+
 		shiftLatch = new Latch(OI.shiftFast, OI.shiftSlow)
 		{
 
@@ -111,14 +108,14 @@ public class Robot extends IterativeRobot
 			public void go()
 			{
 				System.out.println("tyfyfyrfyfytftyf");
-				driveTelop.setPistons(true);
+				drive.setPistons(true);
 			}
 
 			@Override
 			public void stop()
 			{
 				System.out.println("ah");
-				driveTelop.setPistons(false);
+				drive.setPistons(false);
 			}
 
 		};
@@ -128,13 +125,13 @@ public class Robot extends IterativeRobot
 			@Override
 			public void go()
 			{
-				if (!driveControl.isEnabled()) driveControl.startPID(ahrs.getAngle());
+				//if (!driveControl.isEnabled()) driveControl.startPID(ahrs.getAngle());
 			}
 
 			@Override
 			public void stop()
 			{
-				driveControl.stopPID();
+				//driveControl.stopPID();
 			}
 
 		};
@@ -154,17 +151,19 @@ public class Robot extends IterativeRobot
 		{
 			if (!fast)
 			{
-				driveTelop.setPistons(true);
+				drive.setPistons(true);
 				fast = true;
-				/*driveTelop.stopMotors();
-				i = false;*/
+				/*
+				 * driveTelop.stopMotors(); i = false;
+				 */
 			}
 		}
 		else if (fast)
 		{
-			driveTelop.setPistons(false);
-			/*driveTelop.stopMotors();
-			i = false;*/
+			drive.setPistons(false);
+			/*
+			 * driveTelop.stopMotors(); i = false;
+			 */
 			fast = false;
 		}
 		if (i) driveTelop.cheese(OI.driver);
@@ -183,7 +182,7 @@ public class Robot extends IterativeRobot
 	public void writeToDash()
 	{
 		SmartDashboard.putNumber("angle", ahrs.getAngle());
-		// SmartDashboard.putNumber("RPM", -shooter.talon2.getSpeed());
+		SmartDashboard.putNumber("pidget", driveAuto.getPID());
 	}
 
 	/**

@@ -26,7 +26,7 @@ public class DriveControl
 		@Override
 		public PIDSourceType getPIDSourceType()
 		{
-			return PIDSourceType.kRate;
+			return PIDSourceType.kDisplacement;
 		}
 	};
 
@@ -35,30 +35,33 @@ public class DriveControl
 		@Override
 		public void pidWrite(double output)
 		{
-		//	mec(output);
+			rotate(output);
 		}
 	};
 
-	private static double pk = .05;
-	private static double ik = .1;
+	private static double pk = .005;
+	private static double ik = .00;
 	private static double dk = 0;
 
 	private PIDController controller;
 
 	private AHRS ahrs;
 
-	public DriveControl(AHRS ahrs, DriveBase drive)
+	public DriveControl( DriveBase drive,AHRS ahrs)
 	{
 		this.drive = drive;
 		this.ahrs = ahrs;
 		controller = new PIDController(pk, ik, dk, ahrs, out);
 	}
-
+	public double get()
+	{
+		return controller.get();
+	}
 	public void rotate(double amount)
 	{
+		
 		drive.setSides(amount, -amount);
 	}
-	
 
 	public void stopPID()
 	{
