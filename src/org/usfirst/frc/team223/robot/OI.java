@@ -26,8 +26,8 @@ public class OI
 	
 	static int climb =3;
 	
-	static JoystickButton shiftMec =new JoystickButton(driver, 3);
-	static JoystickButton shiftCheese =new JoystickButton(driver, 2);
+	static JoystickButton shiftSlow =new JoystickButton(driver, 3);
+	static JoystickButton shiftFast =new JoystickButton(driver, 6);
 	static JoystickButton startAngle =new JoystickButton(driver, 1);
 	static JoystickButton stopAngle =new JoystickButton(driver, 4);
 	

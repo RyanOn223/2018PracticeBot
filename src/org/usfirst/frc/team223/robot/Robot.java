@@ -1,7 +1,6 @@
 package org.usfirst.frc.team223.robot;
 
-import org.usfirst.frc.team223.robot.drive.DriveControl;
-import org.usfirst.frc.team223.robot.drive.DriveTelop;
+import org.usfirst.frc.team223.robot.drive.*;
 import org.usfirst.frc.team223.vision.VisionServer;
 import org.usfirst.frc.team223.robot.Utils.Latch;
 
@@ -11,7 +10,6 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,18 +26,18 @@ public class Robot extends IterativeRobot
 	Preferences p;
 
 	AHRS ahrs;
-	boolean mec = false;
+
+	DriveBase drive;
 	DriveTelop driveTelop;
-	DriveControl driveControl;
-	Shooter shooter;
+	DriveAuto driveAuto;
+
 	Compressor c;
 	CANTalon climb;
-	Solenoid gearPiston;
-	Solenoid jaws;
 
 	Latch shootLatch;
 	Latch shiftLatch;
 	Latch pidLatch;
+	boolean fast = false;
 	VisionServer visionServer;
 
 	/**
@@ -51,17 +49,16 @@ public class Robot extends IterativeRobot
 	{
 		p = Preferences.getInstance();
 
-		ahrs = new AHRS(SPI.Port.kMXP);
-		c = new Compressor(52);
+		c = new Compressor(RobotMap.pcmID);
 		c.setClosedLoopControl(true);
-		driveTelop = new DriveTelop();
-		climb = new CANTalon(RobotMap.climb);
-		gearPiston = new Solenoid(RobotMap.pcmID, RobotMap.gearPiston);
-		jaws = new Solenoid(RobotMap.pcmID, RobotMap.jaws);
 
-		shooter = new Shooter(RobotMap.shooter0, RobotMap.shooter1, RobotMap.shooter2, RobotMap.blender, RobotMap.intake);
-		visionServer = new VisionServer(50);
-		visionServer.start();
+		ahrs = new AHRS(SPI.Port.kMXP);
+		drive = new DriveBase();
+		driveTelop = new DriveTelop(drive);
+		driveAuto = new DriveAuto(drive, ahrs);
+		/*
+		 * visionServer = new VisionServer(50); visionServer.start();
+		 */
 	}
 
 	/**
@@ -70,6 +67,15 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousInit()
 	{
+		new Thread()
+		{
+			@Override
+			public void run()
+			{
+				driveAuto.start(90);
+			}
+		}.start();
+		generalInit();
 	}
 
 	/**
@@ -78,6 +84,7 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousPeriodic()
 	{
+		writeToDash();
 	}
 
 	/**
@@ -95,39 +102,19 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopInit()
 	{
-		driveControl = new DriveControl(ahrs, driveTelop);
-
-		shootLatch = new Latch(OI.shootOn, OI.shootOff)
+		shiftLatch = new Latch(OI.shiftFast)
 		{
 
 			@Override
 			public void go()
 			{
-				shooter.setSpeed(-500);
+				drive.setPistons(true);
 			}
 
 			@Override
 			public void stop()
 			{
-				shooter.stopPID();
-			}
-
-		};
-		shiftLatch = new Latch(OI.shiftMec, OI.shiftCheese)
-		{
-
-			@Override
-			public void go()
-			{
-				driveTelop.setPistons(true);
-				mec = true;
-			}
-
-			@Override
-			public void stop()
-			{
-				driveTelop.setPistons(false);
-				mec = false;
+				drive.setPistons(false);
 			}
 
 		};
@@ -137,13 +124,14 @@ public class Robot extends IterativeRobot
 			@Override
 			public void go()
 			{
-				if (!driveControl.isEnabled()) driveControl.startPID(ahrs.getAngle());
+				// if (!driveControl.isEnabled())
+				// driveControl.startPID(ahrs.getAngle());
 			}
 
 			@Override
 			public void stop()
 			{
-				driveControl.stopPID();
+				// driveControl.stopPID();
 			}
 
 		};
@@ -153,32 +141,20 @@ public class Robot extends IterativeRobot
 	/**
 	 * This function is called periodically during operator control
 	 */
-	int i = 0;
 
 	@Override
 	public void teleopPeriodic()
 	{
-		shootLatch.get();
 		shiftLatch.get();
-		if (!pidLatch.get())
-		{
-			if (mec) driveTelop.mec(OI.driver);
-			else driveTelop.cheese(OI.driver);
-		}
-
-		shooter.intake(OI.intake.get());
-		shooter.blend(OI.blend.get());
-
-		climb.set(OI.operator.getRawAxis(OI.climb));
-		gearPiston.set(OI.gearPiston.get());
-		jaws.set(OI.jaws.get());
+		driveTelop.cheese(OI.driver);
 		writeToDash();
 	}
 
 	public void writeToDash()
 	{
+		SmartDashboard.putNumber("RPM", ahrs.getAngle());
 		SmartDashboard.putNumber("angle", ahrs.getAngle());
-		SmartDashboard.putNumber("RPM", -shooter.talon2.getSpeed());
+		SmartDashboard.putNumber("pidget", driveAuto.getPID());
 	}
 
 	/**
@@ -195,7 +171,8 @@ public class Robot extends IterativeRobot
 	 */
 	public void generalInit()
 	{
-		driveControl.stopPID();
-		driveControl.setPID(p.getDouble("pk", .05), p.getDouble("ik", .1), p.getDouble("dk", .0));
+		driveAuto.stop();
+		driveAuto.setPID(p.getDouble("pk", .05), p.getDouble("ik", .1), p.getDouble("dk", .0));
+
 	}
 }
