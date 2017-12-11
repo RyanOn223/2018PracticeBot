@@ -55,7 +55,7 @@ public class Robot extends IterativeRobot
 		ahrs = new AHRS(SPI.Port.kMXP);
 		drive = new DriveBase();
 		driveTelop = new DriveTelop(drive);
-		driveAuto = new DriveAuto(drive,ahrs);
+		driveAuto = new DriveAuto(drive, ahrs);
 		/*
 		 * visionServer = new VisionServer(50); visionServer.start();
 		 */
@@ -72,9 +72,10 @@ public class Robot extends IterativeRobot
 			@Override
 			public void run()
 			{
-				driveAuto.set(90);
+				driveAuto.start(90);
 			}
 		}.start();
+		generalInit();
 	}
 
 	/**
@@ -83,6 +84,7 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousPeriodic()
 	{
+		writeToDash();
 	}
 
 	/**
@@ -100,21 +102,18 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopInit()
 	{
-
-		shiftLatch = new Latch(OI.shiftFast, OI.shiftSlow)
+		shiftLatch = new Latch(OI.shiftFast)
 		{
 
 			@Override
 			public void go()
 			{
-				System.out.println("tyfyfyrfyfytftyf");
 				drive.setPistons(true);
 			}
 
 			@Override
 			public void stop()
 			{
-				System.out.println("ah");
 				drive.setPistons(false);
 			}
 
@@ -125,13 +124,14 @@ public class Robot extends IterativeRobot
 			@Override
 			public void go()
 			{
-				//if (!driveControl.isEnabled()) driveControl.startPID(ahrs.getAngle());
+				// if (!driveControl.isEnabled())
+				// driveControl.startPID(ahrs.getAngle());
 			}
 
 			@Override
 			public void stop()
 			{
-				//driveControl.stopPID();
+				// driveControl.stopPID();
 			}
 
 		};
@@ -145,42 +145,14 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopPeriodic()
 	{
-		/* shootLatch.get(); */
-		boolean i = true;
-		if (OI.shiftFast.get())
-		{
-			if (!fast)
-			{
-				drive.setPistons(true);
-				fast = true;
-				/*
-				 * driveTelop.stopMotors(); i = false;
-				 */
-			}
-		}
-		else if (fast)
-		{
-			drive.setPistons(false);
-			/*
-			 * driveTelop.stopMotors(); i = false;
-			 */
-			fast = false;
-		}
-		if (i) driveTelop.cheese(OI.driver);
-
-		/*
-		 * shooter.intake(OI.intake.get()); shooter.blend(OI.blend.get());
-		 * 
-		 * climb.set(OI.operator.getRawAxis(OI.climb));
-		 * gearPiston.set(OI.gearPiston.get()); jaws.set(OI.jaws.get());
-		 * writeToDash();
-		 */
-
+		shiftLatch.get();
+		driveTelop.cheese(OI.driver);
 		writeToDash();
 	}
 
 	public void writeToDash()
 	{
+		SmartDashboard.putNumber("RPM", ahrs.getAngle());
 		SmartDashboard.putNumber("angle", ahrs.getAngle());
 		SmartDashboard.putNumber("pidget", driveAuto.getPID());
 	}
@@ -199,9 +171,8 @@ public class Robot extends IterativeRobot
 	 */
 	public void generalInit()
 	{
-		/*
-		 * driveControl.stopPID(); driveControl.setPID(p.getDouble("pk", .05),
-		 * p.getDouble("ik", .1), p.getDouble("dk", .0));
-		 */
+		driveAuto.stop();
+		driveAuto.setPID(p.getDouble("pk", .05), p.getDouble("ik", .1), p.getDouble("dk", .0));
+
 	}
 }
