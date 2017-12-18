@@ -8,6 +8,7 @@ import com.ctre.CANTalon;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.SPI;
@@ -67,15 +68,8 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousInit()
 	{
-		new Thread()
-		{
-			@Override
-			public void run()
-			{
-				driveAuto.start(90);
-			}
-		}.start();
-		generalInit();
+		drive.setStuff(.5);
+		//generalInit();
 	}
 
 	/**
@@ -84,6 +78,8 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousPeriodic()
 	{
+		if(drive.getSpeed()>20)
+			drive.setStuff(0);
 		writeToDash();
 	}
 
@@ -118,23 +114,6 @@ public class Robot extends IterativeRobot
 			}
 
 		};
-		pidLatch = new Latch(OI.startAngle, OI.stopAngle)
-		{
-
-			@Override
-			public void go()
-			{
-				// if (!driveControl.isEnabled())
-				// driveControl.startPID(ahrs.getAngle());
-			}
-
-			@Override
-			public void stop()
-			{
-				// driveControl.stopPID();
-			}
-
-		};
 		generalInit();
 	}
 
@@ -150,11 +129,12 @@ public class Robot extends IterativeRobot
 		writeToDash();
 	}
 
+	
 	public void writeToDash()
 	{
-		SmartDashboard.putNumber("RPM", ahrs.getAngle());
+		SmartDashboard.putNumber("RPM", drive.getSpeed());
 		SmartDashboard.putNumber("angle", ahrs.getAngle());
-		SmartDashboard.putNumber("pidget", driveAuto.getPID());
+		//SmartDashboard.putNumber("pidget", driveAuto.getPID());
 	}
 
 	/**
@@ -172,7 +152,6 @@ public class Robot extends IterativeRobot
 	public void generalInit()
 	{
 		driveAuto.stop();
-		driveAuto.setPID(p.getDouble("pk", .05), p.getDouble("ik", .1), p.getDouble("dk", .0));
-
+		driveAuto.setPID(p.getDouble("pk", .05), p.getDouble("ik", 0), p.getDouble("dk", .0));
 	}
 }

@@ -1,5 +1,10 @@
 package org.usfirst.frc.team223.robot;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.usfirst.frc.team223.robot.Utils.BetterJoystick;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
@@ -17,8 +22,8 @@ public class OI
 	// number it is.
 	// Joystick stick = new Joystick(port);
 	// Button button = new JoystickButton(stick, buttonNumber);
-	static Joystick driver = new Joystick(0);
-	static Joystick operator = new Joystick(1);
+	static BetterJoystick driver = new BetterJoystick(0);
+	static BetterJoystick operator = new BetterJoystick(1);
 	
 	public static int leftYAxis=1;
 	public static int leftXAxis=0;
@@ -37,6 +42,16 @@ public class OI
 	static JoystickButton jaws =new JoystickButton(operator,2);
 	static JoystickButton blend =new JoystickButton(operator,6);
 	static JoystickButton intake =new JoystickButton(operator,5);
+	
+	static {
+		
+		Map<Integer, Double> driverOffsets = new HashMap<>();
+		driverOffsets.put(leftXAxis, 0.1);
+		driver.setAxisOffsets(driverOffsets);
+		
+		driver.setDeadbandCoef(.1);
+		operator.setDeadbandCoef(0.1);
+	}
 	
 	
 	// There are a few additional built in buttons you can use. Additionally,

@@ -1,7 +1,5 @@
 package org.usfirst.frc.team223.robot.Utils;
 
-import org.usfirst.frc.team223.robot.OI;
-
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public abstract class Latch
@@ -30,7 +28,10 @@ public abstract class Latch
 	}
 
 	private boolean on = false;
-
+	/**
+	 * Runs go when pressed and stop when released
+	 * @returns on/off
+	 */
 	private boolean hold()
 	{
 		if (b1.get())
@@ -54,6 +55,10 @@ public abstract class Latch
 	private boolean b2prev = false;
 	private boolean go = false;
 
+	/**
+	 * Runs go when on button is pressed and stop when the other is pressed
+	 * @returns on/off
+	 */
 	private boolean latch()
 	{
 		boolean b1curr = b1.get();
