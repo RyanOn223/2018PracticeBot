@@ -3,7 +3,7 @@ package org.usfirst.frc.team223.robot;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.usfirst.frc.team223.robot.Utils.BetterJoystick;
+import org.usfirst.frc.team223.robot.utils.BetterJoystick;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;

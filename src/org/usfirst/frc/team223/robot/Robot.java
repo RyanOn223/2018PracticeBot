@@ -1,8 +1,8 @@
 package org.usfirst.frc.team223.robot;
 
 import org.usfirst.frc.team223.robot.drive.*;
+import org.usfirst.frc.team223.robot.utils.Latch;
 import org.usfirst.frc.team223.vision.VisionServer;
-import org.usfirst.frc.team223.robot.Utils.Latch;
 
 import com.ctre.CANTalon;
 import com.kauailabs.navx.frc.AHRS;

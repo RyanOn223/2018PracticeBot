@@ -1,4 +1,4 @@
-package org.usfirst.frc.team223.robot.Utils;
+package org.usfirst.frc.team223.robot.utils;
 
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
