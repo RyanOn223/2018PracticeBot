@@ -3,8 +3,6 @@ package org.usfirst.frc.team223.robot.drive;
 import org.usfirst.frc.team223.robot.RobotMap;
 
 import com.ctre.CANTalon;
-import com.ctre.CANTalon.FeedbackDevice;
-
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class DriveBase
@@ -25,8 +23,6 @@ public class DriveBase
 	}
 	public DriveBase()
 	{
-		talonL0.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-
 		//setSlaves
 		talonL1.changeControlMode(CANTalon.TalonControlMode.Follower);
 		talonL1.set(RobotMap.driveL0);

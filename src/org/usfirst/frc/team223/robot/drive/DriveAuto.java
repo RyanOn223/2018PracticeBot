@@ -17,6 +17,8 @@ public class DriveAuto
 			rotate(output);
 		}
 	};
+	
+	//default pids change in general init
 	private double p = 0.001;
 	private double i = 0;
 	private double d = 0;

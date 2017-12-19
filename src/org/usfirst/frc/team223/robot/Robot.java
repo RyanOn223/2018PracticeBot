@@ -8,7 +8,6 @@ import com.ctre.CANTalon;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.SPI;
@@ -42,8 +41,8 @@ public class Robot extends IterativeRobot
 	VisionServer visionServer;
 
 	/**
-	 * This function is run when the robot is first started up and should be
-	 * used for any initialization code.
+	 * This function is run when the robot is first started up and should be used
+	 * for any initialization code.
 	 */
 	@Override
 	public void robotInit()
@@ -68,8 +67,9 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousInit()
 	{
-		drive.setStuff(.5);
-		//generalInit();
+		driveAuto.start(ahrs.getAngle()+90);
+		// drive.setStuff(.5);
+		generalInit();
 	}
 
 	/**
@@ -78,8 +78,10 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousPeriodic()
 	{
-		if(drive.getSpeed()>20)
-			drive.setStuff(0);
+		/*
+		 * if(drive.getSpeed()>20) { System.out.println(drive.getSpeed());
+		 * drive.setStuff(0); }
+		 */
 		writeToDash();
 	}
 
@@ -92,14 +94,12 @@ public class Robot extends IterativeRobot
 	}
 
 	/**
-	 * This function is called once each time the robot enters tele-operated
-	 * mode
+	 * This function is called once each time the robot enters tele-operated mode
 	 */
 	@Override
 	public void teleopInit()
 	{
-		shiftLatch = new Latch(OI.shiftFast)
-		{
+		shiftLatch = new Latch(OI.shiftFast) {
 
 			@Override
 			public void go()
@@ -129,12 +129,11 @@ public class Robot extends IterativeRobot
 		writeToDash();
 	}
 
-	
 	public void writeToDash()
 	{
 		SmartDashboard.putNumber("RPM", drive.getSpeed());
 		SmartDashboard.putNumber("angle", ahrs.getAngle());
-		//SmartDashboard.putNumber("pidget", driveAuto.getPID());
+		// SmartDashboard.putNumber("pidget", driveAuto.getPID());
 	}
 
 	/**
