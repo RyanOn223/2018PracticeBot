@@ -41,8 +41,8 @@ public class Robot extends IterativeRobot
 	VisionServer visionServer;
 
 	/**
-	 * This function is run when the robot is first started up and should be used
-	 * for any initialization code.
+	 * This function is run when the robot is first started up and should be
+	 * used for any initialization code.
 	 */
 	@Override
 	public void robotInit()
@@ -50,7 +50,6 @@ public class Robot extends IterativeRobot
 		p = Preferences.getInstance();
 
 		c = new Compressor(RobotMap.pcmID);
-		c.setClosedLoopControl(true);
 
 		ahrs = new AHRS(SPI.Port.kMXP);
 		drive = new DriveBase();
@@ -67,9 +66,8 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousInit()
 	{
-		driveAuto.start(ahrs.getAngle()+90);
-		// drive.setStuff(.5);
 		generalInit();
+		driveAuto.go(889);		
 	}
 
 	/**
@@ -94,12 +92,15 @@ public class Robot extends IterativeRobot
 	}
 
 	/**
-	 * This function is called once each time the robot enters tele-operated mode
+	 * This function is called once each time the robot enters tele-operated
+	 * mode
 	 */
 	@Override
 	public void teleopInit()
 	{
-		shiftLatch = new Latch(OI.shiftFast) {
+		generalInit();
+		shiftLatch = new Latch(OI.shiftFast)
+		{
 
 			@Override
 			public void go()
@@ -112,9 +113,7 @@ public class Robot extends IterativeRobot
 			{
 				drive.setPistons(false);
 			}
-
 		};
-		generalInit();
 	}
 
 	/**
@@ -131,8 +130,17 @@ public class Robot extends IterativeRobot
 
 	public void writeToDash()
 	{
-		SmartDashboard.putNumber("RPM", drive.getSpeed());
+		SmartDashboard.putNumber("left", drive.getLeftSpeed());
+		SmartDashboard.putNumber("right", drive.getRightSpeed());
+		
 		SmartDashboard.putNumber("angle", ahrs.getAngle());
+		/*if (OI.driver.getRawAxis(OI.leftYAxis) != 0)
+		{
+			System.out.println(OI.driver.getRawAxis(OI.leftXAxis));
+			System.out.println(OI.driver.getRawAxis(OI.leftYAxis));
+			System.out.println(OI.driver.getRawAxis(OI.rightXAxis));
+			System.out.println();
+		}*/
 		// SmartDashboard.putNumber("pidget", driveAuto.getPID());
 	}
 
@@ -150,7 +158,9 @@ public class Robot extends IterativeRobot
 	 */
 	public void generalInit()
 	{
+		ahrs.reset();
+		drive.resetEncoders();
 		driveAuto.stop();
-		driveAuto.setPID(p.getDouble("pk", .05), p.getDouble("ik", 0), p.getDouble("dk", .0));
+		driveAuto.setPID(p.getDouble("pk", .0111), p.getDouble("ik", 0.0001), p.getDouble("dk", .0));
 	}
 }

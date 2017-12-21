@@ -31,14 +31,6 @@ public class DriveBase
 		//done
 		talonR1.setInverted(true);
 	}
-	public void setStuff(double i)
-	{
-		talonL0.setPosition(0);
-		//talonR1.setPosition(0);
-
-		talonL0.set(i);
-		//talonR1.set(i);
-	}
 	public void setSides(double L,double R)
 	{
 		talonL0.set(-L);
@@ -61,17 +53,17 @@ public class DriveBase
 		solenoidR.free();
 		solenoidL.free();
 	}
-	public double getSpeed()
+	public void resetEncoders()
 	{
-//		return talonL0.getPosition();//+talonR1.getSpeed())/2;
-		return talonL0.getEncPosition();
+		talonL0.setEncPosition(0);
+		talonR1.setEncPosition(0);
 	}
 	public double getLeftSpeed()
 	{
-		return talonL0.getSpeed();
+		return talonL0.getPosition();
 	}
 	public double getRightSpeed()
 	{
-		return talonR1.getSpeed();
+		return talonR1.getPosition();
 	}
 }

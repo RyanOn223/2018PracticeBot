@@ -31,12 +31,12 @@ public class OI
 	static JoystickButton blend =new JoystickButton(operator,6);
 	static JoystickButton intake =new JoystickButton(operator,5);
 	
-	/*static {
-		Map<Integer, Double> driverOffsets = new HashMap<>();
+	static {
+		/*Map<Integer, Double> driverOffsets = new HashMap<>();
 		driverOffsets.put(leftXAxis, 0.1);
 		driver.setAxisOffsets(driverOffsets);
-		
+		*/
 		driver.setDeadbandCoef(.1);
 		operator.setDeadbandCoef(0.1);
-	}*/
+	}
 }
