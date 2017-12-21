@@ -67,7 +67,18 @@ public class Robot extends IterativeRobot
 	public void autonomousInit()
 	{
 		generalInit();
-		driveAuto.go(889);		
+		new Thread()
+		{
+			public void run()
+			{driveAuto.go(889);
+			/*Thread.sleep(2000);
+			driveAuto.turn(180);
+			Thread.sleep(2000);
+*/
+			}
+		}.start();;
+		
+
 	}
 
 	/**
@@ -76,10 +87,6 @@ public class Robot extends IterativeRobot
 	@Override
 	public void autonomousPeriodic()
 	{
-		/*
-		 * if(drive.getSpeed()>20) { System.out.println(drive.getSpeed());
-		 * drive.setStuff(0); }
-		 */
 		writeToDash();
 	}
 
@@ -130,17 +137,17 @@ public class Robot extends IterativeRobot
 
 	public void writeToDash()
 	{
-		SmartDashboard.putNumber("left", drive.getLeftSpeed());
-		SmartDashboard.putNumber("right", drive.getRightSpeed());
-		
+		SmartDashboard.putNumber("left", drive.getLeftPosition());
+		SmartDashboard.putNumber("right", drive.getRightPosition());
+
 		SmartDashboard.putNumber("angle", ahrs.getAngle());
-		/*if (OI.driver.getRawAxis(OI.leftYAxis) != 0)
-		{
-			System.out.println(OI.driver.getRawAxis(OI.leftXAxis));
-			System.out.println(OI.driver.getRawAxis(OI.leftYAxis));
-			System.out.println(OI.driver.getRawAxis(OI.rightXAxis));
-			System.out.println();
-		}*/
+		/*
+		 * if (OI.driver.getRawAxis(OI.leftYAxis) != 0) {
+		 * System.out.println(OI.driver.getRawAxis(OI.leftXAxis));
+		 * System.out.println(OI.driver.getRawAxis(OI.leftYAxis));
+		 * System.out.println(OI.driver.getRawAxis(OI.rightXAxis));
+		 * System.out.println(); }
+		 */
 		// SmartDashboard.putNumber("pidget", driveAuto.getPID());
 	}
 

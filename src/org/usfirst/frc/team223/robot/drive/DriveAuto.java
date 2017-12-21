@@ -10,15 +10,23 @@ public class DriveAuto
 	private DriveBase drive;
 	private AHRS ahrs;
 	private BetterController rotateController;
-	private BetterController averageController;
+	private BetterController leftController;
+	private BetterController rightController;
 
-	
-	private PIDOutput averageOut = new PIDOutput()
+	private PIDOutput leftOut = new PIDOutput()
 	{
 		@Override
 		public void pidWrite(double output)
 		{
-			drive.setMotors(output);
+			drive.setLeft(output);
+		}
+	};
+	private PIDOutput rightOut = new PIDOutput()
+	{
+		@Override
+		public void pidWrite(double output)
+		{
+			drive.setRight(output);
 		}
 	};
 	private PIDOutput rotateOut = new PIDOutput()
@@ -29,30 +37,52 @@ public class DriveAuto
 			rotate(output);
 		}
 	};
-	
-	private PIDSource averageSrc = new PIDSource()
+
+	private PIDSource leftSrc = new PIDSource()
 	{
 		@Override
 		public void setPIDSourceType(PIDSourceType pidSource)
-		{			
+		{
 		}
+
 		@Override
 		public PIDSourceType getPIDSourceType()
 		{
 			return PIDSourceType.kDisplacement;
 		}
+
 		@Override
 		public double pidGet()
 		{
-			return encoderGet();
+			return drive.getLeftPosition();
 		}
 	};
-	
-	//default pids change in general init
+
+	private PIDSource rightSrc = new PIDSource()
+	{
+		@Override
+		public void setPIDSourceType(PIDSourceType pidSource)
+		{
+		}
+
+		@Override
+		public PIDSourceType getPIDSourceType()
+		{
+			return PIDSourceType.kDisplacement;
+		}
+
+		@Override
+		public double pidGet()
+		{
+			return drive.getRightPosition();
+		}
+	};
+
+	// default pids change in general init
 	private double tp = 0.0065;
 	private double ti = 0.000001;
 	private double td = 0.005;
-	
+
 	private double ap = 0.0111;
 	private double ai = 0.0001;
 	private double ad = 0;
@@ -62,23 +92,18 @@ public class DriveAuto
 		this.drive = drive;
 		this.ahrs = ahrs;
 		rotateController = new BetterController(tp, ti, td, ahrs, rotateOut);
-		averageController = new BetterController(ap, ai, ad, averageSrc, averageOut);
+		leftController = new BetterController(ap, ai, ad, leftSrc, leftOut);
+		rightController = new BetterController(ap, ai, ad, rightSrc, rightOut);
 	}
-
 
 	public double getPID()
 	{
 		return rotateController.get();
 	}
 
-	public double encoderGet()
-	{
-		return (drive.getLeftSpeed()+drive.getRightSpeed())/2;
-	}
-	
-	
 	/**
 	 * starts PID to turn degrees number of degrees
+	 * 
 	 * @param degrees
 	 */
 	public void turn(double degrees)
@@ -88,15 +113,18 @@ public class DriveAuto
 
 	public void go(double set)
 	{
-		averageController.startPID(set);
+		leftController.startPID(set);
+		rightController.startPID(set);
 	}
 
 	public void stop()
 	{
 		rotateController.disable();
 		rotateController.reset();
-		averageController.disable();
-		averageController.reset();
+		leftController.disable();
+		leftController.reset();
+		rightController.disable();
+		rightController.reset();
 	}
 
 	protected void rotate(double output)
@@ -106,6 +134,9 @@ public class DriveAuto
 
 	public void setPID(double p, double i, double d)
 	{
-		averageController.setPID(p, i, d);
+		leftController.reset();
+		leftController.setPID(p, i, d);
+		rightController.reset();
+		rightController.setPID(p, i, d);
 	}
 }
