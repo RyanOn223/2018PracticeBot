@@ -41,8 +41,8 @@ public class Robot extends IterativeRobot
 	VisionServer visionServer;
 
 	/**
-	 * This function is run when the robot is first started up and should be
-	 * used for any initialization code.
+	 * This function is run when the robot is first started up and should be used
+	 * for any initialization code.
 	 */
 	@Override
 	public void robotInit()
@@ -67,28 +67,24 @@ public class Robot extends IterativeRobot
 	public void autonomousInit()
 	{
 		generalInit();
-		new Thread()
-		{
+		new Thread() {
 			public void run()
 			{
 				try
 				{
-					Thread.sleep(2000);
+					Thread.sleep(200);
 					driveAuto.go(889);
-					driveAuto.turn(-90);					
+					driveAuto.turn(-90);
 					driveAuto.go(889);
 					driveAuto.turn(0);
 					driveAuto.go(889);
-
 				}
 				catch (InterruptedException e)
 				{
-				//	e.printStackTrace();
+					// e.printStackTrace();
 				}
 			}
 		}.start();
-		;
-
 	}
 
 	/**
@@ -101,7 +97,7 @@ public class Robot extends IterativeRobot
 	}
 
 	/**
-	 * Called When Dissabled (no shit)
+	 * Called When Disabled
 	 */
 	@Override
 	public void disabledInit()
@@ -109,15 +105,13 @@ public class Robot extends IterativeRobot
 	}
 
 	/**
-	 * This function is called once each time the robot enters tele-operated
-	 * mode
+	 * This function is called once each time the robot enters tele-operated mode
 	 */
 	@Override
 	public void teleopInit()
 	{
 		generalInit();
-		shiftLatch = new Latch(OI.shiftFast)
-		{
+		shiftLatch = new Latch(OI.shiftFast) {
 
 			@Override
 			public void go()
@@ -136,7 +130,6 @@ public class Robot extends IterativeRobot
 	/**
 	 * This function is called periodically during operator control
 	 */
-
 	@Override
 	public void teleopPeriodic()
 	{
@@ -147,18 +140,18 @@ public class Robot extends IterativeRobot
 
 	public void writeToDash()
 	{
-		SmartDashboard.putNumber("left", drive.getLeftPosition());
-		SmartDashboard.putNumber("right", drive.getRightPosition());
-
+		//SmartDashboard.putNumber("left", drive.getLeftPosition());
+		//SmartDashboard.putNumber("right", drive.getRightPosition());
 		SmartDashboard.putNumber("angle", ahrs.getAngle());
-		/*
-		 * if (OI.driver.getRawAxis(OI.leftYAxis) != 0) {
-		 * System.out.println(OI.driver.getRawAxis(OI.leftXAxis));
-		 * System.out.println(OI.driver.getRawAxis(OI.leftYAxis));
-		 * System.out.println(OI.driver.getRawAxis(OI.rightXAxis));
-		 * System.out.println(); }
-		 */
-		// SmartDashboard.putNumber("pidget", driveAuto.getPID());
+
+		if (OI.driver.getRawAxis(OI.leftYAxis) != 0)
+		{
+			System.out.println(OI.driver.getRawAxis(OI.leftXAxis));
+			System.out.println(OI.driver.getRawAxis(OI.leftYAxis));
+			System.out.println(OI.driver.getRawAxis(OI.rightXAxis));
+			System.out.println();
+		}
+
 	}
 
 	/**

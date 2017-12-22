@@ -2,7 +2,6 @@ package org.usfirst.frc.team223.vision;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
@@ -12,14 +11,12 @@ import java.net.Socket;
 import java.util.Stack;
 
 import org.opencv.core.Mat;
-import org.opencv.core.Point;
 import org.opencv.imgcodecs.Imgcodecs;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 
 public class VisionServer extends Thread
 {

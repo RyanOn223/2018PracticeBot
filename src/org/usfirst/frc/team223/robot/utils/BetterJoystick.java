@@ -9,8 +9,7 @@ public class BetterJoystick extends Joystick
 {
 	private double deadbandCoef = 0;
 	private Map<Integer, Double> axisOffsets = new HashMap<>();
-	
-	
+
 	public BetterJoystick(int port)
 	{
 		super(port);
@@ -19,21 +18,10 @@ public class BetterJoystick extends Joystick
 	@Override
 	public double getRawAxis(int axis)
 	{
-		double raw =super.getRawAxis(axis);
-		if(Math.abs(raw) < deadbandCoef)
-			raw = 0;
-		return raw;
-	}
-	
-	
-	
-	public double goodGetRawAxis(int axis) {
-		double scl = axisOffsets.get(axis) != null ? axisOffsets.get(axis) : 0;
+		double scl = axisOffsets.get(axis);
 		double val = super.getRawAxis(axis) - scl;
 		return Math.abs(val) < deadbandCoef ? 0 : val;
 	}
-	
-	
 
 	public double getDeadbandCoef()
 	{

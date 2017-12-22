@@ -8,29 +8,26 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 public class DriveAuto
 {
 	private DriveBase drive;
-	private AHRS ahrs;
+	// private AHRS ahrs;
 	private BetterController rotateController;
 	private BetterController leftController;
 	private BetterController rightController;
 
-	private PIDOutput leftOut = new PIDOutput()
-	{
+	private PIDOutput leftOut = new PIDOutput() {
 		@Override
 		public void pidWrite(double output)
 		{
 			drive.setLeft(output);
 		}
 	};
-	private PIDOutput rightOut = new PIDOutput()
-	{
+	private PIDOutput rightOut = new PIDOutput() {
 		@Override
 		public void pidWrite(double output)
 		{
 			drive.setRight(output);
 		}
 	};
-	private PIDOutput rotateOut = new PIDOutput()
-	{
+	private PIDOutput rotateOut = new PIDOutput() {
 		@Override
 		public void pidWrite(double output)
 		{
@@ -38,8 +35,7 @@ public class DriveAuto
 		}
 	};
 
-	private PIDSource leftSrc = new PIDSource()
-	{
+	private PIDSource leftSrc = new PIDSource() {
 		@Override
 		public void setPIDSourceType(PIDSourceType pidSource)
 		{
@@ -58,8 +54,7 @@ public class DriveAuto
 		}
 	};
 
-	private PIDSource rightSrc = new PIDSource()
-	{
+	private PIDSource rightSrc = new PIDSource() {
 		@Override
 		public void setPIDSourceType(PIDSourceType pidSource)
 		{
@@ -90,7 +85,7 @@ public class DriveAuto
 	public DriveAuto(DriveBase drive, AHRS ahrs)
 	{
 		this.drive = drive;
-		this.ahrs = ahrs;
+		// this.ahrs = ahrs;
 		rotateController = new BetterController(tp, ti, td, ahrs, rotateOut);
 		leftController = new BetterController(ap, ai, ad, leftSrc, leftOut);
 		rightController = new BetterController(ap, ai, ad, rightSrc, rightOut);
@@ -105,7 +100,7 @@ public class DriveAuto
 	 * starts PID to turn degrees number of degrees
 	 * 
 	 * @param degrees
-	 * @throws InterruptedException 
+	 * @throws InterruptedException
 	 */
 	public void turn(double degrees) throws InterruptedException
 	{
@@ -119,9 +114,9 @@ public class DriveAuto
 		System.out.println(drive.getLeftPosition());
 		System.out.println(drive.getRightPosition());
 
-		leftController.startPID(set+drive.getLeftPosition());
-		rightController.startPID(set+drive.getRightPosition());
-		
+		leftController.startPID(set + drive.getLeftPosition());
+		rightController.startPID(set + drive.getRightPosition());
+
 		Thread.sleep(2000);
 		this.stop();
 	}
@@ -139,7 +134,7 @@ public class DriveAuto
 	protected void rotate(double output)
 	{
 		drive.setSides(-output, output);
-		
+
 	}
 
 	public void setPID(double p, double i, double d)

@@ -58,20 +58,18 @@ public class DriveBase
 		solenoidL.set(yes);
 		solenoidR.set(yes);
 	}
-	public void free()
-	{
-		solenoidR.free();
-		solenoidL.free();
-	}
+
 	public void resetEncoders()
 	{
 		talonL0.setEncPosition(0);
 		talonR1.setEncPosition(0);
 	}
+	
 	public double getLeftPosition()
 	{
 		return talonL0.getPosition();
 	}
+	
 	public double getRightPosition()
 	{
 		return talonR1.getPosition();

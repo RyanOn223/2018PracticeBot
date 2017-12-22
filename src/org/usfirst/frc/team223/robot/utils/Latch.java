@@ -28,6 +28,7 @@ public abstract class Latch
 	}
 
 	private boolean on = false;
+	
 	/**
 	 * Runs go when pressed and stop when released
 	 * @returns on/off
@@ -48,12 +49,11 @@ public abstract class Latch
 			on = false;
 			stop();
 		}
-		return false;
+		return on;
 	}
 
 	private boolean b1prev = false;
 	private boolean b2prev = false;
-	private boolean go = false;
 
 	/**
 	 * Runs go when on button is pressed and stop when the other is pressed
@@ -64,19 +64,19 @@ public abstract class Latch
 		boolean b1curr = b1.get();
 		boolean b2curr = b2.get();
 
-		if (!b1prev && b1curr) // button 1 rising
+		if (!b1prev && b1curr)
 		{
 			go();
-			go = true;
+			on = true;
 		}
-		else if (!b2prev && b2curr) // button 2 rising
+		else if (!b2prev && b2curr)
 		{
 			stop();
-			go = false;
+			on = false;
 		}
 		b1prev = b1curr;
 		b2prev = b2curr;
-		return go;
+		return on;
 	}
 
 	abstract public void go();
