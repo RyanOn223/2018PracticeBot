@@ -13,7 +13,6 @@ public class BetterController extends PIDController
 
 	public void startPID(double startPoint)
 	{
-		System.out.println("Starting pid");
 		this.setSetpoint(startPoint);
 		this.enable();
 	}

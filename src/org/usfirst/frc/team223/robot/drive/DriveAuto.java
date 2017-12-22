@@ -105,16 +105,25 @@ public class DriveAuto
 	 * starts PID to turn degrees number of degrees
 	 * 
 	 * @param degrees
+	 * @throws InterruptedException 
 	 */
-	public void turn(double degrees)
+	public void turn(double degrees) throws InterruptedException
 	{
 		rotateController.startPID(degrees);
+		Thread.sleep(2000);
+		this.stop();
 	}
 
-	public void go(double set)
+	public void go(double set) throws InterruptedException
 	{
-		leftController.startPID(set);
-		rightController.startPID(set);
+		System.out.println(drive.getLeftPosition());
+		System.out.println(drive.getRightPosition());
+
+		leftController.startPID(set+drive.getLeftPosition());
+		rightController.startPID(set+drive.getRightPosition());
+		
+		Thread.sleep(2000);
+		this.stop();
 	}
 
 	public void stop()
@@ -130,6 +139,7 @@ public class DriveAuto
 	protected void rotate(double output)
 	{
 		drive.setSides(-output, output);
+		
 	}
 
 	public void setPID(double p, double i, double d)

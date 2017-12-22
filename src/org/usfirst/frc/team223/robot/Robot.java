@@ -70,14 +70,24 @@ public class Robot extends IterativeRobot
 		new Thread()
 		{
 			public void run()
-			{driveAuto.go(889);
-			/*Thread.sleep(2000);
-			driveAuto.turn(180);
-			Thread.sleep(2000);
-*/
+			{
+				try
+				{
+					Thread.sleep(2000);
+					driveAuto.go(889);
+					driveAuto.turn(-90);					
+					driveAuto.go(889);
+					driveAuto.turn(0);
+					driveAuto.go(889);
+
+				}
+				catch (InterruptedException e)
+				{
+				//	e.printStackTrace();
+				}
 			}
-		}.start();;
-		
+		}.start();
+		;
 
 	}
 
