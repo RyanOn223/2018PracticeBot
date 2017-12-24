@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Stack;
 
 import org.opencv.core.Mat;
@@ -88,11 +89,8 @@ public class VisionServer extends Thread
 			}
 			catch (IOException e)
 			{
-
 			}
-
 		}
-
 	}
 
 	private void readData() throws IOException
@@ -104,10 +102,13 @@ public class VisionServer extends Thread
 			{
 				int ans=inputStream.readInt();
 				System.out.println(ans);
-				System.out.println(System.currentTimeMillis());
 			}
 		}
 		catch(EOFException u)
+		{
+			return;
+		}
+		catch(SocketException u)
 		{
 			return;
 		}
