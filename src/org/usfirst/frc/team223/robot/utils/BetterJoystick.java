@@ -15,14 +15,13 @@ public class BetterJoystick extends Joystick
 		super(port);
 	}
 
-	@Override
-	public double getRawAxis(int axis)
+	public double getAxis(int axis)
 	{
 		double scl = axisOffsets.get(axis);
 		double val = super.getRawAxis(axis) - scl;
 		return Math.abs(val) < deadbandCoef ? 0 : val;
 	}
-
+	
 	public double getDeadbandCoef()
 	{
 		return deadbandCoef;

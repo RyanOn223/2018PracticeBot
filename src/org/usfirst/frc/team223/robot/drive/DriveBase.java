@@ -2,15 +2,18 @@ package org.usfirst.frc.team223.robot.drive;
 
 import org.usfirst.frc.team223.robot.RobotMap;
 
-import com.ctre.CANTalon;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class DriveBase
 {
-	CANTalon talonL0=new CANTalon(RobotMap.driveL0);//encoder here
-	CANTalon talonL1=new CANTalon(RobotMap.driveL1);//slave
-	CANTalon talonR0=new CANTalon(RobotMap.driveR0);//slave
-	CANTalon talonR1=new CANTalon(RobotMap.driveR1);//encoder here
+	TalonSRX talonL0=new TalonSRX(RobotMap.driveL0);//encoder here
+	TalonSRX talonL1=new TalonSRX(RobotMap.driveL1);//slave
+	TalonSRX talonR0=new TalonSRX(RobotMap.driveR0);//slave
+	TalonSRX talonR1=new TalonSRX(RobotMap.driveR1);//encoder here
 	
 
 	Solenoid solenoidL = new Solenoid(RobotMap.pcmID, RobotMap.leftSolenoid);
@@ -18,33 +21,43 @@ public class DriveBase
 	
 	public void setMotors(double amount)
 	{
-		talonL0.set(amount);
-		talonR1.set(amount);
+		
+		talonL0.set(ControlMode.PercentOutput, amount);
+		talonR1.set(ControlMode.PercentOutput, amount);
 	}
 	public DriveBase()
 	{
+		/*talonL1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,0,0);
+		talonR0.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,0,0);
+		
+		
+		
 		//setSlaves
-		talonL1.changeControlMode(CANTalon.TalonControlMode.Follower);
-		talonL1.set(RobotMap.driveL0);
-		talonR0.changeControlMode(CANTalon.TalonControlMode.Follower);
-		talonR0.set(RobotMap.driveR1);
+		//talonL1.changeControlMode(ControlMode.Follower);
+		talonL1.set(ControlMode.Follower, RobotMap.driveL0);
+		//talonR0.changeControlMode(CANTalon.TalonControlMode.Follower);
+		talonR0.set(ControlMode.Follower, RobotMap.driveR1);
 		//done
+		*/
+		
+		
+		
 		talonR1.setInverted(true);
 	}
 	
 	public void setLeft(double l)
 	{
-		talonL0.set(l);
+		talonL0.set(ControlMode.PercentOutput,l);
 	}
 	public void setRight(double r)
 	{
-		talonR1.set(r);
+		talonR1.set(ControlMode.PercentOutput,r);
 	}
 	
 	public void setSides(double L,double R)
 	{
-		talonL0.set(-L);
-		talonR1.set(-R);
+		talonL0.set(ControlMode.PercentOutput,-L);
+		talonR1.set(ControlMode.PercentOutput,-R);
 	}
 	/**
 	 *  set speed of all motors to zero
@@ -61,17 +74,17 @@ public class DriveBase
 
 	public void resetEncoders()
 	{
-		talonL0.setEncPosition(0);
-		talonR1.setEncPosition(0);
+		talonL0.setSelectedSensorPosition(0, 0, 0);
+		talonR1.setSelectedSensorPosition(0, 0, 0);
 	}
 	
 	public double getLeftPosition()
 	{
-		return talonL0.getPosition();
+		return talonL0.getSelectedSensorPosition(0);
 	}
 	
 	public double getRightPosition()
 	{
-		return talonR1.getPosition();
+		return talonR1.getSelectedSensorPosition(0);
 	}
 }

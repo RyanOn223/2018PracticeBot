@@ -1,7 +1,7 @@
 package org.usfirst.frc.team223.robot.drive;
 
 import org.usfirst.frc.team223.robot.OI;
-import edu.wpi.first.wpilibj.Joystick;
+import org.usfirst.frc.team223.robot.utils.BetterJoystick;
 
 public class DriveTelop
 {
@@ -13,9 +13,9 @@ public class DriveTelop
 	}
 
 	/** Set the controllers based on joystick axis inputs.*/
-	public void cheese(Joystick stick)
+	public void cheese(BetterJoystick stick)
 	{
-		drive.setSides((stick.getRawAxis(OI.leftYAxis) - stick.getRawAxis(OI.rightXAxis)/2) ,
-				 (stick.getRawAxis(OI.leftYAxis) + stick.getRawAxis(OI.rightXAxis)/2));
+		drive.setSides((stick.getAxis(OI.leftYAxis) - stick.getAxis(OI.rightXAxis)*2/3) ,
+				 (stick.getAxis(OI.leftYAxis) + stick.getAxis(OI.rightXAxis)*2/3));
 	}
 }

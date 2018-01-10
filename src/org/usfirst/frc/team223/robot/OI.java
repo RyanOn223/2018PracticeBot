@@ -27,7 +27,6 @@ public class OI
 
 	static
 	{
-		// TODO add offsets
 		Map<Integer, Double> driverOffsets = new HashMap<>();
 		driverOffsets.put(leftXAxis, 0.);
 		driverOffsets.put(leftYAxis, 0.);
@@ -35,7 +34,7 @@ public class OI
 		///driverOffsets.put(rightYAxis, 0);
 		driver.setAxisOffsets(driverOffsets);
 
-		driver.setDeadbandCoef(.1);
+		driver.setDeadbandCoef(0.1);
 		operator.setDeadbandCoef(0.1);
 	}
 }

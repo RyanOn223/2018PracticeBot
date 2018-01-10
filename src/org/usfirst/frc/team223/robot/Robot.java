@@ -4,14 +4,13 @@ import org.usfirst.frc.team223.robot.drive.*;
 import org.usfirst.frc.team223.robot.utils.Latch;
 import org.usfirst.frc.team223.vision.VisionServer;
 
-import com.ctre.CANTalon;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -32,7 +31,6 @@ public class Robot extends IterativeRobot
 	DriveAuto driveAuto;
 
 	Compressor c;
-	CANTalon climb;
 
 	Latch shootLatch;
 	Latch shiftLatch;
@@ -67,6 +65,48 @@ public class Robot extends IterativeRobot
 	public void autonomousInit()
 	{
 		generalInit();
+		
+		int position=p.getInt("position", -1);
+		String gameData=DriverStation.getInstance().getGameSpecificMessage();
+		char lever=gameData.charAt(0);
+		char scale=gameData.charAt(0);
+
+		
+		switch(position)
+		{
+		//left
+		case 0:
+		{	
+			if(lever=='L')
+			{
+				/*
+				 * go forward
+				 * turn
+				 * go forward
+				 * drop cube
+				 */
+			}
+			else
+			{
+				if(scale=='L')
+				{
+					/*
+					 * go to scale
+					 * drop cube
+					 */
+				}
+			}
+			break;
+		}
+		//middle
+		case 1:
+			 break;
+		
+		//right
+		case 2:
+			break;		
+		}
+		
 		new Thread() {
 			public void run()
 			{
@@ -110,6 +150,13 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopInit()
 	{
+		/*  This doesn't work because the offsets constantly change
+		Map<Integer, Double> driverOffsets = new HashMap<>();
+		driverOffsets.put(OI.leftXAxis, OI.driver.getRawAxis(OI.leftXAxis));
+		driverOffsets.put(OI.leftYAxis,  OI.driver.getRawAxis(OI.leftYAxis));
+		driverOffsets.put(OI.rightXAxis,  OI.driver.getRawAxis(OI.rightXAxis));
+		OI.driver.setAxisOffsets(driverOffsets);*/
+		
 		generalInit();
 		shiftLatch = new Latch(OI.shiftFast) {
 
@@ -144,13 +191,13 @@ public class Robot extends IterativeRobot
 		//SmartDashboard.putNumber("right", drive.getRightPosition());
 		SmartDashboard.putNumber("angle", ahrs.getAngle());
 
-		if (OI.driver.getRawAxis(OI.leftYAxis) != 0)
+		/*if (OI.driver.getRawAxis(OI.leftYAxis) != 0)
 		{
-			System.out.println(OI.driver.getRawAxis(OI.leftXAxis));
-			System.out.println(OI.driver.getRawAxis(OI.leftYAxis));
-			System.out.println(OI.driver.getRawAxis(OI.rightXAxis));
+			System.out.println(OI.driver.getAxis(OI.leftXAxis));
+			System.out.println(OI.driver.getAxis(OI.leftYAxis));
+			System.out.println(OI.driver.getAxis(OI.rightXAxis));
 			System.out.println();
-		}
+		}*/
 
 	}
 
@@ -160,7 +207,6 @@ public class Robot extends IterativeRobot
 	@Override
 	public void testPeriodic()
 	{
-		LiveWindow.run();
 	}
 
 	/**
@@ -168,6 +214,7 @@ public class Robot extends IterativeRobot
 	 */
 	public void generalInit()
 	{
+		System.out.println(DriverStation.getInstance().getGameSpecificMessage());
 		ahrs.reset();
 		drive.resetEncoders();
 		driveAuto.stop();
