@@ -113,11 +113,11 @@ public class Robot extends IterativeRobot
 				try
 				{
 					Thread.sleep(200);
-					driveAuto.go(889);
-					driveAuto.turn(-90);
-					driveAuto.go(889);
-					driveAuto.turn(0);
-					driveAuto.go(889);
+					driveAuto.go(1200);
+					//driveAuto.turn(-90);
+					//driveAuto.go(889);
+					//driveAuto.turn(0);
+					//driveAuto.go(889);
 				}
 				catch (InterruptedException e)
 				{
@@ -151,6 +151,7 @@ public class Robot extends IterativeRobot
 	public void teleopInit()
 	{
 		/*  This doesn't work because the offsets constantly change
+		 * 
 		Map<Integer, Double> driverOffsets = new HashMap<>();
 		driverOffsets.put(OI.leftXAxis, OI.driver.getRawAxis(OI.leftXAxis));
 		driverOffsets.put(OI.leftYAxis,  OI.driver.getRawAxis(OI.leftYAxis));
@@ -187,8 +188,8 @@ public class Robot extends IterativeRobot
 
 	public void writeToDash()
 	{
-		//SmartDashboard.putNumber("left", drive.getLeftPosition());
-		//SmartDashboard.putNumber("right", drive.getRightPosition());
+		SmartDashboard.putNumber("left", drive.getLeftPosition());
+		SmartDashboard.putNumber("right", drive.getRightPosition());
 		SmartDashboard.putNumber("angle", ahrs.getAngle());
 
 		/*if (OI.driver.getRawAxis(OI.leftYAxis) != 0)
@@ -214,7 +215,6 @@ public class Robot extends IterativeRobot
 	 */
 	public void generalInit()
 	{
-		System.out.println(DriverStation.getInstance().getGameSpecificMessage());
 		ahrs.reset();
 		drive.resetEncoders();
 		driveAuto.stop();

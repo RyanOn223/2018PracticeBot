@@ -19,29 +19,17 @@ public class DriveBase
 	Solenoid solenoidL = new Solenoid(RobotMap.pcmID, RobotMap.leftSolenoid);
 	Solenoid solenoidR = new Solenoid(RobotMap.pcmID, RobotMap.rightSolenoid);
 	
-	public void setMotors(double amount)
-	{
-		
-		talonL0.set(ControlMode.PercentOutput, amount);
-		talonR1.set(ControlMode.PercentOutput, amount);
-	}
 	public DriveBase()
 	{
-		/*talonL1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,0,0);
-		talonR0.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,0,0);
-		
-		
+		talonL1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,0,0);
+		talonR0.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,0,0);		
 		
 		//setSlaves
-		//talonL1.changeControlMode(ControlMode.Follower);
 		talonL1.set(ControlMode.Follower, RobotMap.driveL0);
-		//talonR0.changeControlMode(CANTalon.TalonControlMode.Follower);
 		talonR0.set(ControlMode.Follower, RobotMap.driveR1);
 		//done
-		*/
 		
-		
-		
+		talonR0.setInverted(true);
 		talonR1.setInverted(true);
 	}
 	
@@ -54,7 +42,7 @@ public class DriveBase
 		talonR1.set(ControlMode.PercentOutput,r);
 	}
 	
-	public void setSides(double L,double R)
+	public void setMotors(double L,double R)
 	{
 		talonL0.set(ControlMode.PercentOutput,-L);
 		talonR1.set(ControlMode.PercentOutput,-R);
@@ -64,7 +52,7 @@ public class DriveBase
 	 */
 	public void stopMotors()
 	{
-		setMotors(0);
+		setMotors(0,0);
 	}
 	public void setPistons(boolean yes)
 	{
@@ -80,7 +68,7 @@ public class DriveBase
 	
 	public double getLeftPosition()
 	{
-		return talonL0.getSelectedSensorPosition(0);
+		return -talonL0.getSelectedSensorPosition(0);
 	}
 	
 	public double getRightPosition()

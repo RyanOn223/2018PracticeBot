@@ -133,7 +133,7 @@ public class DriveAuto
 
 	protected void rotate(double output)
 	{
-		drive.setSides(-output, output);
+		drive.setMotors(-output, output);
 
 	}
 

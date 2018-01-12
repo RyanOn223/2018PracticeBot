@@ -7,10 +7,10 @@ package org.usfirst.frc.team223.robot;
  */
 public class RobotMap
 {
-	public static int driveR0 = 1;
-	public static int driveR1 = 2;// encoder on this one
-	public static int driveL0 = 4;//encoder on this one
-	public static int driveL1 = 3;
+	public static int driveL1 = 1;
+	public static int driveL0 = 2;// encoder on this one
+	public static int driveR1 = 4;//encoder on this one
+	public static int driveR0 = 3;
 
 	public static int pcmID = 51;
 	public static int leftSolenoid = 1;

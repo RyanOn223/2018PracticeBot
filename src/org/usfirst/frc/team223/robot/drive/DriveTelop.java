@@ -15,7 +15,7 @@ public class DriveTelop
 	/** Set the controllers based on joystick axis inputs.*/
 	public void cheese(BetterJoystick stick)
 	{
-		drive.setSides((stick.getAxis(OI.leftYAxis) - stick.getAxis(OI.rightXAxis)*2/3) ,
+		drive.setMotors((stick.getAxis(OI.leftYAxis) - stick.getAxis(OI.rightXAxis)*2/3) ,
 				 (stick.getAxis(OI.leftYAxis) + stick.getAxis(OI.rightXAxis)*2/3));
 	}
 }
