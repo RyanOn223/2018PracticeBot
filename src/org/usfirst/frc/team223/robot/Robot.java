@@ -46,13 +46,13 @@ public class Robot extends IterativeRobot
 	public void robotInit()
 	{
 		p = Preferences.getInstance();
-
 		c = new Compressor(RobotMap.pcmID);
 
 		ahrs = new AHRS(SPI.Port.kMXP);
 		drive = new DriveBase();
 		driveTelop = new DriveTelop(drive);
 		driveAuto = new DriveAuto(drive, ahrs);
+		AutoRoutines.init(driveAuto);
 		/*
 		 * visionServer = new VisionServer(50); visionServer.start();
 		 */
@@ -66,10 +66,11 @@ public class Robot extends IterativeRobot
 	{
 		generalInit();
 		
+		
 		int position=p.getInt("position", -1);
 		String gameData=DriverStation.getInstance().getGameSpecificMessage();
 		char lever=gameData.charAt(0);
-		char scale=gameData.charAt(0);
+		char scale=gameData.charAt(1);
 
 		
 		switch(position)
@@ -81,7 +82,7 @@ public class Robot extends IterativeRobot
 			{
 				/*
 				 * go forward
-				 * turn
+				 * turn right
 				 * go forward
 				 * drop cube
 				 */
@@ -95,16 +96,52 @@ public class Robot extends IterativeRobot
 					 * drop cube
 					 */
 				}
+				else
+				{
+					/*
+					 * go forward
+					 */
+				}
 			}
 			break;
 		}
 		//middle
 		case 1:
+			/*
+			 * go forward
+			 * 
+			 */
 			 break;
 		
 		//right
 		case 2:
-			break;		
+			if(lever=='R')
+			{
+				/*
+				 * go forward
+				 * turn left
+				 * go forward
+				 * drop cube
+				 */
+			}
+			else
+			{
+				if(scale=='R')
+				{
+					/*
+					 * go to scale
+					 * drop cube
+					 */
+				}
+				else
+				{
+					/*
+					 * go forward
+					 */
+				}
+			}
+			
+			break;
 		}
 		
 		new Thread() {
@@ -112,7 +149,9 @@ public class Robot extends IterativeRobot
 			{
 				try
 				{
+					//wait for general init
 					Thread.sleep(200);
+					
 					driveAuto.go(1200);
 					//driveAuto.turn(-90);
 					//driveAuto.go(889);
