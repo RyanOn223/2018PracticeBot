@@ -66,8 +66,8 @@ public class Robot extends IterativeRobot
 	{
 		generalInit();
 		
-		
-		int position=p.getInt("position", -1);
+		//gets string 
+		char location=p.getString("position","D").toUpperCase().toCharArray()[0];
 		String gameData="LLL";//DriverStation.getInstance().getGameSpecificMessage();
 		char lever=gameData.charAt(0);
 		char scale=gameData.charAt(1);
@@ -76,21 +76,23 @@ public class Robot extends IterativeRobot
 		//makes sure lever and scale are both L or R
 		if(!(  (lever=='L'||lever=='R') && (scale=='L'||scale=='R')  ))
 		{
-			position=-2;
+			location='F';
 		}
 		
-		switch(position)
+		
+		
+		switch(location)
 		{
-		//left
-		case 0:
+		//left	right
+		case 'L': case 'R':
 		{	
-			if(lever=='L')
+			if(lever==location)
 			{
 				AutoRoutines.near(100, 20, true);
 			}
 			else
 			{
-				if(scale=='L')
+				if(scale==location)
 				{
 					AutoRoutines.far(1000, 20, false);
 				}
@@ -102,12 +104,12 @@ public class Robot extends IterativeRobot
 			break;
 		}
 		//middle
-		case 1:
+		case 'M':
 			AutoRoutines.middle(100, lever=='L');
 			break;
 		
 		//right
-		case 2:
+		/*case 2:
 			if(lever=='R')
 			{
 				AutoRoutines.near(100, 20, false);
@@ -125,11 +127,15 @@ public class Robot extends IterativeRobot
 			}
 			
 			break;
-		case -1:
+			*/
+		case 'D':
 			System.err.println("BAD DATA FROM DASH BOARD!\n\t Moving forward to cross line");
 			AutoRoutines.none(100);
-		case -2:
+		case 'F':
 			System.err.println("BAD DATA FROM FMS!\n\t Moving forward to cross line");
+			AutoRoutines.none(100);
+		default :
+			System.out.println("something bad happened\n\\t Moving forward to cross line");
 			AutoRoutines.none(100);
 		}
 		
