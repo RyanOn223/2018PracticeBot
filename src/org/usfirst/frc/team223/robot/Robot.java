@@ -66,8 +66,9 @@ public class Robot extends IterativeRobot
 	{
 		generalInit();
 		
-		//gets string 
+		//gets string from dashboard puts it in uppercase takes first letter
 		char location=p.getString("position","D").toUpperCase().toCharArray()[0];
+		
 		String gameData="LLL";//DriverStation.getInstance().getGameSpecificMessage();
 		char lever=gameData.charAt(0);
 		char scale=gameData.charAt(1);
@@ -88,13 +89,13 @@ public class Robot extends IterativeRobot
 		{	
 			if(lever==location)
 			{
-				AutoRoutines.near(100, 20, true);
+				AutoRoutines.near(100, 20, location=='L');
 			}
 			else
 			{
 				if(scale==location)
 				{
-					AutoRoutines.far(1000, 20, false);
+					AutoRoutines.far(1000, 20, location=='L');
 				}
 				else
 				{
