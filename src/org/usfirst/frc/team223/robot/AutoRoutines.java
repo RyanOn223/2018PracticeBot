@@ -1,4 +1,6 @@
-package org.usfirst.frc.team223.robot.drive;
+package org.usfirst.frc.team223.robot;
+
+import org.usfirst.frc.team223.robot.drive.DriveAuto;
 
 public class AutoRoutines
 {
