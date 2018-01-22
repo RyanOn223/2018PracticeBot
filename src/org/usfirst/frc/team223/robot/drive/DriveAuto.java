@@ -7,9 +7,8 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
-public class DriveAuto
+public class DriveAuto extends DriveBase
 {
-	private DriveTrain drive;
 	// private AHRS ahrs;
 	private BetterController rotateController;
 	private BetterController leftController;
@@ -86,8 +85,7 @@ public class DriveAuto
 
 	public DriveAuto(DriveTrain drive, AHRS ahrs)
 	{
-		this.drive = drive;
-		// this.ahrs = ahrs;
+		super(drive,ahrs);
 		rotateController = new BetterController(rp, ri, rd, ahrs, rotateOut);
 		leftController = new BetterController(ap, ai, ad, leftSrc, leftOut);
 		rightController = new BetterController(ap, ai, ad, rightSrc, rightOut);
@@ -130,11 +128,7 @@ public class DriveAuto
 		rightController.reset();
 	}
 
-	protected void rotate(double output)
-	{
-		drive.setMotors(-output, output);
-
-	}
+	
 
 	public void setPID(double p, double i, double d)
 	{

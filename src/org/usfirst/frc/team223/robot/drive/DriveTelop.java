@@ -3,35 +3,28 @@ package org.usfirst.frc.team223.robot.drive;
 import org.usfirst.frc.team223.robot.OI;
 import org.usfirst.frc.team223.robot.utils.BetterController;
 import org.usfirst.frc.team223.robot.utils.BetterJoystick;
+import org.usfirst.frc.team223.robot.utils.GeneralUtils;
+
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
-public class DriveTelop
-{
-	private DriveTrain drive;
-	
-	private BetterController rightController;
-	private BetterController leftController;
-	
-	private PIDOutput leftOut = new PIDOutput() {
-		@Override
-		public void pidWrite(double output)
-		{
-			//rotate(output);
-		}
-	};
+public class DriveTelop extends DriveBase
+{	
+	private BetterController controller;
 
 	private PIDOutput rightOut = new PIDOutput() {
 		@Override
 		public void pidWrite(double output)
 		{
-			//rotate(output);
+			System.out.println((int)controller.getSetpoint()+" "+(int)ahrs.getAngle()+" "+output);
+			left=-output;
+			right=output;
 		}
 	};
-	
-	private PIDSource leftSrc = new PIDSource() {
+	private PIDSource src = new PIDSource() {
 		@Override
 		public void setPIDSourceType(PIDSourceType pidSource)
 		{
@@ -40,43 +33,32 @@ public class DriveTelop
 		@Override
 		public PIDSourceType getPIDSourceType()
 		{
-			return PIDSourceType.kRate;
+			return PIDSourceType.kDisplacement;
 		}
 
 		@Override
 		public double pidGet()
 		{
-			return drive.getLeftSpeed();
+			return ahrs.getAngle();
 		}
 	};
-	
-	
+	private double left=0;
+	private double right=0;
+	private double p = 0.0085;
+	private double i = 0.00000;
+	private double d = 0.00;
 
-	private PIDSource rightSrc = new PIDSource() {
-		@Override
-		public void setPIDSourceType(PIDSourceType pidSource)
-		{
-		}
-
-		@Override
-		public PIDSourceType getPIDSourceType()
-		{
-			return PIDSourceType.kRate;
-		}
-
-		@Override
-		public double pidGet()
-		{
-			return drive.getRightSpeed();
-		}
-	};
-	
-	
-	public DriveTelop(DriveTrain drive)
+	public DriveTelop(DriveTrain drive,AHRS ahrs)
 	{
-		this.drive=drive;
+		super(drive,ahrs);
+		controller=new BetterController(p,i,d,src,rightOut);
 	}
 
+	public void init()
+	{
+		controller.startPID(0);
+	}
+	
 	/** Set the controllers based on joystick axis inputs.*/
 	public void cheese(BetterJoystick stick)
 	{
@@ -84,19 +66,28 @@ public class DriveTelop
 				 (stick.getAxis(OI.leftYAxis) + stick.getAxis(OI.rightXAxis)*2/3));
 	}
 	
+	public void cheesePID(BetterJoystick stick)
+	{
+		controller.setSetpoint(ahrs.getAngle()+18*stick.getAxis(OI.rightXAxis));		
+		drive.setMotors(stick.getAxis(OI.leftYAxis)+left,stick.getAxis(OI.leftYAxis)+right);
+	}
+	
 	public void stop()
 	{
-		leftController.disable();
-		leftController.reset();
-		rightController.disable();
-		rightController.reset();
+		controller.disable();
+		controller.reset();
+	}
+	
+	public double getSet()
+	{
+		return controller.getSetpoint();
 	}
 	
 	public void setPID(double p, double i, double d)
 	{
-		leftController.reset();
-		rightController.setPID(p, i, d);
-		rightController.reset();
-		leftController.setPID(p, i, d);
+	
+		controller.setPID(p, i, d);
+		controller.reset();
+		
 	}
 }
