@@ -8,7 +8,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.Solenoid;
 
-public class DriveBase
+public class DriveTrain
 {
 	TalonSRX talonL0=new TalonSRX(RobotMap.driveL0);//encoder here
 	TalonSRX talonL1=new TalonSRX(RobotMap.driveL1);//slave
@@ -19,7 +19,7 @@ public class DriveBase
 	Solenoid solenoidL = new Solenoid(RobotMap.pcmID, RobotMap.leftSolenoid);
 	Solenoid solenoidR = new Solenoid(RobotMap.pcmID, RobotMap.rightSolenoid);
 	
-	public DriveBase()
+	public DriveTrain()
 	{
 		talonL1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,0,0);
 		talonR0.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,0,0);		
@@ -64,6 +64,17 @@ public class DriveBase
 	{
 		talonL0.setSelectedSensorPosition(0, 0, 0);
 		talonR1.setSelectedSensorPosition(0, 0, 0);
+	}
+	
+	
+	public double getLeftSpeed()
+	{
+		return -talonL0.getSelectedSensorVelocity(0);
+	}
+	
+	public double getRightSpeed()
+	{
+		return talonR1.getSelectedSensorVelocity(0);
 	}
 	
 	public double getLeftPosition()

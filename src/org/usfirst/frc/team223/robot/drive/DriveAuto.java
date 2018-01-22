@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 
 public class DriveAuto
 {
-	private DriveBase drive;
+	private DriveTrain drive;
 	// private AHRS ahrs;
 	private BetterController rotateController;
 	private BetterController leftController;
@@ -84,7 +84,7 @@ public class DriveAuto
 	private double ai = 0.000;
 	private double ad = 0.003;
 
-	public DriveAuto(DriveBase drive, AHRS ahrs)
+	public DriveAuto(DriveTrain drive, AHRS ahrs)
 	{
 		this.drive = drive;
 		// this.ahrs = ahrs;

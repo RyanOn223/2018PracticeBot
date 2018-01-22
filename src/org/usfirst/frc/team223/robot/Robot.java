@@ -26,7 +26,7 @@ public class Robot extends IterativeRobot
 
 	AHRS ahrs;
 
-	DriveBase drive;
+	DriveTrain drive;
 	DriveTelop driveTelop;
 	DriveAuto driveAuto;
 
@@ -49,7 +49,7 @@ public class Robot extends IterativeRobot
 		c = new Compressor(RobotMap.pcmID);
 
 		ahrs = new AHRS(SPI.Port.kMXP);
-		drive = new DriveBase();
+		drive = new DriveTrain();
 		driveTelop = new DriveTelop(drive);
 		driveAuto = new DriveAuto(drive, ahrs);
 		AutoRoutines.init(driveAuto);
@@ -195,8 +195,8 @@ public class Robot extends IterativeRobot
 
 	public void writeToDash()
 	{
-		SmartDashboard.putNumber("left", drive.getLeftPosition());
-		SmartDashboard.putNumber("right", drive.getRightPosition());
+		SmartDashboard.putNumber("left", drive.getLeftSpeed());
+		SmartDashboard.putNumber("right", drive.getRightSpeed());
 		SmartDashboard.putNumber("angle", ahrs.getAngle());
 
 		/*if (OI.driver.getRawAxis(OI.leftYAxis) != 0)
@@ -224,7 +224,7 @@ public class Robot extends IterativeRobot
 	{
 		ahrs.reset();
 		drive.resetEncoders();
-		driveAuto.stop();
-		driveAuto.setPID(p.getDouble("pk", .0111), p.getDouble("ik", 0.0001), p.getDouble("dk", .0));
+		driveTelop.stop();
+		driveTelop.setPID(p.getDouble("pk", .0111), p.getDouble("ik", 0.0001), p.getDouble("dk", .0));
 	}
 }
