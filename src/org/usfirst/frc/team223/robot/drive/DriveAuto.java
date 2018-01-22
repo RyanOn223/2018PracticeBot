@@ -76,19 +76,19 @@ public class DriveAuto
 	};
 
 	// default pids change in general init
-	private double tp = 0.0065;
-	private double ti = 0.000001;
-	private double td = 0.005;
+	private double rp = 0.0085;
+	private double ri = 0.00000;
+	private double rd = 0.00;
 
-	private double ap = 0.0111;
-	private double ai = 0.0001;
-	private double ad = 0;
+	private double ap = 0.001;
+	private double ai = 0.000;
+	private double ad = 0.003;
 
 	public DriveAuto(DriveBase drive, AHRS ahrs)
 	{
 		this.drive = drive;
 		// this.ahrs = ahrs;
-		rotateController = new BetterController(tp, ti, td, ahrs, rotateOut);
+		rotateController = new BetterController(rp, ri, rd, ahrs, rotateOut);
 		leftController = new BetterController(ap, ai, ad, leftSrc, leftOut);
 		rightController = new BetterController(ap, ai, ad, rightSrc, rightOut);
 	}
@@ -113,9 +113,6 @@ public class DriveAuto
 
 	public void go(double set) throws InterruptedException
 	{
-		System.out.println(drive.getLeftPosition());
-		System.out.println(drive.getRightPosition());
-
 		leftController.startPID(set + drive.getLeftPosition());
 		rightController.startPID(set + drive.getRightPosition());
 
@@ -141,9 +138,7 @@ public class DriveAuto
 
 	public void setPID(double p, double i, double d)
 	{
-		leftController.reset();
-		leftController.setPID(p, i, d);
-		rightController.reset();
-		rightController.setPID(p, i, d);
+		rotateController.reset();
+		rotateController.setPID(p, i, d);
 	}
 }

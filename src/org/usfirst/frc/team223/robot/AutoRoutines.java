@@ -82,7 +82,7 @@ public class AutoRoutines
 					Thread.sleep(200);
 
 					driveAuto.go(distance);
-					driveAuto.turn(buttonLeft ? 90 : -90);
+					driveAuto.turn(buttonLeft ? -90 : 90);
 					// clamp.drop()
 				}
 				catch (InterruptedException e)

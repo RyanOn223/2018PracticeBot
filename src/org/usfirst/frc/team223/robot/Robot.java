@@ -69,7 +69,7 @@ public class Robot extends IterativeRobot
 		//gets string from dashboard puts it in uppercase takes first letter
 		char location=p.getString("position","D").toUpperCase().toCharArray()[0];
 		
-		String gameData="LLL";//DriverStation.getInstance().getGameSpecificMessage();
+		String gameData=DriverStation.getInstance().getGameSpecificMessage();
 		char lever=gameData.charAt(0);
 		char scale=gameData.charAt(1);
 		
@@ -80,8 +80,6 @@ public class Robot extends IterativeRobot
 			location='F';
 		}
 		
-		
-		
 		switch(location)
 		{
 		//left	right
@@ -89,77 +87,51 @@ public class Robot extends IterativeRobot
 		{	
 			if(lever==location)
 			{
-				AutoRoutines.near(100, 20, location=='L');
+				AutoRoutines.near(1000, 200, location=='L');
 			}
 			else
 			{
 				if(scale==location)
 				{
-					AutoRoutines.far(1000, 20, location=='L');
+					AutoRoutines.far(2000, 200, location=='L');
 				}
 				else
 				{
-					AutoRoutines.none(100);
+					AutoRoutines.none(1000);
 				}
 			}
 			break;
 		}
 		//middle
 		case 'M':
-			AutoRoutines.middle(100, lever=='L');
+			AutoRoutines.middle(1000, lever=='L');
 			break;
-		
-		//right
-		/*case 2:
-			if(lever=='R')
-			{
-				AutoRoutines.near(100, 20, false);
-			}
-			else
-			{
-				if(scale=='R')
-				{
-					AutoRoutines.far(1000, 20, false);
-				}
-				else
-				{
-					AutoRoutines.none(100);
-				}
-			}
-			
-			break;
-			*/
 		case 'D':
 			System.err.println("BAD DATA FROM DASH BOARD!\n\t Moving forward to cross line");
 			AutoRoutines.none(100);
+			break;
 		case 'F':
 			System.err.println("BAD DATA FROM FMS!\n\t Moving forward to cross line");
 			AutoRoutines.none(100);
+			break;
 		default :
 			System.out.println("something bad happened\n\\t Moving forward to cross line");
 			AutoRoutines.none(100);
+			break;
 		}
 		
-		new Thread() {
+		/*new Thread() {
 			public void run()
 			{
 				try
 				{
 					//wait for general init
 					Thread.sleep(200);
-					
 					driveAuto.go(1200);
-					//driveAuto.turn(-90);
-					//driveAuto.go(889);
-					//driveAuto.turn(0);
-					//driveAuto.go(889);
 				}
-				catch (InterruptedException e)
-				{
-					// e.printStackTrace();
-				}
+				catch (InterruptedException e){}
 			}
-		}.start();
+		}.start();*/
 	}
 
 	/**
