@@ -149,8 +149,8 @@ public class Robot extends IterativeRobot
 	@Override
 	public void disabledInit()
 	{
-		driveTelop.stop();
-		driveAuto.stop();
+		driveTelop.stopControllers();
+		driveAuto.stopControllers();
 	}
 
 	/**
@@ -204,7 +204,7 @@ public class Robot extends IterativeRobot
 		SmartDashboard.putNumber("left", drive.getLeftSpeed());
 		SmartDashboard.putNumber("right", drive.getRightSpeed());
 		SmartDashboard.putNumber("angle", ahrs.getAngle());
-		SmartDashboard.putNumber("pid", driveTelop.getSet()-ahrs.getAngle());
+		SmartDashboard.putNumber("pid", driveTelop.getSet("c")-ahrs.getAngle());
 		
 		/*
 		{
@@ -231,7 +231,7 @@ public class Robot extends IterativeRobot
 	{
 		ahrs.reset();
 		drive.resetEncoders();
-		driveTelop.stop();
-		driveTelop.setPID(p.getDouble("pk", .0111), p.getDouble("ik", 0.0001), p.getDouble("dk", .0));
+		driveTelop.stopControllers();
+		driveTelop.setPID("c",p.getDouble("pk", .0111), p.getDouble("ik", 0.0001), p.getDouble("dk", .0));
 	}
 }

@@ -89,11 +89,9 @@ public class DriveAuto extends DriveBase
 		rotateController = new BetterController(rp, ri, rd, ahrs, rotateOut);
 		leftController = new BetterController(ap, ai, ad, leftSrc, leftOut);
 		rightController = new BetterController(ap, ai, ad, rightSrc, rightOut);
-	}
-
-	public double getPID()
-	{
-		return rotateController.get();
+		addController("rotate",rotateController);
+		addController("left",leftController);
+		addController("right",rightController);		
 	}
 
 	/**
@@ -106,7 +104,7 @@ public class DriveAuto extends DriveBase
 	{
 		rotateController.startPID(degrees);
 		Thread.sleep(2000);
-		this.stop();
+		this.stopControllers();
 	}
 
 	public void go(double set) throws InterruptedException
@@ -115,24 +113,8 @@ public class DriveAuto extends DriveBase
 		rightController.startPID(set + drive.getRightPosition());
 
 		Thread.sleep(2000);
-		this.stop();
+		this.stopControllers();
 	}
 
-	public void stop()
-	{
-		rotateController.disable();
-		rotateController.reset();
-		leftController.disable();
-		leftController.reset();
-		rightController.disable();
-		rightController.reset();
-	}
 
-	
-
-	public void setPID(double p, double i, double d)
-	{
-		rotateController.reset();
-		rotateController.setPID(p, i, d);
-	}
 }
