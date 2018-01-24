@@ -1,78 +1,52 @@
 package org.usfirst.frc.team223.robot.drive;
 
-import org.usfirst.frc.team223.robot.RobotMap;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import org.usfirst.frc.team223.robot.utils.BetterController;
 
-import edu.wpi.first.wpilibj.Solenoid;
+import com.kauailabs.navx.frc.AHRS;
 
 public class DriveBase
 {
-	TalonSRX talonL0=new TalonSRX(RobotMap.driveL0);//encoder here
-	TalonSRX talonL1=new TalonSRX(RobotMap.driveL1);//slave
-	TalonSRX talonR0=new TalonSRX(RobotMap.driveR0);//slave
-	TalonSRX talonR1=new TalonSRX(RobotMap.driveR1);//encoder here
+	protected DriveTrain drive;
+	protected AHRS ahrs;
 	
-
-	Solenoid solenoidL = new Solenoid(RobotMap.pcmID, RobotMap.leftSolenoid);
-	Solenoid solenoidR = new Solenoid(RobotMap.pcmID, RobotMap.rightSolenoid);
+	private Map<String, BetterController> controllers=new HashMap<String, BetterController>();
 	
-	public DriveBase()
+	public DriveBase(DriveTrain drive, AHRS ahrs)
 	{
-		talonL1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,0,0);
-		talonR0.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,0,0);		
-		
-		//setSlaves
-		talonL1.set(ControlMode.Follower, RobotMap.driveL0);
-		talonR0.set(ControlMode.Follower, RobotMap.driveR1);
-		//done
-		
-		talonR0.setInverted(true);
-		talonR1.setInverted(true);
+		this.drive=drive;
+		this.ahrs=ahrs;
+	}
+	protected void rotate(double output)
+	{
+		drive.setMotors(-output, output);
 	}
 	
-	public void setLeft(double l)
+	public void addController(String key, BetterController value)
 	{
-		talonL0.set(ControlMode.PercentOutput,l);
-	}
-	public void setRight(double r)
-	{
-		talonR1.set(ControlMode.PercentOutput,r);
+		controllers.put(key, value);
 	}
 	
-	public void setMotors(double L,double R)
+	public void stopControllers()
 	{
-		talonL0.set(ControlMode.PercentOutput,-L);
-		talonR1.set(ControlMode.PercentOutput,-R);
-	}
-	/**
-	 *  set speed of all motors to zero
-	 */
-	public void stopMotors()
-	{
-		setMotors(0,0);
-	}
-	public void setPistons(boolean yes)
-	{
-		solenoidL.set(yes);
-		solenoidR.set(yes);
-	}
-
-	public void resetEncoders()
-	{
-		talonL0.setSelectedSensorPosition(0, 0, 0);
-		talonR1.setSelectedSensorPosition(0, 0, 0);
+		for(BetterController c:controllers.values())
+		{
+			c.disable();
+			c.reset();
+		}
 	}
 	
-	public double getLeftPosition()
+	public double getSet(String key)
 	{
-		return -talonL0.getSelectedSensorPosition(0);
+		return controllers.get(key).getSetpoint();
 	}
 	
-	public double getRightPosition()
+	public void setPID(String key,double p, double i, double d)
 	{
-		return talonR1.getSelectedSensorPosition(0);
+		BetterController c=controllers.get(key);
+		c.reset();
+		c.setPID(p, i, d);
 	}
 }

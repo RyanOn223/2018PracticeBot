@@ -26,7 +26,7 @@ public class Robot extends IterativeRobot
 
 	AHRS ahrs;
 
-	DriveBase drive;
+	DriveTrain drive;
 	DriveTelop driveTelop;
 	DriveAuto driveAuto;
 
@@ -49,8 +49,8 @@ public class Robot extends IterativeRobot
 		c = new Compressor(RobotMap.pcmID);
 
 		ahrs = new AHRS(SPI.Port.kMXP);
-		drive = new DriveBase();
-		driveTelop = new DriveTelop(drive);
+		drive = new DriveTrain();
+		driveTelop = new DriveTelop(drive,ahrs);
 		driveAuto = new DriveAuto(drive, ahrs);
 		AutoRoutines.init(driveAuto);
 		/*
@@ -149,6 +149,8 @@ public class Robot extends IterativeRobot
 	@Override
 	public void disabledInit()
 	{
+		driveTelop.stopControllers();
+		driveAuto.stopControllers();
 	}
 
 	/**
@@ -166,6 +168,7 @@ public class Robot extends IterativeRobot
 		OI.driver.setAxisOffsets(driverOffsets);*/
 		
 		generalInit();
+		driveTelop.init();
 		shiftLatch = new Latch(OI.shiftFast) {
 
 			@Override
@@ -180,6 +183,8 @@ public class Robot extends IterativeRobot
 				drive.setPistons(false);
 			}
 		};
+		
+		
 	}
 
 	/**
@@ -189,23 +194,25 @@ public class Robot extends IterativeRobot
 	public void teleopPeriodic()
 	{
 		shiftLatch.get();
-		driveTelop.cheese(OI.driver);
+		//driveTelop.cheese(OI.driver);
+		driveTelop.cheesePID(OI.driver);
 		writeToDash();
 	}
 
 	public void writeToDash()
 	{
-		SmartDashboard.putNumber("left", drive.getLeftPosition());
-		SmartDashboard.putNumber("right", drive.getRightPosition());
+		SmartDashboard.putNumber("left", drive.getLeftSpeed());
+		SmartDashboard.putNumber("right", drive.getRightSpeed());
 		SmartDashboard.putNumber("angle", ahrs.getAngle());
-
-		/*if (OI.driver.getRawAxis(OI.leftYAxis) != 0)
+		SmartDashboard.putNumber("pid", driveTelop.getSet("c")-ahrs.getAngle());
+		
+		/*
 		{
 			System.out.println(OI.driver.getAxis(OI.leftXAxis));
 			System.out.println(OI.driver.getAxis(OI.leftYAxis));
 			System.out.println(OI.driver.getAxis(OI.rightXAxis));
 			System.out.println();
-		}*/
+		}//*/
 
 	}
 
@@ -224,7 +231,7 @@ public class Robot extends IterativeRobot
 	{
 		ahrs.reset();
 		drive.resetEncoders();
-		driveAuto.stop();
-		driveAuto.setPID(p.getDouble("pk", .0111), p.getDouble("ik", 0.0001), p.getDouble("dk", .0));
+		driveTelop.stopControllers();
+		driveTelop.setPID("c",p.getDouble("pk", .0111), p.getDouble("ik", 0.0001), p.getDouble("dk", .0));
 	}
 }

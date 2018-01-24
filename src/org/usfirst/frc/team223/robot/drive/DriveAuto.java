@@ -7,9 +7,8 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
-public class DriveAuto
+public class DriveAuto extends DriveBase
 {
-	private DriveBase drive;
 	// private AHRS ahrs;
 	private BetterController rotateController;
 	private BetterController leftController;
@@ -84,18 +83,15 @@ public class DriveAuto
 	private double ai = 0.000;
 	private double ad = 0.003;
 
-	public DriveAuto(DriveBase drive, AHRS ahrs)
+	public DriveAuto(DriveTrain drive, AHRS ahrs)
 	{
-		this.drive = drive;
-		// this.ahrs = ahrs;
+		super(drive,ahrs);
 		rotateController = new BetterController(rp, ri, rd, ahrs, rotateOut);
 		leftController = new BetterController(ap, ai, ad, leftSrc, leftOut);
 		rightController = new BetterController(ap, ai, ad, rightSrc, rightOut);
-	}
-
-	public double getPID()
-	{
-		return rotateController.get();
+		addController("rotate",rotateController);
+		addController("left",leftController);
+		addController("right",rightController);		
 	}
 
 	/**
@@ -108,7 +104,7 @@ public class DriveAuto
 	{
 		rotateController.startPID(degrees);
 		Thread.sleep(2000);
-		this.stop();
+		this.stopControllers();
 	}
 
 	public void go(double set) throws InterruptedException
@@ -117,28 +113,8 @@ public class DriveAuto
 		rightController.startPID(set + drive.getRightPosition());
 
 		Thread.sleep(2000);
-		this.stop();
+		this.stopControllers();
 	}
 
-	public void stop()
-	{
-		rotateController.disable();
-		rotateController.reset();
-		leftController.disable();
-		leftController.reset();
-		rightController.disable();
-		rightController.reset();
-	}
 
-	protected void rotate(double output)
-	{
-		drive.setMotors(-output, output);
-
-	}
-
-	public void setPID(double p, double i, double d)
-	{
-		rotateController.reset();
-		rotateController.setPID(p, i, d);
-	}
 }
