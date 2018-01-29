@@ -1,6 +1,8 @@
 package org.usfirst.frc.team223.robot;
 
 import org.usfirst.frc.team223.robot.drive.*;
+import org.usfirst.frc.team223.robot.elevator.Elevator;
+import org.usfirst.frc.team223.robot.elevator.Plate;
 import org.usfirst.frc.team223.robot.utils.Latch;
 import org.usfirst.frc.team223.vision.VisionServer;
 
@@ -23,18 +25,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot
 {
 	Preferences p;
-
+	Compressor c;
 	AHRS ahrs;
 
 	DriveTrain drive;
 	DriveTelop driveTelop;
 	DriveAuto driveAuto;
-
-	Compressor c;
-
-	Latch shootLatch;
+	Elevator elevator;
+	Plate plate;
 	Latch shiftLatch;
-	Latch pidLatch;
 	boolean fast = false;
 	VisionServer visionServer;
 
@@ -52,10 +51,13 @@ public class Robot extends IterativeRobot
 		drive = new DriveTrain();
 		driveTelop = new DriveTelop(drive,ahrs);
 		driveAuto = new DriveAuto(drive, ahrs);
+		elevator = new Elevator();
+		plate=new Plate();
 		AutoRoutines.init(driveAuto);
 		/*
 		 * visionServer = new VisionServer(50); visionServer.start();
 		 */
+		
 	}
 
 	/**
@@ -183,8 +185,6 @@ public class Robot extends IterativeRobot
 				drive.setPistons(false);
 			}
 		};
-		
-		
 	}
 
 	/**
@@ -195,7 +195,9 @@ public class Robot extends IterativeRobot
 	{
 		shiftLatch.get();
 		//driveTelop.cheese(OI.driver);
-		driveTelop.cheesePID(OI.driver);
+		//driveTelop.cheesePID(OI.driver);
+		
+		elevator.setSpeed(OI.driver.getAxis(OI.rightYAxis));
 		writeToDash();
 	}
 
