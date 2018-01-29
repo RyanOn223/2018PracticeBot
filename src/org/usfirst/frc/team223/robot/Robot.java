@@ -80,7 +80,7 @@ public class Robot extends IterativeRobot
 			location='F';
 		}
 		
-		switch(location)
+		/*switch(location)
 		{
 		//left	right
 		case 'L': case 'R':
@@ -108,30 +108,30 @@ public class Robot extends IterativeRobot
 			break;
 		case 'D':
 			System.err.println("BAD DATA FROM DASH BOARD!\n\t Moving forward to cross line");
-			AutoRoutines.none(100);
+			AutoRoutines.none(500);
 			break;
 		case 'F':
 			System.err.println("BAD DATA FROM FMS!\n\t Moving forward to cross line");
-			AutoRoutines.none(100);
+			AutoRoutines.none(500);
 			break;
 		default :
 			System.out.println("something bad happened\n\\t Moving forward to cross line");
-			AutoRoutines.none(100);
+			AutoRoutines.none(500);
 			break;
-		}
+		}*/
 		
-		/*new Thread() {
+		new Thread() {
 			public void run()
 			{
 				try
 				{
 					//wait for general init
 					Thread.sleep(200);
-					driveAuto.go(1200);
+					driveAuto.turn(90);
 				}
 				catch (InterruptedException e){}
 			}
-		}.start();*/
+		}.start();
 	}
 
 	/**

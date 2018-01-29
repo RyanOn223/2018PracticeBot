@@ -18,7 +18,7 @@ public class DriveTelop extends DriveBase
 		@Override
 		public void pidWrite(double output)
 		{
-			System.out.println((int)controller.getSetpoint()+" "+(int)ahrs.getAngle()+" "+output);
+			System.out.println(ahrs.getAngle()+" deg\n\t"+controller.getSetpoint()+"\n\t"+output);
 			left=-output;
 			right=output;
 		}
@@ -66,6 +66,8 @@ public class DriveTelop extends DriveBase
 				 (stick.getAxis(OI.leftYAxis) + stick.getAxis(OI.rightXAxis)*2/3));
 	}
 	
+	
+	private double getSetPrev=0;
 	/**
 	 * uses rotation pid to drive straight
 	 * @param stick joystick
@@ -73,7 +75,7 @@ public class DriveTelop extends DriveBase
 	public void cheesePID(BetterJoystick stick)
 	{
 		//Sets new setpoint of pid to current angle plus value of joystick
-		controller.setSetpoint((int)ahrs.getAngle()+18*stick.getAxis(OI.rightXAxis));
+		controller.setSetpoint(controller.getSetpoint()+5*stick.getAxis(OI.rightXAxis));
 		//Then sets motors to value of outputs plus forward and back
 		drive.setMotors(stick.getAxis(OI.leftYAxis)+left,stick.getAxis(OI.leftYAxis)+right);
 	}
