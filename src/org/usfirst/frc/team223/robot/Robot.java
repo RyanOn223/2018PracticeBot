@@ -195,9 +195,10 @@ public class Robot extends IterativeRobot
 	{
 		shiftLatch.get();
 		//driveTelop.cheese(OI.driver);
-		//driveTelop.cheesePID(OI.driver);
+		driveTelop.cheesePID(OI.driver);
 		
-		elevator.setSpeed(OI.driver.getAxis(OI.rightYAxis));
+		elevator.setSpeed(-OI.operator.getAxis(OI.rightYAxis));
+		plate.setSpeed(-OI.operator.getAxis(OI.leftYAxis));
 		writeToDash();
 	}
 

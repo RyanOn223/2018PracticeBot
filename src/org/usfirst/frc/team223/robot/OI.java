@@ -32,6 +32,7 @@ public class OI
 		driverOffsets.put(leftXAxis, 0.);
 		driverOffsets.put(leftYAxis, 0.);
 		driverOffsets.put(rightXAxis, 0.);
+		driverOffsets.put(rightYAxis, 0.);
 		///driverOffsets.put(rightYAxis, 0);
 		driver.setAxisOffsets(driverOffsets);
 
