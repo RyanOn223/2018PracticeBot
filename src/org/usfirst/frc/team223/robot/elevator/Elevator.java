@@ -17,7 +17,6 @@ public class Elevator
 	
 	public Elevator()
 	{
-		talon1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,0,0);
 		talon0.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,0,0);		
 		
 		//setSlave

@@ -16,6 +16,8 @@ public class RobotMap
 	public static int elevator1 = 16;
 	public static int plate = 14;//encoder on this one
 	
+	public static int claw =2147483333;
+	public static int intake=3838;
 	
 	public static int pcmID = 51;
 	public static int leftSolenoid = 1;
