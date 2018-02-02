@@ -19,10 +19,11 @@ public class OI
 	public static int leftYAxis = 1;
 	public static int leftXAxis = 0;
 	public static int rightXAxis = 4;
-	//public static int rightYAxis=3;
-	static int climb = 3;
-
-	//static JoystickButton shiftSlow = new JoystickButton(driver, 3);
+	public static int rightYAxis = 5;
+	
+	static JoystickButton clawDrop = new JoystickButton(operator, 3);
+	static JoystickButton clawUp = new JoystickButton(operator, 2);
+	static JoystickButton intake = new JoystickButton(operator,5);
 	static JoystickButton shiftFast = new JoystickButton(driver, 6);
 
 	static
@@ -31,9 +32,11 @@ public class OI
 		driverOffsets.put(leftXAxis, 0.);
 		driverOffsets.put(leftYAxis, 0.);
 		driverOffsets.put(rightXAxis, 0.);
+		driverOffsets.put(rightYAxis, 0.);
 		///driverOffsets.put(rightYAxis, 0);
 		driver.setAxisOffsets(driverOffsets);
-
+		operator.setAxisOffsets(driverOffsets);
+		
 		driver.setDeadbandCoef(0.1);
 		operator.setDeadbandCoef(0.1);
 	}

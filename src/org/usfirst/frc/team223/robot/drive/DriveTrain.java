@@ -66,7 +66,6 @@ public class DriveTrain
 		talonR1.setSelectedSensorPosition(0, 0, 0);
 	}
 	
-	
 	public double getLeftSpeed()
 	{
 		return -talonL0.getSelectedSensorVelocity(0);

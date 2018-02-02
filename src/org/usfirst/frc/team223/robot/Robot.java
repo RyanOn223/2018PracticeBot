@@ -1,6 +1,9 @@
 package org.usfirst.frc.team223.robot;
 
 import org.usfirst.frc.team223.robot.drive.*;
+import org.usfirst.frc.team223.robot.elevator.Claw;
+import org.usfirst.frc.team223.robot.elevator.Elevator;
+import org.usfirst.frc.team223.robot.elevator.Plate;
 import org.usfirst.frc.team223.robot.utils.Latch;
 import org.usfirst.frc.team223.vision.VisionServer;
 
@@ -23,19 +26,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot
 {
 	Preferences p;
-
+	Compressor c;
 	AHRS ahrs;
 
 	DriveTrain drive;
 	DriveTelop driveTelop;
 	DriveAuto driveAuto;
-
-	Compressor c;
-
-	Latch shootLatch;
+	Elevator elevator;
+	Plate plate;
+	Claw claw;
+	
 	Latch shiftLatch;
-	Latch pidLatch;
-	boolean fast = false;
+	Latch clawLatch;
 	VisionServer visionServer;
 
 	/**
@@ -52,6 +54,10 @@ public class Robot extends IterativeRobot
 		drive = new DriveTrain();
 		driveTelop = new DriveTelop(drive,ahrs);
 		driveAuto = new DriveAuto(drive, ahrs);
+		elevator = new Elevator();
+		plate=new Plate();
+		
+		//claw=new Claw();
 		AutoRoutines.init(driveAuto);
 		/*
 		 * visionServer = new VisionServer(50); visionServer.start();
@@ -66,13 +72,12 @@ public class Robot extends IterativeRobot
 	{
 		generalInit();
 		
-		//gets string from dashboard puts it in uppercase takes first letter
+		/*gets string from dashboard, puts it in uppercase, takes first letter
 		char location=p.getString("position","D").toUpperCase().toCharArray()[0];
 		
 		String gameData=DriverStation.getInstance().getGameSpecificMessage();
 		char lever=gameData.charAt(0);
 		char scale=gameData.charAt(1);
-		
 		
 		//makes sure lever and scale are both L or R
 		if(!(  (lever=='L'||lever=='R') && (scale=='L'||scale=='R')  ))
@@ -119,19 +124,20 @@ public class Robot extends IterativeRobot
 			AutoRoutines.none(100);
 			break;
 		}
-		
-		/*new Thread() {
+		//*/
+		///*
+		new Thread() {
 			public void run()
 			{
 				try
 				{
 					//wait for general init
 					Thread.sleep(200);
-					driveAuto.go(1200);
+					elevator.setHeight(1536);
 				}
 				catch (InterruptedException e){}
 			}
-		}.start();*/
+		}.start();//*/
 	}
 
 	/**
@@ -151,6 +157,8 @@ public class Robot extends IterativeRobot
 	{
 		driveTelop.stopControllers();
 		driveAuto.stopControllers();
+		elevator.stopControllers();
+		plate.stopControllers();
 	}
 
 	/**
@@ -183,8 +191,19 @@ public class Robot extends IterativeRobot
 				drive.setPistons(false);
 			}
 		};
-		
-		
+		clawLatch =new Latch(OI.clawDrop,OI.clawUp){
+			@Override
+			public void go()
+			{
+				claw.drop();
+			}
+
+			@Override
+			public void stop()
+			{
+				claw.up();
+			}
+		};
 	}
 
 	/**
@@ -194,8 +213,14 @@ public class Robot extends IterativeRobot
 	public void teleopPeriodic()
 	{
 		shiftLatch.get();
-		//driveTelop.cheese(OI.driver);
-		driveTelop.cheesePID(OI.driver);
+		//clawLatch.get();
+		
+		driveTelop.cheese(OI.driver);
+		//driveTelop.cheesePID(OI.driver);
+		
+		elevator.setSpeed(-OI.operator.getAxis(OI.rightYAxis));
+		plate.setSpeed(-OI.operator.getAxis(OI.leftYAxis));
+		//if(OI.intake.get())claw.intake();
 		writeToDash();
 	}
 
@@ -203,17 +228,8 @@ public class Robot extends IterativeRobot
 	{
 		SmartDashboard.putNumber("left", drive.getLeftSpeed());
 		SmartDashboard.putNumber("right", drive.getRightSpeed());
-		SmartDashboard.putNumber("angle", ahrs.getAngle());
+		SmartDashboard.putNumber("ele", elevator.getPosition());
 		SmartDashboard.putNumber("pid", driveTelop.getSet("c")-ahrs.getAngle());
-		
-		/*
-		{
-			System.out.println(OI.driver.getAxis(OI.leftXAxis));
-			System.out.println(OI.driver.getAxis(OI.leftYAxis));
-			System.out.println(OI.driver.getAxis(OI.rightXAxis));
-			System.out.println();
-		}//*/
-
 	}
 
 	/**
@@ -231,7 +247,9 @@ public class Robot extends IterativeRobot
 	{
 		ahrs.reset();
 		drive.resetEncoders();
-		driveTelop.stopControllers();
-		driveTelop.setPID("c",p.getDouble("pk", .0111), p.getDouble("ik", 0.0001), p.getDouble("dk", .0));
+		plate.resetEncoders();
+		elevator.resetEncoders();
+		
+		elevator.setPID(p.getDouble("pk", .0111), p.getDouble("ik", 0.0001), p.getDouble("dk", .0));
 	}
 }

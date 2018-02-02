@@ -18,7 +18,7 @@ public class DriveTelop extends DriveBase
 		@Override
 		public void pidWrite(double output)
 		{
-			System.out.println((int)controller.getSetpoint()+" "+(int)ahrs.getAngle()+" "+output);
+			//System.out.println((int)controller.getSetpoint()+" "+(int)ahrs.getAngle()+" "+output);
 			left=-output;
 			right=output;
 		}
