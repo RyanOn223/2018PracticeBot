@@ -22,6 +22,6 @@ public class Claw
 		intake.set(ControlMode.PercentOutput,1);
 	}
 	
-	public void drop(){};
-	public void up(){};
+	public void drop(){}
+	public void up(){}
 }

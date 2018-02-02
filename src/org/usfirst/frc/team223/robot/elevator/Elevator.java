@@ -102,4 +102,9 @@ public class Elevator
 	{
 		controller.setPID(p, i, d);
 	}
+
+	public void init()
+	{
+		controller.startPID(0);		
+	}
 }

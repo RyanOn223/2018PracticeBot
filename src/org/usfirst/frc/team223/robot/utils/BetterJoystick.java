@@ -17,6 +17,7 @@ public class BetterJoystick extends Joystick
 
 	public double getAxis(int axis)
 	{
+		if(axisOffsets.get(axis)==null)return super.getRawAxis(axis);
 		double scl = axisOffsets.get(axis);
 		double val = super.getRawAxis(axis) - scl;
 		return Math.abs(val) < deadbandCoef ? 0 : val;

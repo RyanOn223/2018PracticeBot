@@ -21,6 +21,14 @@ public class OI
 	public static int rightXAxis = 4;
 	public static int rightYAxis = 5;
 	
+	public static int rightTrigger=3;
+	public static int leftTrigger=2;
+	
+	static JoystickButton bottom = new JoystickButton(operator, 3);
+	static JoystickButton top = new JoystickButton(operator, 4);
+	static JoystickButton middle = new JoystickButton(operator, 2);
+	
+	
 	static JoystickButton clawDrop = new JoystickButton(operator, 3);
 	static JoystickButton clawUp = new JoystickButton(operator, 2);
 	static JoystickButton intake = new JoystickButton(operator,5);

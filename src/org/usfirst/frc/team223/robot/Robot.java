@@ -177,6 +177,8 @@ public class Robot extends IterativeRobot
 		
 		generalInit();
 		driveTelop.init();
+		elevator.init();
+		
 		shiftLatch = new Latch(OI.shiftFast) {
 
 			@Override
@@ -216,10 +218,14 @@ public class Robot extends IterativeRobot
 		//clawLatch.get();
 		
 		driveTelop.cheese(OI.driver);
-		//driveTelop.cheesePID(OI.driver);
 		
-		elevator.setSpeed(-OI.operator.getAxis(OI.rightYAxis));
-		plate.setSpeed(-OI.operator.getAxis(OI.leftYAxis));
+		//elevator.setSpeed(-OI.operator.getAxis(OI.rightYAxis));
+		plate.setSpeed(-OI.operator.getRawAxis(OI.leftYAxis));
+		
+		
+		
+		
+		
 		//if(OI.intake.get())claw.intake();
 		writeToDash();
 	}
