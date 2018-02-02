@@ -62,7 +62,6 @@ public class Robot extends IterativeRobot
 		/*
 		 * visionServer = new VisionServer(50); visionServer.start();
 		 */
-		
 	}
 
 	/**
@@ -134,7 +133,7 @@ public class Robot extends IterativeRobot
 				{
 					//wait for general init
 					Thread.sleep(200);
-					elevator.go
+					elevator.setHeight(1536);
 				}
 				catch (InterruptedException e){}
 			}
@@ -158,6 +157,8 @@ public class Robot extends IterativeRobot
 	{
 		driveTelop.stopControllers();
 		driveAuto.stopControllers();
+		elevator.stopControllers();
+		plate.stopControllers();
 	}
 
 	/**
@@ -248,7 +249,7 @@ public class Robot extends IterativeRobot
 		drive.resetEncoders();
 		plate.resetEncoders();
 		elevator.resetEncoders();
-		driveTelop.stopControllers();
-		driveTelop.setPID("c",p.getDouble("pk", .0111), p.getDouble("ik", 0.0001), p.getDouble("dk", .0));
+		
+		elevator.setPID(p.getDouble("pk", .0111), p.getDouble("ik", 0.0001), p.getDouble("dk", .0));
 	}
 }
