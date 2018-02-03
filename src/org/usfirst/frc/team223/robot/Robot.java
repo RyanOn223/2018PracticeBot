@@ -1,5 +1,7 @@
 package org.usfirst.frc.team223.robot;
 
+import org.usfirst.frc.team223.robot.constants.OI;
+import org.usfirst.frc.team223.robot.constants.RobotMap;
 import org.usfirst.frc.team223.robot.drive.*;
 import org.usfirst.frc.team223.robot.elevator.Claw;
 import org.usfirst.frc.team223.robot.elevator.Elevator;
@@ -58,7 +60,7 @@ public class Robot extends IterativeRobot
 		plate=new Plate();
 		
 		//claw=new Claw();
-		AutoRoutines.init(driveAuto);
+		AutoRoutines.init(driveAuto,claw,plate,elevator);
 		/*
 		 * visionServer = new VisionServer(50); visionServer.start();
 		 */
@@ -92,13 +94,13 @@ public class Robot extends IterativeRobot
 		{	
 			if(lever==location)
 			{
-				AutoRoutines.near(1000, 200, location=='L');
+				AutoRoutines.near(36, 12,24, location=='L');
 			}
 			else
 			{
 				if(scale==location)
 				{
-					AutoRoutines.far(2000, 200, location=='L');
+					AutoRoutines.far(60, 12,48, location=='L');
 				}
 				else
 				{
@@ -109,19 +111,19 @@ public class Robot extends IterativeRobot
 		}
 		//middle
 		case 'M':
-			AutoRoutines.middle(1000, lever=='L');
+			AutoRoutines.middle(24,24, lever=='L');
 			break;
 		case 'D':
 			System.err.println("BAD DATA FROM DASH BOARD!\n\t Moving forward to cross line");
-			AutoRoutines.none(100);
+			AutoRoutines.none(36);
 			break;
 		case 'F':
 			System.err.println("BAD DATA FROM FMS!\n\t Moving forward to cross line");
-			AutoRoutines.none(100);
+			AutoRoutines.none(36);
 			break;
 		default :
 			System.out.println("something bad happened\n\\t Moving forward to cross line");
-			AutoRoutines.none(100);
+			AutoRoutines.none(36);
 			break;
 		}
 		//*/

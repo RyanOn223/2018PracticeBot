@@ -1,6 +1,6 @@
 package org.usfirst.frc.team223.robot.elevator;
 
-import org.usfirst.frc.team223.robot.RobotMap;
+import org.usfirst.frc.team223.robot.constants.RobotMap;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;

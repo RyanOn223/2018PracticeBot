@@ -1,4 +1,4 @@
-package org.usfirst.frc.team223.robot;
+package org.usfirst.frc.team223.robot.constants;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
  */
 public class OI
 {
-	static BetterJoystick driver = new BetterJoystick(0);
-	static BetterJoystick operator = new BetterJoystick(1);
+	public static BetterJoystick driver = new BetterJoystick(0);
+	public static BetterJoystick operator = new BetterJoystick(1);
 
 	public static int leftYAxis = 1;
 	public static int leftXAxis = 0;
@@ -29,10 +29,10 @@ public class OI
 	static JoystickButton middle = new JoystickButton(operator, 2);
 	
 	
-	static JoystickButton clawDrop = new JoystickButton(operator, 3);
-	static JoystickButton clawUp = new JoystickButton(operator, 2);
+	public static JoystickButton clawDrop = new JoystickButton(operator, 3);
+	public static JoystickButton clawUp = new JoystickButton(operator, 2);
 	static JoystickButton intake = new JoystickButton(operator,5);
-	static JoystickButton shiftFast = new JoystickButton(driver, 6);
+	public static JoystickButton shiftFast = new JoystickButton(driver, 6);
 
 	static
 	{
@@ -41,7 +41,7 @@ public class OI
 		driverOffsets.put(leftYAxis, 0.);
 		driverOffsets.put(rightXAxis, 0.);
 		driverOffsets.put(rightYAxis, 0.);
-		///driverOffsets.put(rightYAxis, 0);
+		
 		driver.setAxisOffsets(driverOffsets);
 		operator.setAxisOffsets(driverOffsets);
 		

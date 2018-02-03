@@ -1,6 +1,6 @@
 package org.usfirst.frc.team223.robot.elevator;
 
-import org.usfirst.frc.team223.robot.RobotMap;
+import org.usfirst.frc.team223.robot.constants.RobotMap;
 import org.usfirst.frc.team223.robot.utils.BetterController;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -64,7 +64,7 @@ public class Elevator
 		controller= new BetterController(p,i,d,src,out);
 	}
 	
-	public void setHeight(int height)
+	public void setHeight(double height)
 	{
 		controller.startPID(height);
 	}

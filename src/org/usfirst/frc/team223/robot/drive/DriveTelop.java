@@ -1,6 +1,6 @@
 package org.usfirst.frc.team223.robot.drive;
 
-import org.usfirst.frc.team223.robot.OI;
+import org.usfirst.frc.team223.robot.constants.OI;
 import org.usfirst.frc.team223.robot.utils.BetterController;
 import org.usfirst.frc.team223.robot.utils.BetterJoystick;
 
