@@ -61,7 +61,7 @@ public class Plate
 	
 	public void setSpeed(double L)
 	{
-		talon.set(ControlMode.PercentOutput,L);
+		talon.set(ControlMode.PercentOutput,-L);
 	}
 	
 	public void resetEncoders()

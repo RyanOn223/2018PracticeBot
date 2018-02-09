@@ -40,7 +40,7 @@ public class AutoRoutines
 					driveAuto.go(distance*Constants.DRIVE_CNT_TO_IN);
 					driveAuto.turn(robotLeft ? 90 : -90);
 					driveAuto.go(creep*Constants.DRIVE_CNT_TO_IN);
-					// clamp.drop()
+					claw.out();
 				}
 				catch (InterruptedException e)
 				{
@@ -73,7 +73,7 @@ public class AutoRoutines
 					driveAuto.turn(robotLeft ? 90 : -90);
 					
 					driveAuto.go(creep*Constants.DRIVE_CNT_TO_IN);
-					// clamp.drop()
+					claw.out();
 				}
 				catch (InterruptedException e)
 				{
@@ -95,8 +95,8 @@ public class AutoRoutines
 					
 					plate.setHeight(height*Constants.PLATE_CNT_TO_IN);
 					driveAuto.go(distance);
-					driveAuto.turn(buttonLeft ? -90 : 90);
-					// clamp.drop()
+					driveAuto.turn(buttonLeft ? -45 : 45);
+					claw.out();
 				}
 				catch (InterruptedException e)
 				{

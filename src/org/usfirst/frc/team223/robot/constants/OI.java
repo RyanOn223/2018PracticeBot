@@ -27,11 +27,15 @@ public class OI
 	static JoystickButton bottom = new JoystickButton(operator, 3);
 	static JoystickButton top = new JoystickButton(operator, 4);
 	static JoystickButton middle = new JoystickButton(operator, 2);
-	
-	
 	public static JoystickButton clawDrop = new JoystickButton(operator, 3);
 	public static JoystickButton clawUp = new JoystickButton(operator, 2);
-	static JoystickButton intake = new JoystickButton(operator,5);
+	
+	public static JoystickButton intake = new JoystickButton(operator,5);
+	public static JoystickButton outtake = new JoystickButton(operator,6);
+	
+	public static JoystickButton clawMove = new JoystickButton(driver, 6);
+
+	
 	public static JoystickButton shiftFast = new JoystickButton(driver, 6);
 
 	static

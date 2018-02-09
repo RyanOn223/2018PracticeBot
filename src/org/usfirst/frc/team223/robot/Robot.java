@@ -39,7 +39,9 @@ public class Robot extends IterativeRobot
 	Claw claw;
 	
 	Latch shiftLatch;
+	Latch raiseLatch;
 	Latch clawLatch;
+	
 	VisionServer visionServer;
 
 	/**
@@ -58,8 +60,8 @@ public class Robot extends IterativeRobot
 		driveAuto = new DriveAuto(drive, ahrs);
 		elevator = new Elevator();
 		plate=new Plate();
-		
-		//claw=new Claw();
+		claw=new Claw();
+
 		AutoRoutines.init(driveAuto,claw,plate,elevator);
 		/*
 		 * visionServer = new VisionServer(50); visionServer.start();
@@ -178,9 +180,14 @@ public class Robot extends IterativeRobot
 		OI.driver.setAxisOffsets(driverOffsets);*/
 		
 		generalInit();
-		driveTelop.init();
-		elevator.init();
+		try
+		{//for encoder reset
+			Thread.sleep(200);
+		}catch (InterruptedException e){}
 		
+		//driveTelop.init();
+		//elevator.init();
+		//claw.init();
 		shiftLatch = new Latch(OI.shiftFast) {
 
 			@Override
@@ -195,17 +202,30 @@ public class Robot extends IterativeRobot
 				drive.setPistons(false);
 			}
 		};
-		clawLatch =new Latch(OI.clawDrop,OI.clawUp){
+		raiseLatch =new Latch(OI.clawUp){
 			@Override
 			public void go()
 			{
-				claw.drop();
+				claw.up();
 			}
 
 			@Override
 			public void stop()
 			{
-				claw.up();
+			}
+		};
+		clawLatch =new Latch(OI.clawMove,OI.clawDrop){
+			@Override
+			public void go()
+			{
+				//claw.set
+				claw.setSpeed(.1);
+			}
+
+			@Override
+			public void stop()
+			{
+				claw.drop();
 			}
 		};
 	}
@@ -217,27 +237,26 @@ public class Robot extends IterativeRobot
 	public void teleopPeriodic()
 	{
 		shiftLatch.get();
-		//clawLatch.get();
+		//if(!raiseLatch.get())clawLatch.get();
+		
+		
 		
 		driveTelop.cheese(OI.driver);
 		
-		//elevator.setSpeed(-OI.operator.getAxis(OI.rightYAxis));
+		elevator.setSpeed(-OI.operator.getAxis(OI.rightYAxis));
 		plate.setSpeed(-OI.operator.getRawAxis(OI.leftYAxis));
 		
+		claw.setSpeed(OI.operator.getAxis(OI.rightTrigger)-OI.operator.getAxis(OI.leftTrigger));
 		
-		
-		
-		
-		//if(OI.intake.get())claw.intake();
+		claw.intake(OI.intake.get(), OI.outtake.get());
+
 		writeToDash();
 	}
 
 	public void writeToDash()
 	{
-		SmartDashboard.putNumber("left", drive.getLeftSpeed());
-		SmartDashboard.putNumber("right", drive.getRightSpeed());
 		SmartDashboard.putNumber("ele", elevator.getPosition());
-		SmartDashboard.putNumber("pid", driveTelop.getSet("c")-ahrs.getAngle());
+		SmartDashboard.putNumber("claw", claw.getPosition());
 	}
 
 	/**
@@ -257,7 +276,7 @@ public class Robot extends IterativeRobot
 		drive.resetEncoders();
 		plate.resetEncoders();
 		elevator.resetEncoders();
-		
+		claw.resetEncoders();
 		elevator.setPID(p.getDouble("pk", .0111), p.getDouble("ik", 0.0001), p.getDouble("dk", .0));
 	}
 }
