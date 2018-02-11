@@ -94,8 +94,9 @@ public class AutoRoutines
 					Thread.sleep(200);
 					
 					plate.setHeight(height*Constants.PLATE_CNT_TO_IN);
-					driveAuto.go(distance);
 					driveAuto.turn(buttonLeft ? -45 : 45);
+					driveAuto.go(distance);
+					
 					claw.out();
 				}
 				catch (InterruptedException e)

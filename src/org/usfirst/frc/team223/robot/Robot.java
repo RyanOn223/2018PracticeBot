@@ -76,7 +76,7 @@ public class Robot extends IterativeRobot
 	{
 		generalInit();
 		
-		/*gets string from dashboard, puts it in uppercase, takes first letter
+		///*gets string from dashboard, puts it in uppercase, takes first letter
 		char location=p.getString("position","D").toUpperCase().toCharArray()[0];
 		
 		String gameData=DriverStation.getInstance().getGameSpecificMessage();
@@ -129,7 +129,7 @@ public class Robot extends IterativeRobot
 			break;
 		}
 		//*/
-		///*
+		/*
 		new Thread() {
 			public void run()
 			{
