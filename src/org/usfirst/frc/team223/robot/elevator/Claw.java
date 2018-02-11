@@ -105,11 +105,16 @@ public class Claw
 		intake.set(ControlMode.PercentOutput,forward?-1:1);
 	}
 	
-	public void drop(){controller.startPID(90);}
-	public void up(){controller.startPID(0);}
-
+	public void setAngle(int deg){controller.startPID(deg);}
+	public void addAngle(int j)
+	{
+		controller.addSetpoint(j);;
+		
+	}
 	public void stopIntake()
 	{
 		intake.set(ControlMode.PercentOutput,0);		
 	}
+
+	
 }

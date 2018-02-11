@@ -17,4 +17,9 @@ public class BetterController extends PIDController
 		if(!this.isEnabled())
 			this.enable();
 	}
+	
+	public void addSetpoint(double i)
+	{
+		this.setSetpoint(i+this.getSetpoint());
+	}
 }

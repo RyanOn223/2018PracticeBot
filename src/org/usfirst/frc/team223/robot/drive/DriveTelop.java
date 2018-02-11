@@ -62,8 +62,8 @@ public class DriveTelop extends DriveBase
 	/** Set the controllers based on joystick axis inputs.*/
 	public void cheese(BetterJoystick stick)
 	{
-		drive.setMotors((stick.getAxis(OI.leftYAxis) - stick.getAxis(OI.rightXAxis)*2/3) ,
-				 (stick.getAxis(OI.leftYAxis) + stick.getAxis(OI.rightXAxis)*2/3));
+		drive.setMotors((stick.getAxis(OI.leftYAxis) - stick.getAxis(OI.rightXAxis)) ,
+				 (stick.getAxis(OI.leftYAxis) + stick.getAxis(OI.rightXAxis)));
 	}
 	
 	/**

@@ -8,24 +8,28 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
 public class Plate
 {
-	TalonSRX talon=new TalonSRX(RobotMap.plate);//encoder here
-	AnalogInput voltage = new AnalogInput(0);
+	TalonSRX talon = new TalonSRX(RobotMap.plate);// encoder here
+	DigitalInput top = new DigitalInput(RobotMap.plateTop);
+	DigitalInput bottom = new DigitalInput(RobotMap.plateBottom);
 	private BetterController controller;
 
-	private PIDOutput out = new PIDOutput() {
+	private PIDOutput out = new PIDOutput()
+	{
 		@Override
 		public void pidWrite(double output)
 		{
 			setSpeed(output);
 		}
 	};
-	private PIDSource src = new PIDSource() {
+	private PIDSource src = new PIDSource()
+	{
 		@Override
 		public void setPIDSourceType(PIDSourceType pidSource)
 		{
@@ -43,58 +47,76 @@ public class Plate
 			return getPosition();
 		}
 	};
-	
+
 	private double p = 0.005;
 	private double i = 0.00000;
 	private double d = 0.00;
-	
+
 	public Plate()
 	{
-		talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,0,0);
-		controller= new BetterController(p,i,d,src,out);
+		talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+		controller = new BetterController(p, i, d, src, out);
 	}
-	
+
 	public void setHeight(double e)
 	{
 		controller.startPID(e);
 	}
-	
+
 	public void setSpeed(double L)
 	{
-		talon.set(ControlMode.PercentOutput,-L);
+		// System.out.println(bottom.get());
+		if (L < 0 && !bottom.get() || L > 0 && !top.get())
+		{
+			talon.set(ControlMode.PercentOutput, 0);
+			return;
+		}
+		talon.set(ControlMode.PercentOutput, L);
 	}
-	
+
 	public void resetEncoders()
 	{
 		talon.setSelectedSensorPosition(0, 0, 0);
 	}
-	
+
 	public double getSpeed()
 	{
 		return talon.getSelectedSensorVelocity(0);
 	}
-	
+
 	public double getPosition()
 	{
 		return talon.getSelectedSensorPosition(0);
 	}
-	
+
 	public int getLocation()
 	{
-		/* Three positions (0,1,2) with voltages (1.5, 3, 4.5)
-		 * divide by 1.5 to find position above (3/1.5=2)
-		 * subtract 1 (2-1)=1
-		 * voltage 3 is position 1
-		 * 
-		 * added .2 just in case voltage is lower than it should be.
-		 * voltage 1.4 would give position 0. not after adding .2
-		 */
-		return (int)((voltage.getVoltage()+.2)/1.5)-1;
+		return 0;// (int)((voltage.getVoltage()+.2)/1.5)-1;
 	}
-	
+
 	public void stopControllers()
 	{
 		controller.disable();
-		controller.reset();		
+		controller.reset();
+	}
+
+	public void checkTop()
+	{
+		new Thread()
+		{
+			@Override
+			public void run()
+			{
+				while (true)
+				{
+					if (!top.get())
+					{
+						talon.set(ControlMode.PercentOutput, 0);
+						return;
+					}
+
+				}
+			}
+		}.start();
 	}
 }

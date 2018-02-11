@@ -75,7 +75,7 @@ public class DriveAuto extends DriveBase
 	};
 
 	// default pids change in general init
-	private double rp = 0.0085;
+	private double rp = 0.0155;
 	private double ri = 0.00000;
 	private double rd = 0.00;
 
@@ -112,7 +112,7 @@ public class DriveAuto extends DriveBase
 		leftController.startPID(set + drive.getLeftPosition());
 		rightController.startPID(set + drive.getRightPosition());
 
-		Thread.sleep(2000);
+		Thread.sleep(4000);
 		this.stopControllers();
 	}
 

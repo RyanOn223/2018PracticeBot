@@ -24,6 +24,9 @@ public class RobotMap
 	public static int rightSolenoid = 0;
 	public static int elevateSolenoid = 2;
 	
-	public static int botomLimit=0;
-	public static int topLimit=1;
+	
+	public static int plateTop=2;
+	public static int plateBottom=4;
+	public static int elevatorBotom=1;
+	public static int elevatorTop=0;
 }

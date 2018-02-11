@@ -96,13 +96,15 @@ public class Robot extends IterativeRobot
 		{	
 			if(lever==location)
 			{
-				AutoRoutines.near(36, 12,24, location=='L');
+				System.out.println("near");
+				AutoRoutines.near(137, 36,24, location=='L');
 			}
 			else
 			{
 				if(scale==location)
 				{
-					AutoRoutines.far(60, 12,48, location=='L');
+					System.out.println("far");
+					AutoRoutines.far(166+137, 36,48, location=='L');
 				}
 				else
 				{
@@ -113,7 +115,7 @@ public class Robot extends IterativeRobot
 		}
 		//middle
 		case 'M':
-			AutoRoutines.middle(24,24, lever=='L');
+			AutoRoutines.middle(80,57,24, lever=='L');
 			break;
 		case 'D':
 			System.err.println("BAD DATA FROM DASH BOARD!\n\t Moving forward to cross line");
@@ -181,7 +183,7 @@ public class Robot extends IterativeRobot
 		
 		generalInit();
 		try
-		{//for encoder reset
+		{//wait for encoder reset
 			Thread.sleep(200);
 		}catch (InterruptedException e){}
 		
@@ -206,7 +208,7 @@ public class Robot extends IterativeRobot
 			@Override
 			public void go()
 			{
-				claw.up();
+				claw.setAngle(90);
 			}
 
 			@Override
@@ -218,14 +220,13 @@ public class Robot extends IterativeRobot
 			@Override
 			public void go()
 			{
-				//claw.set
-				claw.setSpeed(.1);
+				claw.addAngle(1);
 			}
 
 			@Override
 			public void stop()
 			{
-				claw.drop();
+				claw.setAngle(0);
 			}
 		};
 	}
@@ -256,7 +257,7 @@ public class Robot extends IterativeRobot
 	public void writeToDash()
 	{
 		SmartDashboard.putNumber("ele", elevator.getPosition());
-		SmartDashboard.putNumber("claw", claw.getPosition());
+		SmartDashboard.putNumber("angle", ahrs.getAngle());
 	}
 
 	/**

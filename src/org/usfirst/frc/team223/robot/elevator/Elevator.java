@@ -18,9 +18,9 @@ public class Elevator
 	TalonSRX talon0 = new TalonSRX(RobotMap.elevator0);// encoder here
 	TalonSRX talon1 = new TalonSRX(RobotMap.elevator1);// slave
 
-	DigitalInput bottomLimit = new DigitalInput(RobotMap.botomLimit);
-	DigitalInput topLimit = new DigitalInput(RobotMap.topLimit);
-
+	DigitalInput top = new DigitalInput(RobotMap.elevatorTop);
+	DigitalInput bottom = new DigitalInput(RobotMap.elevatorBotom);	
+	
 	Solenoid solenoid = new Solenoid(RobotMap.pcmID, RobotMap.elevateSolenoid);
 
 	private BetterController controller;
@@ -58,7 +58,7 @@ public class Elevator
 
 	private double p = 0.005;
 	private double i = 0.00000;
-	private double d = 0.00;
+	private double kd = 0.00;
 
 	public Elevator()
 	{
@@ -68,7 +68,7 @@ public class Elevator
 		talon1.set(ControlMode.Follower, RobotMap.elevator0);
 		// done
 
-		controller = new BetterController(p, i, d, src, out);
+		controller = new BetterController(p, i, kd, src, out);
 	}
 
 	public void setHeight(double height)
@@ -83,7 +83,8 @@ public class Elevator
 
 	public void setSpeed(double L)
 	{
-		if (L < 0 && bottomLimit.get() || L > 0 && topLimit.get())
+		//System.out.println("0:"+ top.get()+" 1:"+ bottom.get()+" 2:"+ c.get()+" 4:"+ d.get());
+		if (L < 0 && !bottom.get() || L > 0 && !top.get())
 		{
 			talon0.set(ControlMode.PercentOutput, 0);
 			return;
@@ -120,5 +121,24 @@ public class Elevator
 	public void init()
 	{
 		controller.startPID(0);
+	}
+	public void checkTop()
+	{
+		new Thread()
+		{
+			@Override
+			public void run()
+			{
+				while (true)
+				{
+					if (!top.get())
+					{
+						talon0.set(ControlMode.PercentOutput, 0);
+						return;
+					}
+
+				}
+			}
+		}.start();
 	}
 }
