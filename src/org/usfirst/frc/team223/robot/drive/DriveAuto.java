@@ -107,12 +107,12 @@ public class DriveAuto extends DriveBase
 		this.stopControllers();
 	}
 
-	public void go(double set) throws InterruptedException
+	public void go(double set,int millisec) throws InterruptedException
 	{
 		leftController.startPID(set + drive.getLeftPosition());
 		rightController.startPID(set + drive.getRightPosition());
 
-		Thread.sleep(4000);
+		Thread.sleep(millisec);
 		this.stopControllers();
 	}
 

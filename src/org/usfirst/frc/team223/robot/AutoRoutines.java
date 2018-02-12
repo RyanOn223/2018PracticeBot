@@ -25,7 +25,7 @@ public class AutoRoutines
 	 * @param creep How far to move after turn
 	 * @param robotLeft Position of robot
 	 */
-	public static void near(int distance, int creep, int height, boolean robotLeft)
+	public static void near(boolean robotLeft)
 	{
 		new Thread()
 		{
@@ -35,14 +35,14 @@ public class AutoRoutines
 				{
 					// wait for general init
 					Thread.sleep(200);
-					//plate.setHeight(height*Constants.PLATE_CNT_TO_IN);
-					plate.setSpeed(1);
+
+					plate.setSpeed(Constants.NEAR_PLATE_HEIGHT);//do not use
 					plate.checkTop();
 					
 					
-					driveAuto.go(distance*Constants.DRIVE_CNT_TO_IN);
+					driveAuto.go(Constants.NEAR_DISTANCE,2000);
 					driveAuto.turn(robotLeft ? 90 : -90);
-					driveAuto.go(creep*Constants.DRIVE_CNT_TO_IN);
+					driveAuto.go(Constants.NEAR_CREEP,2000);
 					claw.out();
 				}
 				catch (InterruptedException e)
@@ -58,7 +58,7 @@ public class AutoRoutines
 	 * @param height How high to lift plate.  Must be larger than 34 in.
 	 * @param robotLeft Position of robot
 	 */
-	public static void far(int distance, int creep, int height, boolean robotLeft)
+	public static void far(boolean robotLeft)
 	{
 		new Thread()
 		{
@@ -69,18 +69,15 @@ public class AutoRoutines
 					// wait for general init
 					Thread.sleep(200);
 					
-					//plate.setHeight((height-34)*Constants.PLATE_CNT_TO_IN);
-					//elevator.setHeight(34*Constants.ELE_CNT_TO_IN);  elevator. gotottop
+					plate.setSpeed(Constants.FAR_PLATE_HEIGHT);//not good dont use
 					
-					plate.setSpeed(1);
-					
-					
-					driveAuto.go(distance*Constants.DRIVE_CNT_TO_IN);
+					driveAuto.go(Constants.FAR_DISTANCE,4000);
 					driveAuto.turn(robotLeft ? 90 : -90);
-					elevator.setSpeed(1);//TODO get up before creep
 					
-					elevator.checkTop();Thread.sleep(2000);
-					driveAuto.go(creep*Constants.DRIVE_CNT_TO_IN);
+					elevator.setSpeed(1);
+					elevator.checkTop();//wait for elevator at top
+					
+					driveAuto.go(Constants.FAR_CREEP,2000);
 					claw.out();
 				}
 				catch (InterruptedException e)
@@ -90,7 +87,7 @@ public class AutoRoutines
 		}.start();
 	}
 	
-	public static void middle(int distance, int creep, int height, boolean buttonLeft)
+	public static void middle(boolean buttonLeft)
 	{
 		new Thread()
 		{
@@ -101,19 +98,14 @@ public class AutoRoutines
 					// wait for general init
 					Thread.sleep(200);
 					
-					//80 115
-					plate.setSpeed(1);
-					//plate.setHeight(height*Constants.PLATE_CNT_TO_IN);
+					plate.setSpeed(Constants.MIDDLE_PLATE_HEIGHT);
 					
-					driveAuto.go(80*Constants.DRIVE_CNT_TO_IN);
-					
-					driveAuto.turn(-90);
-					
-					driveAuto.go(115*Constants.DRIVE_CNT_TO_IN);
-					
+					driveAuto.go(80*Constants.DRIVE_CNT_TO_IN,2000);
+					driveAuto.turn(buttonLeft?-90:90);
+					driveAuto.go(115*Constants.DRIVE_CNT_TO_IN,2000);
 					driveAuto.turn(0);
-					driveAuto.go(58*Constants.DRIVE_CNT_TO_IN);
-					driveAuto.turn(90);
+					driveAuto.go(58*Constants.DRIVE_CNT_TO_IN,2000);
+					driveAuto.turn(buttonLeft?90:-90);
 					claw.out();
 				}
 				catch (InterruptedException e)
@@ -132,7 +124,7 @@ public class AutoRoutines
 				{
 					// wait for general init
 					Thread.sleep(200);
-					driveAuto.go(distance*Constants.DRIVE_CNT_TO_IN);
+					driveAuto.go(distance*Constants.DRIVE_CNT_TO_IN,2000);
 				}
 				catch (InterruptedException e)
 				{

@@ -63,13 +63,41 @@ public class Plate
 		controller.startPID(e);
 	}
 
+	private int pos=0;
 	public void setSpeed(double L)
 	{
-		// System.out.println(bottom.get());
-		if (L < 0 && !bottom.get() || L > 0 && !top.get())
+		System.out.println(!bottom.get() + " " + pos);
+		if (L < 0)
 		{
-			talon.set(ControlMode.PercentOutput, 0);
-			return;
+			if (!bottom.get())
+			{
+				pos = -1;
+			}
+			if (!top.get())
+			{
+				pos = 0;
+			}
+			if (pos < 0)
+			{
+				talon.set(ControlMode.PercentOutput, 0);
+				return;
+			}
+		}
+		if (L > 0)
+		{
+			if (!top.get())
+			{
+				pos = 1;
+			}
+			if (!bottom.get())
+			{
+				pos = 0;
+			}
+			if (pos > 0)
+			{
+				talon.set(ControlMode.PercentOutput, 0);
+				return;
+			}
 		}
 		talon.set(ControlMode.PercentOutput, L);
 	}

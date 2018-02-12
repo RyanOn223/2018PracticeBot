@@ -19,8 +19,8 @@ public class Elevator
 	TalonSRX talon1 = new TalonSRX(RobotMap.elevator1);// slave
 
 	DigitalInput top = new DigitalInput(RobotMap.elevatorTop);
-	DigitalInput bottom = new DigitalInput(RobotMap.elevatorBotom);	
-	
+	DigitalInput bottom = new DigitalInput(RobotMap.elevatorBotom);
+
 	Solenoid solenoid = new Solenoid(RobotMap.pcmID, RobotMap.elevateSolenoid);
 
 	private BetterController controller;
@@ -32,7 +32,7 @@ public class Elevator
 		{
 			// System.out.println((int)controller.getSetpoint()+"
 			// "+(int)ahrs.getAngle()+" "+output);
-			
+
 			setSpeed(output);
 		}
 	};
@@ -81,13 +81,41 @@ public class Elevator
 		solenoid.set(yes);
 	}
 
+	public int pos = 0;
+
 	public void setSpeed(double L)
 	{
-		//System.out.println("0:"+ top.get()+" 1:"+ bottom.get()+" 2:"+ c.get()+" 4:"+ d.get());
-		if (L < 0 && !bottom.get() || L > 0 && !top.get())
+		if (L < 0)
 		{
-			talon0.set(ControlMode.PercentOutput, 0);
-			return;
+			if (!bottom.get())
+			{
+				pos = -1;
+			}
+			if (!top.get())
+			{
+				pos = 0;
+			}
+			if (pos < 0)
+			{
+				talon0.set(ControlMode.PercentOutput, 0);
+				return;
+			}
+		}
+		if (L > 0)
+		{
+			if (!top.get())
+			{
+				pos = 1;
+			}
+			if (!bottom.get())
+			{
+				pos = 0;
+			}
+			if (pos > 0)
+			{
+				talon0.set(ControlMode.PercentOutput, 0);
+				return;
+			}
 		}
 		talon0.set(ControlMode.PercentOutput, L);
 	}
@@ -122,23 +150,19 @@ public class Elevator
 	{
 		controller.startPID(0);
 	}
+
 	public void checkTop()
 	{
-		new Thread()
-		{
-			@Override
-			public void run()
-			{
-				while (true)
-				{
-					if (!top.get())
-					{
-						talon0.set(ControlMode.PercentOutput, 0);
-						return;
-					}
 
-				}
+		while (true)
+		{
+			if (!top.get())
+			{
+				talon0.set(ControlMode.PercentOutput, 0);
+				return;
 			}
-		}.start();
+
+		}
+
 	}
 }

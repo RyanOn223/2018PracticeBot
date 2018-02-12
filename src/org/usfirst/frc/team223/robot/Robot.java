@@ -97,14 +97,14 @@ public class Robot extends IterativeRobot
 			if(lever==location)
 			{
 				System.out.println("near");
-				AutoRoutines.near(137, 36,24, location=='L');
+				AutoRoutines.near(location=='L');
 			}
 			else
 			{
 				if(scale==location)
 				{
 					System.out.println("far");
-					AutoRoutines.far(166+137, 36,48, location=='L');
+					AutoRoutines.far(location=='L');
 				}
 				else
 				{
@@ -115,7 +115,7 @@ public class Robot extends IterativeRobot
 		}
 		//middle
 		case 'M':
-			AutoRoutines.middle(80,57,24, lever=='L');
+			AutoRoutines.middle(lever=='L');
 			break;
 		case 'D':
 			System.err.println("BAD DATA FROM DASH BOARD!\n\t Moving forward to cross line");
@@ -139,7 +139,8 @@ public class Robot extends IterativeRobot
 				{
 					//wait for general init
 					Thread.sleep(200);
-					elevator.setHeight(1536);
+					plate.setSpeed(1);
+					plate.checkTop();
 				}
 				catch (InterruptedException e){}
 			}
