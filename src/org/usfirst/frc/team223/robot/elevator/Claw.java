@@ -1,5 +1,6 @@
 package org.usfirst.frc.team223.robot.elevator;
 
+import org.usfirst.frc.team223.robot.constants.Constants;
 import org.usfirst.frc.team223.robot.constants.RobotMap;
 import org.usfirst.frc.team223.robot.utils.BetterController;
 
@@ -44,9 +45,9 @@ public class Claw
 		}
 	};
 	
-	private double p = 0.005;
+	private double p = 0.007;
 	private double i = 0.00000;
-	private double d = 0.00;
+	private double d = 0.001;
 	
 	public Claw()
 	{
@@ -57,7 +58,7 @@ public class Claw
 	
 	public void init()
 	{
-		controller.startPID(90);
+		controller.startPID(-45*Constants.CLAW_CNT_TO_DEG);
 	}
 	
 	public void setSpeed(double L)
@@ -105,7 +106,7 @@ public class Claw
 		intake.set(ControlMode.PercentOutput,forward?-1:1);
 	}
 	
-	public void setAngle(int deg){controller.startPID(deg);}
+	public void setAngle(int deg){controller.startPID(deg*Constants.CLAW_CNT_TO_DEG);}
 	public void addAngle(int j)
 	{
 		controller.addSetpoint(j);;
@@ -114,6 +115,11 @@ public class Claw
 	public void stopIntake()
 	{
 		intake.set(ControlMode.PercentOutput,0);		
+	}
+
+	public void disable()
+	{
+controller.disable();		
 	}
 
 	

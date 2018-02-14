@@ -66,8 +66,7 @@ public class Plate
 	private int pos=0;
 	public void setSpeed(double L)
 	{
-		System.out.println(!bottom.get() + " " + pos);
-		if (L < 0)
+		/*if (L < 0)
 		{
 			if (!bottom.get())
 			{
@@ -85,6 +84,7 @@ public class Plate
 		}
 		if (L > 0)
 		{
+			System.out.println(" hi");
 			if (!top.get())
 			{
 				pos = 1;
@@ -98,7 +98,7 @@ public class Plate
 				talon.set(ControlMode.PercentOutput, 0);
 				return;
 			}
-		}
+		}*/
 		talon.set(ControlMode.PercentOutput, L);
 	}
 
