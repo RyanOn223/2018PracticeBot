@@ -36,9 +36,7 @@ public class AutoRoutines
 					// wait for general init
 					Thread.sleep(200);
 
-					plate.setSpeed(Constants.NEAR_PLATE_HEIGHT);//do not use
-					plate.checkTop();
-					
+					plate.setHeight(Constants.SCALE_HEIGHT);					
 					
 					driveAuto.go(Constants.NEAR_DISTANCE,2000);
 					driveAuto.turn(robotLeft ? 90 : -90);
@@ -69,7 +67,7 @@ public class AutoRoutines
 					// wait for general init
 					Thread.sleep(200);
 					
-					plate.setSpeed(Constants.FAR_PLATE_HEIGHT);//not good dont use
+					plate.setHeight(Constants.SCALE_HEIGHT);
 					
 					driveAuto.go(Constants.FAR_DISTANCE,4000);
 					driveAuto.turn(robotLeft ? 90 : -90);
@@ -98,7 +96,7 @@ public class AutoRoutines
 					// wait for general init
 					Thread.sleep(200);
 					
-					plate.setSpeed(Constants.MIDDLE_PLATE_HEIGHT);
+					plate.setHeight(Constants.SWITCH_HEIGHT);
 					
 					driveAuto.go(80*Constants.DRIVE_CNT_TO_IN,2000);
 					driveAuto.turn(buttonLeft?-90:90);
@@ -114,7 +112,7 @@ public class AutoRoutines
 			}
 		}.start();
 	}
-	public static void none()
+	public static void error()
 	{
 		new Thread()
 		{
@@ -131,5 +129,30 @@ public class AutoRoutines
 				}
 			}
 		}.start();
+	}
+
+	public static void none(boolean left)
+	{
+		new Thread()
+		{
+			public void run()
+			{
+				try
+				{
+					// wait for general init
+					Thread.sleep(200);
+					driveAuto.go(Constants.TO_MIDDLE,2000);
+					driveAuto.turn(left?90:-90);
+					driveAuto.go(Constants.ACROSS_DISTANCE, 2000);
+					driveAuto.turn(180);
+					driveAuto.go(Constants.NONE_CREEP, 1000);
+					claw.out();
+				}
+				catch (InterruptedException e)
+				{
+				}
+			}
+		}.start();
+		
 	}
 }

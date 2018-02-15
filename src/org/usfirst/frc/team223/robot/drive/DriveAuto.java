@@ -14,6 +14,11 @@ public class DriveAuto extends DriveBase
 	private BetterController leftController;
 	private BetterController rightController;
 
+	private double leftDrive=0;
+	private double leftDrive=0;
+	private double leftDrive=0;
+	private double leftDrive=0;
+	
 	private PIDOutput leftOut = new PIDOutput() {
 		@Override
 		public void pidWrite(double output)
@@ -103,7 +108,7 @@ public class DriveAuto extends DriveBase
 	public void turn(double degrees) throws InterruptedException
 	{
 		rotateController.startPID(degrees);
-		Thread.sleep(2000);
+		Thread.sleep(1000);
 		this.stopControllers();
 	}
 

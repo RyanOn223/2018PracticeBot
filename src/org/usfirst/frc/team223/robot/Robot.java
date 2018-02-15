@@ -98,19 +98,17 @@ public class Robot extends IterativeRobot
 			{
 				if (lever == location&&routine!=1)
 				{
-					System.out.println("near");
 					AutoRoutines.near(location == 'L');
 				}
 				else
 				{
 					if (scale == location)
 					{
-						System.out.println("far");
 						AutoRoutines.far(location == 'L');
 					}
 					else
 					{
-						AutoRoutines.none();
+						AutoRoutines.none(location=='L');
 					}
 				}
 				break;
@@ -121,15 +119,15 @@ public class Robot extends IterativeRobot
 				break;
 			case 'D':
 				System.err.println("BAD DATA FROM DASH BOARD!\n\t Moving forward to cross line");
-				AutoRoutines.none();
+				AutoRoutines.error();
 				break;
 			case 'F':
 				System.err.println("BAD DATA FROM FMS!\n\t Moving forward to cross line");
-				AutoRoutines.none();
+				AutoRoutines.error();
 				break;
 			default:
 				System.out.println("something bad happened\n\\t Moving forward to cross line");
-				AutoRoutines.none();
+				AutoRoutines.error();
 				break;
 		}
 		// */

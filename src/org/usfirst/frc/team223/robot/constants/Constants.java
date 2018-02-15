@@ -8,13 +8,13 @@ public class Constants
 	public static final double CLAW_CNT_TO_DEG = 36;
 
 	public static final int SCALE_HEIGHT = 345678;// unknwn
-	public static final int SWITCH_HEIGHT = 345678;// unknown
+	public static final int SWITCH_HEIGHT = 345;// unknown
 
 	// Near AutoRoutine Distances---------
 
 	public static final double NEAR_DISTANCE = 137 * DRIVE_CNT_TO_IN;
 	public static final double NEAR_CREEP = 36 * DRIVE_CNT_TO_IN;
-	public static final double NEAR_PLATE_HEIGHT = 2345 * PLATE_CNT_TO_IN;// unknown do not use
+	
 
 	// -----------------------------------
 
@@ -22,7 +22,6 @@ public class Constants
 
 	public static final double FAR_DISTANCE = 303 * DRIVE_CNT_TO_IN;
 	public static final double FAR_CREEP = 36 * DRIVE_CNT_TO_IN;
-	public static final double FAR_PLATE_HEIGHT = 2345 * PLATE_CNT_TO_IN;// unknown do not use
 
 	// -----------------------------------
 
@@ -31,7 +30,14 @@ public class Constants
 	public static final double MIDDLE_DISTANCE = 80 * DRIVE_CNT_TO_IN;
 	public static final double MIDDLE_LEFT = 115 * DRIVE_CNT_TO_IN;
 	public static final double MIDDLE_CREEP = 58 * DRIVE_CNT_TO_IN;
-	public static final double MIDDLE_PLATE_HEIGHT = 2345 * PLATE_CNT_TO_IN;// unknown do not use
+
+	// -----------------------------------
+	
+	// None AutoRoutine Distances---------
+
+	public static final double TO_MIDDLE = 220 * DRIVE_CNT_TO_IN;
+	public static final double ACROSS_DISTANCE = 115 * DRIVE_CNT_TO_IN;//unknown
+	public static final double NONE_CREEP = 36 * DRIVE_CNT_TO_IN;
 
 	// -----------------------------------
 
