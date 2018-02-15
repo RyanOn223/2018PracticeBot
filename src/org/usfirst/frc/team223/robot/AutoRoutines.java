@@ -114,7 +114,7 @@ public class AutoRoutines
 			}
 		}.start();
 	}
-	public static void none(int distance)
+	public static void none()
 	{
 		new Thread()
 		{
@@ -124,7 +124,7 @@ public class AutoRoutines
 				{
 					// wait for general init
 					Thread.sleep(200);
-					driveAuto.go(distance*Constants.DRIVE_CNT_TO_IN,2000);
+					driveAuto.go(Constants.ERROR_DISTANCE,2000);
 				}
 				catch (InterruptedException e)
 				{

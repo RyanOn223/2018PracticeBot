@@ -119,7 +119,7 @@ public class Claw
 
 	public void disable()
 	{
-controller.disable();		
+		controller.disable();		
 	}
 
 	
