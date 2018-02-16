@@ -99,46 +99,32 @@ public class Robot extends IterativeRobot
 		{
 
 		case 'L':
-		{
-			if (lever == location && routine != 1)
-			{
-				AutoRoutines.near(location == 'L');
-			}
-			else
-			{
-				if (scale == location)
-				{
-					AutoRoutines.far(location == 'L');
-				}
-				else
-				{
-					AutoRoutines.none(location == 'L');
-				}
-			}
-			break;
-		}
 		case 'R':
 		{
-			if (lever == location && routine != 1)
+			if (lever == location&&	!( (routine&1)==1) )
 			{
-				AutoRoutines.near(location == 'L');
+				AutoRoutines.near(location == 'L',invert);
 			}
-			else
+			else if(!( (routine&2)==2) )
 			{
 				if (scale == location)
 				{
-					AutoRoutines.far(location == 'L');
+					AutoRoutines.far(location == 'L',invert);
 				}
 				else
 				{
-					AutoRoutines.none(location == 'L');
+					AutoRoutines.none(location == 'L',invert);
 				}
+			}
+			else
+			{
+				AutoRoutines.crossLine(location=='L',invert);
 			}
 			break;
 		}
 		// middle
 		case 'M':
-			AutoRoutines.middle(lever == 'L');
+			AutoRoutines.middle(lever == 'L',invert);
 			break;
 		case 'D':
 			System.err.println("BAD DATA FROM DASH BOARD!\n\t Moving forward to cross line");

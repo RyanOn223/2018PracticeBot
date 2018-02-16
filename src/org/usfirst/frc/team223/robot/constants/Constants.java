@@ -41,6 +41,7 @@ public class Constants
 
 	// -----------------------------------
 
+	public static final double ACROSS_BOTTOM=234*DRIVE_CNT_TO_IN;//unknown
 	public static final double ERROR_DISTANCE = 160 * DRIVE_CNT_TO_IN;
 
 }
