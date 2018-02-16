@@ -98,11 +98,11 @@ public class AutoRoutines
 					
 					plate.setHeight(Constants.SWITCH_HEIGHT);
 					
-					driveAuto.go(80*Constants.DRIVE_CNT_TO_IN,2000);
+					driveAuto.go(Constants.MIDDLE_DISTANCE,2000);
 					driveAuto.turn(buttonLeft?-90:90);
-					driveAuto.go(115*Constants.DRIVE_CNT_TO_IN,2000);
+					driveAuto.go(Constants.MIDDLE_LEFT,2000);
 					driveAuto.turn(0);
-					driveAuto.go(58*Constants.DRIVE_CNT_TO_IN,2000);
+					driveAuto.go(Constants.MIDDLE_CREEP,2000);
 					driveAuto.turn(buttonLeft?90:-90);
 					claw.out();
 				}
