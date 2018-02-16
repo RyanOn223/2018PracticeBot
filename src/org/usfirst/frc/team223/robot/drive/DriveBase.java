@@ -21,7 +21,7 @@ public class DriveBase
 	}
 	protected void rotate(double output)
 	{
-		drive.setMotors(-output, output);
+		drive.setMotors(output, -output);
 	}
 	
 	public void addController(String key, BetterController value)

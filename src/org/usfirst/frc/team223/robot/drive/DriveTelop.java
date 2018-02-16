@@ -62,8 +62,8 @@ public class DriveTelop extends DriveBase
 	/** Set the controllers based on joystick axis inputs.*/
 	public void cheese(BetterJoystick stick)
 	{
-		drive.setMotors((stick.getAxis(OI.leftYAxis) - stick.getAxis(OI.rightXAxis)) ,
-				 (stick.getAxis(OI.leftYAxis) + stick.getAxis(OI.rightXAxis)));
+		drive.setMotors(-(stick.getAxis(OI.leftYAxis) - stick.getAxis(OI.rightXAxis)) ,
+				 -(stick.getAxis(OI.leftYAxis) + stick.getAxis(OI.rightXAxis)));
 	}
 	
 	/**
@@ -75,6 +75,6 @@ public class DriveTelop extends DriveBase
 		//Sets new setpoint of pid to current angle plus value of joystick
 		controller.setSetpoint((int)ahrs.getAngle()+18*stick.getAxis(OI.rightXAxis));
 		//Then sets motors to value of outputs plus forward and back
-		drive.setMotors(stick.getAxis(OI.leftYAxis)+left,stick.getAxis(OI.leftYAxis)+right);
+		drive.setMotors(-(stick.getAxis(OI.leftYAxis)+left),-(stick.getAxis(OI.leftYAxis)+right));
 	}
 }

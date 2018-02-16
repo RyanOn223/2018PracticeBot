@@ -14,34 +14,44 @@ public class DriveAuto extends DriveBase
 	private BetterController leftController;
 	private BetterController rightController;
 
-	private double leftDrive=0;
-	private double leftDrive=0;
-	private double leftDrive=0;
-	private double leftDrive=0;
-	
-	private PIDOutput leftOut = new PIDOutput() {
+	private double leftDrive = 0;
+	private double rightDrive = 0;
+	private double leftRotate = 0;
+	private double rightRotate = 0;
+
+	private PIDOutput leftOut = new PIDOutput()
+	{
 		@Override
 		public void pidWrite(double output)
 		{
-			drive.setLeft(output);
+			if (output > 0) output = Math.min(output, .6);
+			if (output < 0) output = Math.max(output, -.6);
+			leftDrive = output;
 		}
 	};
-	private PIDOutput rightOut = new PIDOutput() {
+	private PIDOutput rightOut = new PIDOutput()
+	{
 		@Override
 		public void pidWrite(double output)
 		{
-			drive.setRight(output);
+			if (output > 0) output = Math.min(output, .6);
+			if (output < 0) output = Math.max(output, -.6);
+			rightDrive = output;
 		}
 	};
-	private PIDOutput rotateOut = new PIDOutput() {
+	private PIDOutput rotateOut = new PIDOutput()
+	{
 		@Override
 		public void pidWrite(double output)
 		{
-			rotate(output);
+			// rotate(output);
+			leftRotate = output;
+			rightRotate =- output;
 		}
 	};
 
-	private PIDSource leftSrc = new PIDSource() {
+	private PIDSource leftSrc = new PIDSource()
+	{
 		@Override
 		public void setPIDSourceType(PIDSourceType pidSource)
 		{
@@ -60,7 +70,8 @@ public class DriveAuto extends DriveBase
 		}
 	};
 
-	private PIDSource rightSrc = new PIDSource() {
+	private PIDSource rightSrc = new PIDSource()
+	{
 		@Override
 		public void setPIDSourceType(PIDSourceType pidSource)
 		{
@@ -90,13 +101,13 @@ public class DriveAuto extends DriveBase
 
 	public DriveAuto(DriveTrain drive, AHRS ahrs)
 	{
-		super(drive,ahrs);
+		super(drive, ahrs);
 		rotateController = new BetterController(rp, ri, rd, ahrs, rotateOut);
 		leftController = new BetterController(ap, ai, ad, leftSrc, leftOut);
 		rightController = new BetterController(ap, ai, ad, rightSrc, rightOut);
-		addController("rotate",rotateController);
-		addController("left",leftController);
-		addController("right",rightController);		
+		addController("rotate", rotateController);
+		addController("left", leftController);
+		addController("right", rightController);
 	}
 
 	/**
@@ -112,14 +123,19 @@ public class DriveAuto extends DriveBase
 		this.stopControllers();
 	}
 
-	public void go(double set,int millisec) throws InterruptedException
+	public void go(double set, int millisec) throws InterruptedException
 	{
 		leftController.startPID(set + drive.getLeftPosition());
 		rightController.startPID(set + drive.getRightPosition());
-		//rotateController.startPID(ahrs.getAngle());
+		rotateController.startPID(ahrs.getAngle());
 		Thread.sleep(millisec);
 		this.stopControllers();
 	}
 
+	public void update()
+	{
+		//System.out.println(leftDrive+" "+rightDrive);
+		drive.setMotors(leftRotate + leftDrive, rightRotate + rightDrive);
+	}
 
 }

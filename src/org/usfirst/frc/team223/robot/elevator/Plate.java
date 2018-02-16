@@ -7,7 +7,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
@@ -115,11 +114,6 @@ public class Plate
 	public double getPosition()
 	{
 		return talon.getSelectedSensorPosition(0);
-	}
-
-	public int getLocation()
-	{
-		return 0;// (int)((voltage.getVoltage()+.2)/1.5)-1;
 	}
 
 	public void stopControllers()

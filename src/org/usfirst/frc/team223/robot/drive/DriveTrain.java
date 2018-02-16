@@ -49,8 +49,8 @@ public class DriveTrain
 	public void setMotors(double L,double R)
 	{
 		//System.out.println(R+" "+L);
-		setLeft(-L);
-		setRight(-R);
+		setLeft(L);
+		setRight(R);
 	}
 	/**
 	 *  set speed of all motors to zero

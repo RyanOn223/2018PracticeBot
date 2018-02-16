@@ -121,6 +121,4 @@ public class Claw
 	{
 		controller.disable();		
 	}
-
-	
 }
