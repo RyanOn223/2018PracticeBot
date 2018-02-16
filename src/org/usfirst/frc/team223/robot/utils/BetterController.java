@@ -1,4 +1,4 @@
-package org.usfirst.frc.team223.robot.drive;
+package org.usfirst.frc.team223.robot.utils;
 
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
@@ -13,8 +13,13 @@ public class BetterController extends PIDController
 
 	public void startPID(double startPoint)
 	{
-		System.out.println("Starting pid");
 		this.setSetpoint(startPoint);
-		this.enable();
+		if(!this.isEnabled())
+			this.enable();
+	}
+	
+	public void addSetpoint(double i)
+	{
+		this.setSetpoint(i+this.getSetpoint());
 	}
 }

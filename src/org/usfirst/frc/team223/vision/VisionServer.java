@@ -2,24 +2,22 @@ package org.usfirst.frc.team223.vision;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Stack;
 
 import org.opencv.core.Mat;
-import org.opencv.core.Point;
 import org.opencv.imgcodecs.Imgcodecs;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 
 public class VisionServer extends Thread
 {
@@ -91,11 +89,8 @@ public class VisionServer extends Thread
 			}
 			catch (IOException e)
 			{
-
 			}
-
 		}
-
 	}
 
 	private void readData() throws IOException
@@ -107,10 +102,13 @@ public class VisionServer extends Thread
 			{
 				int ans=inputStream.readInt();
 				System.out.println(ans);
-				System.out.println(System.currentTimeMillis());
 			}
 		}
 		catch(EOFException u)
+		{
+			return;
+		}
+		catch(SocketException u)
 		{
 			return;
 		}

@@ -1,24 +1,42 @@
 package org.usfirst.frc.team223.robot.drive;
 
+import org.usfirst.frc.team223.robot.utils.BetterController;
+
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
-public class DriveAuto
+public class DriveAuto extends DriveBase
 {
-	private DriveBase drive;
-	private AHRS ahrs;
+	// private AHRS ahrs;
 	private BetterController rotateController;
-	private BetterController averageController;
+	private BetterController leftController;
+	private BetterController rightController;
 
-	
-	private PIDOutput averageOut = new PIDOutput()
+	private double leftDrive = 0;
+	private double rightDrive = 0;
+	private double leftRotate = 0;
+	private double rightRotate = 0;
+
+	private PIDOutput leftOut = new PIDOutput()
 	{
 		@Override
 		public void pidWrite(double output)
 		{
-			drive.setMotors(output);
+			if (output > 0) output = Math.min(output, .6);
+			if (output < 0) output = Math.max(output, -.6);
+			leftDrive = output;
+		}
+	};
+	private PIDOutput rightOut = new PIDOutput()
+	{
+		@Override
+		public void pidWrite(double output)
+		{
+			if (output > 0) output = Math.min(output, .6);
+			if (output < 0) output = Math.max(output, -.6);
+			rightDrive = output;
 		}
 	};
 	private PIDOutput rotateOut = new PIDOutput()
@@ -26,86 +44,98 @@ public class DriveAuto
 		@Override
 		public void pidWrite(double output)
 		{
-			rotate(output);
+			// rotate(output);
+			leftRotate = output;
+			rightRotate =- output;
 		}
 	};
-	
-	private PIDSource averageSrc = new PIDSource()
+
+	private PIDSource leftSrc = new PIDSource()
 	{
 		@Override
 		public void setPIDSourceType(PIDSourceType pidSource)
-		{			
+		{
 		}
+
 		@Override
 		public PIDSourceType getPIDSourceType()
 		{
 			return PIDSourceType.kDisplacement;
 		}
+
 		@Override
 		public double pidGet()
 		{
-			return encoderGet();
+			return drive.getLeftPosition();
 		}
 	};
-	
-	//default pids change in general init
-	private double tp = 0.0065;
-	private double ti = 0.000001;
-	private double td = 0.005;
-	
-	private double ap = 0.0111;
-	private double ai = 0.0001;
-	private double ad = 0;
 
-	public DriveAuto(DriveBase drive, AHRS ahrs)
+	private PIDSource rightSrc = new PIDSource()
 	{
-		this.drive = drive;
-		this.ahrs = ahrs;
-		rotateController = new BetterController(tp, ti, td, ahrs, rotateOut);
-		averageController = new BetterController(ap, ai, ad, averageSrc, averageOut);
+		@Override
+		public void setPIDSourceType(PIDSourceType pidSource)
+		{
+		}
+
+		@Override
+		public PIDSourceType getPIDSourceType()
+		{
+			return PIDSourceType.kDisplacement;
+		}
+
+		@Override
+		public double pidGet()
+		{
+			return drive.getRightPosition();
+		}
+	};
+
+	// default pids change in general init
+	private double rp = 0.0155;
+	private double ri = 0.00000;
+	private double rd = 0.00;
+
+	private double ap = 0.001;
+	private double ai = 0.000;
+	private double ad = 0.003;
+
+	public DriveAuto(DriveTrain drive, AHRS ahrs)
+	{
+		super(drive, ahrs);
+		rotateController = new BetterController(rp, ri, rd, ahrs, rotateOut);
+		leftController = new BetterController(ap, ai, ad, leftSrc, leftOut);
+		rightController = new BetterController(ap, ai, ad, rightSrc, rightOut);
+		addController("rotate", rotateController);
+		addController("left", leftController);
+		addController("right", rightController);
 	}
 
-
-	public double getPID()
-	{
-		return rotateController.get();
-	}
-
-	public double encoderGet()
-	{
-		return (drive.getLeftSpeed()+drive.getRightSpeed())/2;
-	}
-	
-	
 	/**
 	 * starts PID to turn degrees number of degrees
+	 * 
 	 * @param degrees
+	 * @throws InterruptedException
 	 */
-	public void turn(double degrees)
+	public void turn(double degrees) throws InterruptedException
 	{
 		rotateController.startPID(degrees);
+		Thread.sleep(1000);
+		this.stopControllers();
 	}
 
-	public void go(double set)
+	public void go(double set, int millisec) throws InterruptedException
 	{
-		averageController.startPID(set);
+		leftController.startPID(set + drive.getLeftPosition());
+		rightController.startPID(set + drive.getRightPosition());
+		rotateController.startPID(ahrs.getAngle());
+		Thread.sleep(millisec);
+		this.stopControllers();
 	}
 
-	public void stop()
+	public void update()
 	{
-		rotateController.disable();
-		rotateController.reset();
-		averageController.disable();
-		averageController.reset();
+		//System.out.println(leftDrive+" "+rightDrive);
+		drive.setMotors(leftRotate + leftDrive, rightRotate + rightDrive);
 	}
 
-	protected void rotate(double output)
-	{
-		drive.setSides(-output, output);
-	}
-
-	public void setPID(double p, double i, double d)
-	{
-		averageController.setPID(p, i, d);
-	}
 }
