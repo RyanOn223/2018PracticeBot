@@ -97,8 +97,26 @@ public class Robot extends IterativeRobot
 
 		switch (location)
 		{
-		// left right
+
 		case 'L':
+		{
+			if (lever == location && routine != 1)
+			{
+				AutoRoutines.near(location == 'L');
+			}
+			else
+			{
+				if (scale == location)
+				{
+					AutoRoutines.far(location == 'L');
+				}
+				else
+				{
+					AutoRoutines.none(location == 'L');
+				}
+			}
+			break;
+		}
 		case 'R':
 		{
 			if (lever == location && routine != 1)
