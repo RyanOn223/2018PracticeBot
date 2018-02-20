@@ -224,13 +224,13 @@ public class Robot extends IterativeRobot
 			@Override
 			public void go()
 			{
-				drive.setPistons(true);
+				elevator.setPistons(true);
 			}
 
 			@Override
 			public void stop()
 			{
-				drive.setPistons(false);
+				elevator.setPistons(false);
 			}
 		};
 		raiseLatch = new Latch(OI.clawUp)
