@@ -67,11 +67,11 @@ public class Plate
 	{
 		//System.out.println("2:"+top.get()+" 4:"+bottom.get());
 
-		/*if (L < 0)
+		if (L < 0)
 		{
-			if (!bottom.get())
+			//if (!bottom.get())
 			{
-				pos = -1;
+				//pos = -1;
 			}
 			if (!top.get())
 			{
@@ -82,10 +82,9 @@ public class Plate
 				talon.set(ControlMode.PercentOutput, 0);
 				return;
 			}
-		}*/
+		}
 		if (L > 0)
 		{
-			System.out.println(" hi");
 			if (!top.get())
 			{
 				pos = 1;

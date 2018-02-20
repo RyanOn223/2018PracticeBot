@@ -91,7 +91,7 @@ public class DriveAuto extends DriveBase
 	};
 
 	// default pids change in general init
-	private double rp = 0.0195;
+	private double rp = 0.0175;
 	private double ri = 0.00000;
 	private double rd = 0.00;
 
@@ -119,7 +119,7 @@ public class DriveAuto extends DriveBase
 	public void turn(double degrees) throws InterruptedException
 	{
 		rotateController.startPID(degrees);
-		Thread.sleep(1000);
+		Thread.sleep(2000);
 		this.stopControllers();
 	}
 

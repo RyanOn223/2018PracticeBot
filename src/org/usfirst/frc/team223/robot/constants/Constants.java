@@ -16,8 +16,8 @@ public class Constants
 	
 	public static final double TO_MIDDLE = 220 * DRIVE_CNT_TO_IN;
 	public static final double START_CREEP= 36 * DRIVE_CNT_TO_IN;
-	public static final double FAR_ACROSS = 220 * DRIVE_CNT_TO_IN;//unknown
-	public static final double MIDDLE_ACROSS = 220 * DRIVE_CNT_TO_IN;//unknown
+	public static final double FAR_ACROSS = 60 * DRIVE_CNT_TO_IN;//unknown
+	public static final double MIDDLE_ACROSS = 60 * DRIVE_CNT_TO_IN;//unknown
 	
 	// Near AutoRoutine Distances---------
 

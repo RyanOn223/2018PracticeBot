@@ -37,23 +37,23 @@ public class AutoRoutines
 			}
 			else
 			{
-				driveAuto.go(Constants.START_CREEP, 2000);
+				driveAuto.go(Constants.START_CREEP, 4000);
 				driveAuto.turn(goLeft ? -90 : 90);
-				driveAuto.go(Constants.FAR_ACROSS, 2000);
+				driveAuto.go(Constants.FAR_ACROSS, 4000);
 				driveAuto.turn(0);
-				driveAuto.go(Constants.TO_MIDDLE - Constants.START_CREEP, 2000);
+				driveAuto.go(Constants.TO_MIDDLE - Constants.START_CREEP, 4000);
 				driveAuto.turn(goLeft ? 90 : -90);
 			}
 			break;
 		}
 		case 'M':
 		{
-			driveAuto.go(Constants.START_CREEP, 2000);
+			driveAuto.go(Constants.START_CREEP, 4000);
 
 			driveAuto.turn(goLeft ? -90 : 90);
-			driveAuto.go(Constants.MIDDLE_ACROSS, 2000);
+			driveAuto.go(Constants.MIDDLE_ACROSS, 4000);
 			driveAuto.turn(0);
-			driveAuto.go(Constants.TO_MIDDLE - Constants.START_CREEP, 2000);
+			driveAuto.go(Constants.TO_MIDDLE - Constants.START_CREEP, 4000);
 			driveAuto.turn(goLeft ? 90 : -90);
 			break;
 		}
@@ -148,9 +148,11 @@ public class AutoRoutines
 
 					plate.setHeight(Constants.SCALE_HEIGHT);
 
-					driveAuto.go(Constants.NSCALE_DISTANCE, 2000);
-					driveAuto.turn(180);
-					driveAuto.go(Constants.SCALE_CREEP, 2000);
+					driveAuto.go(Constants.NSCALE_DISTANCE, 4000);
+					driveAuto.turn(0);
+					elevator.setHeight(Constants.ELEVATOR_HEIGHT);
+					Thread.sleep(1000);
+					driveAuto.go(Constants.SCALE_CREEP, 4000);
 					claw.out();
 				}
 				catch (InterruptedException e)
@@ -175,7 +177,9 @@ public class AutoRoutines
 					plate.setHeight(Constants.SCALE_HEIGHT);
 
 					driveAuto.go(Constants.FSCALE_DISTANCE, 2000);
-					driveAuto.turn(180);
+					driveAuto.turn(0);
+					elevator.setHeight(Constants.ELEVATOR_HEIGHT);
+					Thread.sleep(1000);
 					driveAuto.go(Constants.SCALE_CREEP, 2000);
 					claw.out();
 				}

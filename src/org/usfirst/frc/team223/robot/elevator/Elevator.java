@@ -154,7 +154,6 @@ public class Elevator
 
 	public void checkTop()
 	{
-
 		while (true)
 		{
 			if (!top.get())
