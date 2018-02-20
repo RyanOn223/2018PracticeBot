@@ -16,8 +16,7 @@ public class DriveTrain
 	TalonSRX talonR1=new TalonSRX(RobotMap.driveR1);//encoder here
 	
 
-	Solenoid solenoidL = new Solenoid(RobotMap.pcmID, RobotMap.leftSolenoid);
-	Solenoid solenoidR = new Solenoid(RobotMap.pcmID, RobotMap.rightSolenoid);
+	Solenoid solenoid = new Solenoid(RobotMap.pcmID, RobotMap.driveSolenoid);
 	
 	public DriveTrain()
 	{
@@ -61,8 +60,7 @@ public class DriveTrain
 	}
 	public void setPistons(boolean yes)
 	{
-		solenoidL.set(yes);
-		solenoidR.set(yes);
+		solenoid.set(yes);
 	}
 
 	public void resetEncoders()

@@ -17,6 +17,7 @@ public class Elevator
 {
 	TalonSRX talon0 = new TalonSRX(RobotMap.elevator0);// encoder here
 	TalonSRX talon1 = new TalonSRX(RobotMap.elevator1);// slave
+	TalonSRX talon2 = new TalonSRX(RobotMap.elevator2);// slave
 
 	DigitalInput top = new DigitalInput(RobotMap.elevatorTop);
 	DigitalInput bottom = new DigitalInput(RobotMap.elevatorBotom);
@@ -66,8 +67,10 @@ public class Elevator
 
 		// setSlave
 		talon1.set(ControlMode.Follower, RobotMap.elevator0);
+		talon2.set(ControlMode.Follower, RobotMap.elevator0);
 		// done
 
+		talon1.setInverted(true);
 		controller = new BetterController(p, i, kd, src, out);
 	}
 
@@ -85,37 +88,24 @@ public class Elevator
 
 	public void setSpeed(double L)
 	{
-		if (L < 0)
+		System.out.println("0: " + top.get() + " 1: " + bottom.get() + " " + pos);
+
+		if (solenoid.get())
 		{
-			if (!bottom.get())
-			{
-				pos = -1;
-			}
-			if (!top.get())
-			{
-				pos = 0;
-			}
-			if (pos < 0)
-			{
-				talon0.set(ControlMode.PercentOutput, 0);
-				return;
-			}
+			talon0.set(ControlMode.PercentOutput, 0);
+			return;
 		}
-		if (L > 0)
+		if(L>0&&!top.get())
 		{
-			if (!top.get())
-			{
-				pos = 1;
-			}
-			if (!bottom.get())
-			{
-				pos = 0;
-			}
-			if (pos > 0)
-			{
-				talon0.set(ControlMode.PercentOutput, 0);
-				return;
-			}
+			solenoid.set(true);
+			talon0.set(ControlMode.PercentOutput, 0);
+			return;
+		}
+		if(L<0&&!bottom.get())
+		{
+			solenoid.set(true);
+			talon0.set(ControlMode.PercentOutput, 0);
+			return;
 		}
 		talon0.set(ControlMode.PercentOutput, L);
 	}

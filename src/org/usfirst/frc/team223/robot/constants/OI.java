@@ -31,13 +31,13 @@ public class OI
 	
 	public static JoystickButton clawDrop = new JoystickButton(operator, 1);
 	public static JoystickButton clawUp = new JoystickButton(operator, 4);
-	public static JoystickButton clawMove = new JoystickButton(operator, 3);
 	
 	public static JoystickButton intake = new JoystickButton(operator,5);
 	public static JoystickButton outtake = new JoystickButton(operator,6);
 	
 	
-
+	public static JoystickButton elevatorLock = new JoystickButton(operator, 3);
+	public static JoystickButton elevatorUnlock = new JoystickButton(operator, 2);
 	
 	public static JoystickButton shiftFast = new JoystickButton(driver, 6);
 

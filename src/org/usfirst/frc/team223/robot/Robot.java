@@ -40,6 +40,7 @@ public class Robot extends IterativeRobot
 	Claw claw;
 
 	Latch shiftLatch;
+	Latch elevatorLatch;
 	Latch raiseLatch;
 	Latch resetLatch;
 
@@ -202,8 +203,22 @@ public class Robot extends IterativeRobot
 		{
 		}
 
-		// claw.init();
 		shiftLatch = new Latch(OI.shiftFast)
+		{
+
+			@Override
+			public void go()
+			{
+				drive.setPistons(true);
+			}
+
+			@Override
+			public void stop()
+			{
+				drive.setPistons(false);
+			}
+		};
+		elevatorLatch= new Latch(OI.elevatorLock)
 		{
 
 			@Override
@@ -253,7 +268,8 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopPeriodic()
 	{
-
+		elevatorLatch.get();
+		
 		shiftLatch.get();
 		if (!raiseLatch.get())
 		{
