@@ -21,137 +21,48 @@ public class AutoRoutines
 		elevator = e;
 	}
 
-	public static void crossLine(char pos, boolean goRight)
+	// Done Don't touch
+	private static void crossLine(char pos, boolean goLeft) throws InterruptedException
 	{
 		switch (pos)
 		{
-
-			case 'L':
-			case 'R':
+		case 'L':
+		case 'R':
+		{
+			if (pos == 'L' == goLeft)
 			{
-				
+				driveAuto.go(Constants.TO_MIDDLE, 2000);
+				driveAuto.turn(goLeft ? 90 : -90);
 			}
-			case 'M':
+			else
 			{
-				
+				driveAuto.go(Constants.START_CREEP, 2000);
+				driveAuto.turn(goLeft ? -90 : 90);
+				driveAuto.go(Constants.FAR_ACROSS, 2000);
+				driveAuto.turn(0);
+				driveAuto.go(Constants.TO_MIDDLE - Constants.START_CREEP, 2000);
+				driveAuto.turn(goLeft ? 90 : -90);
 			}
+			break;
 		}
-	}
+		case 'M':
+		{
+			driveAuto.go(Constants.START_CREEP, 2000);
 
-	/**
-	 * @param distance
-	 *           initial Distance
-	 * @param creep
-	 *           How far to move after turn
-	 * @param robotLeft
-	 *           Position of robot
-	 */
-	public static void near(boolean robotLeft, boolean alwaysRight)
-	{
-		new Thread() {
-			public void run()
-			{
-				try
-				{
-					// wait for general init
-					Thread.sleep(200);
-					plate.setHeight(Constants.SCALE_HEIGHT);
-					if (alwaysRight == robotLeft)
-					{
-						driveAuto.go(Constants.NEAR_DISTANCE, 2000);
-						driveAuto.turn(robotLeft ? 90 : -90);
-						driveAuto.go(Constants.NEAR_CREEP, 2000);
-					}
-					else
-					{
-						driveAuto.go(Constants.MIDDLE_DISTANCE, 2000);
-						driveAuto.turn(robotLeft ? 90 : -90);
-						driveAuto.go(Constants.ACROSS_BOTTOM, 2000);
-						driveAuto.turn(0);
-						driveAuto.go(Constants.MIDDLE_CREEP, 2000);
-						driveAuto.turn(robotLeft ? -90 : 90);
-						driveAuto.go(567890, 2000);
-						driveAuto.turn(180);
-						driveAuto.go(1, 1000);
-					}
-
-					claw.out();
-				}
-				catch (InterruptedException e)
-				{
-				}
-			}
-		}.start();
-	}
-
-	/**
-	 * @param distance
-	 *           initial Distance
-	 * @param creep
-	 *           How far to move after turn
-	 * @param height
-	 *           How high to lift plate. Must be larger than 34 in.
-	 * @param robotLeft
-	 *           Position of robot
-	 */
-	public static void far(boolean robotLeft, boolean alwaysLeft)
-	{
-		new Thread() {
-			public void run()
-			{
-				try
-				{
-					// wait for general init
-					Thread.sleep(200);
-
-					plate.setHeight(Constants.SCALE_HEIGHT);
-
-					driveAuto.go(Constants.FAR_DISTANCE, 4000);
-					driveAuto.turn(robotLeft ? 90 : -90);
-
-					elevator.setSpeed(1);
-					elevator.checkTop();// wait for elevator at top
-
-					driveAuto.go(Constants.FAR_CREEP, 2000);
-					claw.out();
-				}
-				catch (InterruptedException e)
-				{
-				}
-			}
-		}.start();
-	}
-
-	public static void middle(boolean buttonLeft, boolean alwaysLeft)
-	{
-		new Thread() {
-			public void run()
-			{
-				try
-				{
-					// wait for general init
-					Thread.sleep(200);
-
-					plate.setHeight(Constants.SWITCH_HEIGHT);
-
-					driveAuto.go(Constants.MIDDLE_DISTANCE, 2000);
-					driveAuto.turn(buttonLeft ? -90 : 90);
-					driveAuto.go(Constants.ACROSS_DISTANCE, 2000);
-					driveAuto.turn(0);
-					driveAuto.go(Constants.MIDDLE_CREEP, 2000);
-					driveAuto.turn(buttonLeft ? 90 : -90);
-					claw.out();
-				}
-				catch (InterruptedException e)
-				{
-				}
-			}
-		}.start();
+			driveAuto.turn(goLeft ? -90 : 90);
+			driveAuto.go(Constants.MIDDLE_ACROSS, 2000);
+			driveAuto.turn(0);
+			driveAuto.go(Constants.TO_MIDDLE - Constants.START_CREEP, 2000);
+			driveAuto.turn(goLeft ? 90 : -90);
+			break;
+		}
+		}
 	}
 
 	public static void error()
 	{
-		new Thread() {
+		new Thread()
+		{
 			public void run()
 			{
 				try
@@ -167,20 +78,22 @@ public class AutoRoutines
 		}.start();
 	}
 
-	public static void none(boolean left, boolean alwaysLeft)
+	public static void leverFar(char pos, boolean invert)
 	{
-		new Thread() {
+		new Thread()
+		{
 			public void run()
 			{
 				try
 				{
 					// wait for general init
 					Thread.sleep(200);
-					driveAuto.go(Constants.TO_MIDDLE, 2000);
-					driveAuto.turn(left ? 90 : -90);
-					driveAuto.go(Constants.ACROSS_DISTANCE, 2000);
+					crossLine(pos, invert);
+					plate.setHeight(Constants.SCALE_HEIGHT);
+
+					driveAuto.go(Constants.FLEVER_DISTANCE, 2000);
 					driveAuto.turn(180);
-					driveAuto.go(Constants.NONE_CREEP, 1000);
+					driveAuto.go(Constants.LEVER_CREEP, 2000);
 					claw.out();
 				}
 				catch (InterruptedException e)
@@ -188,18 +101,100 @@ public class AutoRoutines
 				}
 			}
 		}.start();
-
 	}
 
-	public static void lever(boolean invert)
+	public static void leverNear(char pos, boolean invert)
 	{
-		// TODO Auto-generated method stub
-		
+		new Thread()
+		{
+			public void run()
+			{
+				try
+				{
+					Thread.sleep(200);
+					crossLine(pos, invert);
+
+					plate.setHeight(Constants.SCALE_HEIGHT);
+
+					driveAuto.go(Constants.NLEVER_DISTANCE, 2000);
+					driveAuto.turn(180);
+					driveAuto.go(Constants.LEVER_CREEP, 2000);
+
+					claw.out();
+				}
+				catch (InterruptedException e)
+				{
+				}
+			}
+		}.start();
 	}
 
-	public static void scale(boolean invert)
+	public static void scaleNear(char pos, boolean invert)
 	{
-		// TODO Auto-generated method stub
-		
+		new Thread()
+		{
+			public void run()
+			{
+				try
+				{
+					// wait for general init
+					Thread.sleep(200);
+					crossLine(pos, invert);
+
+					plate.setHeight(Constants.SCALE_HEIGHT);
+
+					driveAuto.go(Constants.NSCALE_DISTANCE, 2000);
+					driveAuto.turn(180);
+					driveAuto.go(Constants.SCALE_CREEP, 2000);
+					claw.out();
+				}
+				catch (InterruptedException e)
+				{
+				}
+			}
+		}.start();
+	}
+
+	public static void scaleFar(char pos, boolean invert)
+	{
+		new Thread()
+		{
+			public void run()
+			{
+				try
+				{
+					// wait for general init
+					Thread.sleep(200);
+					crossLine(pos, invert);
+					plate.setHeight(Constants.SCALE_HEIGHT);
+
+					driveAuto.go(Constants.FSCALE_DISTANCE, 2000);
+					driveAuto.turn(180);
+					driveAuto.go(Constants.SCALE_CREEP, 2000);
+					claw.out();
+				}
+				catch (InterruptedException e)
+				{
+				}
+			}
+		}.start();
+	}
+
+	public static void crossLineThread(char location, boolean invert)
+	{
+		new Thread()
+		{
+			public void run()
+			{
+				try
+				{
+					crossLine(location, invert);
+				}
+				catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}.start();
 	}
 }

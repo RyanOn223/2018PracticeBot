@@ -46,8 +46,8 @@ public class Robot extends IterativeRobot
 	VisionServer visionServer;
 
 	/**
-	 * This function is run when the robot is first started up and should be used
-	 * for any initialization code.
+	 * This function is run when the robot is first started up and should be
+	 * used for any initialization code.
 	 */
 	@Override
 	public void robotInit()
@@ -70,7 +70,8 @@ public class Robot extends IterativeRobot
 	}
 
 	/**
-	 * This function is run once each time the robot enters autonomous mode
+	 * This function is run once each time the robot enters autonomous mode. I
+	 * apologize for this spaghetti
 	 */
 	@Override
 	public void autonomousInit()
@@ -80,15 +81,27 @@ public class Robot extends IterativeRobot
 		/// *gets string from dashboard, puts it in uppercase, takes first
 		/// letter
 		char location = p.getString("position", "D").toUpperCase().toCharArray()[0];
-		int routine = p.getInt("routine", 0);
+		int routine = p.getInt("routine", 3);
 
 		// invert true means go left false means go right
 		boolean invert = p.getBoolean("left", false);
-
+		
+		boolean ignoreSwitch = (routine & 1) == 1;
+		boolean ignoreScale = (routine & 2) == 2;
 		String gameData = DriverStation.getInstance().getGameSpecificMessage();
 
-		char lever = gameData.charAt(0);
-		char scale = gameData.charAt(1);
+		char lever='Q';
+		char scale='Q';
+
+		if (gameData != null)
+		{
+			try
+			{
+				lever = gameData.charAt(0);
+				scale = gameData.charAt(1);
+			}
+			catch (IndexOutOfBoundsException e){}
+		}		
 
 		// makes sure lever and scale are both L or R
 		if (!((lever == 'L' || lever == 'R') && (scale == 'L' || scale == 'R')))
@@ -99,46 +112,58 @@ public class Robot extends IterativeRobot
 		switch (location)
 		{
 
-			case 'L':
-			case 'R':
-			case 'M':
+		case 'L':
+		case 'R':
+		case 'M':
+		{
+		
+
+			// if switch is on the left and so is robot after crossing line
+			if (!ignoreSwitch && 'L' == lever == invert)
 			{
-				AutoRoutines.crossLine(location, invert);
-
-				// if switch is on the left and so is robot after crossing line
-				if ((lever == 'L' == invert) && !((routine & 1) == 1))
-				{
-					AutoRoutines.lever(invert);
-				}
-				else if ((scale == 'L' == invert) && !((routine & 2) == 2))
-				{
-					AutoRoutines.scale(invert);
-				}
-
-				break;
+				AutoRoutines.leverNear(location,invert);
 			}
-			case 'D':
-				System.err.println("BAD DATA FROM DASH BOARD!\n\t Moving forward to cross line");
-				AutoRoutines.error();
-				break;
-			case 'F':
-				System.err.println("BAD DATA FROM FMS!\n\t Moving forward to cross line");
-				AutoRoutines.error();
-				break;
-			default:
-				System.out.println("something bad happened\n\\t Moving forward to cross line");
-				AutoRoutines.error();
-				break;
+			else if (!ignoreScale && 'L' == scale == invert)
+			{
+				AutoRoutines.scaleNear(location,invert);
+			}
+			else if (!ignoreSwitch)
+			{
+				AutoRoutines.leverFar(location,invert);
+			}
+			else if (!ignoreScale)
+			{
+				AutoRoutines.scaleFar(location,invert);
+			}
+			else
+			{
+				AutoRoutines.crossLineThread(location, invert);
+			}
+			break;
+		}
+		case 'D':
+			System.err.println("BAD DATA FROM DASH BOARD!\n\t Moving forward to cross line");
+			AutoRoutines.error();
+			break;
+		case 'F':
+			System.err.println("BAD DATA FROM FMS!\n\t Moving forward to cross line");
+			AutoRoutines.error();
+			break;
+		default:
+			System.out.println("something bad happened\n\\t Moving forward to cross line");
+			AutoRoutines.error();
+			break;
 		}
 		// */
 		/// *
-		new Thread() {
+		new Thread()
+		{
 			public void run()
 			{
 				try
 				{ // wait for general init
 					Thread.sleep(200);
-					driveAuto.go(Constants.FAR_DISTANCE, 4000);
+					driveAuto.go(Constants.ERROR_DISTANCE, 4000);
 				}
 				catch (InterruptedException e)
 				{
@@ -171,16 +196,18 @@ public class Robot extends IterativeRobot
 	}
 
 	/**
-	 * This function is called once each time the robot enters tele-operated mode
+	 * This function is called once each time the robot enters tele-operated
+	 * mode
 	 */
 	@Override
 	public void teleopInit()
 	{
 		/*
-		 * This doesn't work because the offsets constantly change Map<Integer, Double>
-		 * driverOffsets = new HashMap<>(); driverOffsets.put(OI.leftXAxis,
-		 * OI.driver.getRawAxis(OI.leftXAxis)); driverOffsets.put(OI.leftYAxis,
-		 * OI.driver.getRawAxis(OI.leftYAxis)); driverOffsets.put(OI.rightXAxis,
+		 * This doesn't work because the offsets constantly change Map<Integer,
+		 * Double> driverOffsets = new HashMap<>();
+		 * driverOffsets.put(OI.leftXAxis, OI.driver.getRawAxis(OI.leftXAxis));
+		 * driverOffsets.put(OI.leftYAxis, OI.driver.getRawAxis(OI.leftYAxis));
+		 * driverOffsets.put(OI.rightXAxis,
 		 * OI.driver.getRawAxis(OI.rightXAxis));
 		 * OI.driver.setAxisOffsets(driverOffsets);
 		 */
@@ -195,7 +222,8 @@ public class Robot extends IterativeRobot
 		}
 
 		// claw.init();
-		shiftLatch = new Latch(OI.shiftFast) {
+		shiftLatch = new Latch(OI.shiftFast)
+		{
 
 			@Override
 			public void go()
@@ -209,7 +237,8 @@ public class Robot extends IterativeRobot
 				drive.setPistons(false);
 			}
 		};
-		raiseLatch = new Latch(OI.clawUp) {
+		raiseLatch = new Latch(OI.clawUp)
+		{
 			@Override
 			public void go()
 			{
@@ -221,7 +250,8 @@ public class Robot extends IterativeRobot
 			{
 			}
 		};
-		resetLatch = new Latch(OI.clawDrop) {
+		resetLatch = new Latch(OI.clawDrop)
+		{
 			@Override
 			public void go()
 			{
@@ -265,6 +295,7 @@ public class Robot extends IterativeRobot
 		SmartDashboard.putNumber("ele", elevator.getPosition());
 		SmartDashboard.putNumber("right", drive.getRightPosition());
 		SmartDashboard.putNumber("left", drive.getLeftPosition());
+		SmartDashboard.putNumber("angle", ahrs.getAngle());
 	}
 
 	/**

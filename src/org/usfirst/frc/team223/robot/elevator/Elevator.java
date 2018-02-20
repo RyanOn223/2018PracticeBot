@@ -85,6 +85,7 @@ public class Elevator
 
 	public void setSpeed(double L)
 	{
+		//System.out.println("0:"+top.get()+" 1:"+bottom.get());
 		if (L < 0)
 		{
 			if (!bottom.get())
@@ -161,8 +162,6 @@ public class Elevator
 				talon0.set(ControlMode.PercentOutput, 0);
 				return;
 			}
-
 		}
-
 	}
 }
