@@ -21,18 +21,34 @@ public class AutoRoutines
 		elevator = e;
 	}
 
+	public static void crossLine(char pos, boolean goRight)
+	{
+		switch (pos)
+		{
+
+			case 'L':
+			case 'R':
+			{
+				
+			}
+			case 'M':
+			{
+				
+			}
+		}
+	}
+
 	/**
 	 * @param distance
-	 *            initial Distance
+	 *           initial Distance
 	 * @param creep
-	 *            How far to move after turn
+	 *           How far to move after turn
 	 * @param robotLeft
-	 *            Position of robot
+	 *           Position of robot
 	 */
-	public static void near(boolean robotLeft, boolean alwaysLeft)
+	public static void near(boolean robotLeft, boolean alwaysRight)
 	{
-		new Thread()
-		{
+		new Thread() {
 			public void run()
 			{
 				try
@@ -40,7 +56,7 @@ public class AutoRoutines
 					// wait for general init
 					Thread.sleep(200);
 					plate.setHeight(Constants.SCALE_HEIGHT);
-					if (alwaysLeft == robotLeft)
+					if (alwaysRight == robotLeft)
 					{
 						driveAuto.go(Constants.NEAR_DISTANCE, 2000);
 						driveAuto.turn(robotLeft ? 90 : -90);
@@ -58,8 +74,7 @@ public class AutoRoutines
 						driveAuto.turn(180);
 						driveAuto.go(1, 1000);
 					}
-					
-					
+
 					claw.out();
 				}
 				catch (InterruptedException e)
@@ -71,18 +86,17 @@ public class AutoRoutines
 
 	/**
 	 * @param distance
-	 *            initial Distance
+	 *           initial Distance
 	 * @param creep
-	 *            How far to move after turn
+	 *           How far to move after turn
 	 * @param height
-	 *            How high to lift plate. Must be larger than 34 in.
+	 *           How high to lift plate. Must be larger than 34 in.
 	 * @param robotLeft
-	 *            Position of robot
+	 *           Position of robot
 	 */
 	public static void far(boolean robotLeft, boolean alwaysLeft)
 	{
-		new Thread()
-		{
+		new Thread() {
 			public void run()
 			{
 				try
@@ -110,8 +124,7 @@ public class AutoRoutines
 
 	public static void middle(boolean buttonLeft, boolean alwaysLeft)
 	{
-		new Thread()
-		{
+		new Thread() {
 			public void run()
 			{
 				try
@@ -138,8 +151,7 @@ public class AutoRoutines
 
 	public static void error()
 	{
-		new Thread()
-		{
+		new Thread() {
 			public void run()
 			{
 				try
@@ -157,8 +169,7 @@ public class AutoRoutines
 
 	public static void none(boolean left, boolean alwaysLeft)
 	{
-		new Thread()
-		{
+		new Thread() {
 			public void run()
 			{
 				try
@@ -180,8 +191,15 @@ public class AutoRoutines
 
 	}
 
-	public static void crossLine(boolean left, boolean goLeft)
+	public static void lever(boolean invert)
 	{
-		//TODO THIS
+		// TODO Auto-generated method stub
+		
+	}
+
+	public static void scale(boolean invert)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }

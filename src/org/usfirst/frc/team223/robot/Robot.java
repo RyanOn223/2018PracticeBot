@@ -46,8 +46,8 @@ public class Robot extends IterativeRobot
 	VisionServer visionServer;
 
 	/**
-	 * This function is run when the robot is first started up and should be
-	 * used for any initialization code.
+	 * This function is run when the robot is first started up and should be used
+	 * for any initialization code.
 	 */
 	@Override
 	public void robotInit()
@@ -82,6 +82,7 @@ public class Robot extends IterativeRobot
 		char location = p.getString("position", "D").toUpperCase().toCharArray()[0];
 		int routine = p.getInt("routine", 0);
 
+		// invert true means go left false means go right
 		boolean invert = p.getBoolean("left", false);
 
 		String gameData = DriverStation.getInstance().getGameSpecificMessage();
@@ -98,51 +99,40 @@ public class Robot extends IterativeRobot
 		switch (location)
 		{
 
-		case 'L':
-		case 'R':
-		{
-			if (lever == location&&	!( (routine&1)==1) )
+			case 'L':
+			case 'R':
+			case 'M':
 			{
-				AutoRoutines.near(location == 'L',invert);
-			}
-			else if(!( (routine&2)==2) )
-			{
-				if (scale == location)
+				AutoRoutines.crossLine(location, invert);
+
+				// if switch is on the left and so is robot after crossing line
+				if ((lever == 'L' == invert) && !((routine & 1) == 1))
 				{
-					AutoRoutines.far(location == 'L',invert);
+					AutoRoutines.lever(invert);
 				}
-				else
+				else if ((scale == 'L' == invert) && !((routine & 2) == 2))
 				{
-					AutoRoutines.none(location == 'L',invert);
+					AutoRoutines.scale(invert);
 				}
+
+				break;
 			}
-			else
-			{
-				AutoRoutines.crossLine(location=='L',invert);
-			}
-			break;
-		}
-		// middle
-		case 'M':
-			AutoRoutines.middle(lever == 'L',invert);
-			break;
-		case 'D':
-			System.err.println("BAD DATA FROM DASH BOARD!\n\t Moving forward to cross line");
-			AutoRoutines.error();
-			break;
-		case 'F':
-			System.err.println("BAD DATA FROM FMS!\n\t Moving forward to cross line");
-			AutoRoutines.error();
-			break;
-		default:
-			System.out.println("something bad happened\n\\t Moving forward to cross line");
-			AutoRoutines.error();
-			break;
+			case 'D':
+				System.err.println("BAD DATA FROM DASH BOARD!\n\t Moving forward to cross line");
+				AutoRoutines.error();
+				break;
+			case 'F':
+				System.err.println("BAD DATA FROM FMS!\n\t Moving forward to cross line");
+				AutoRoutines.error();
+				break;
+			default:
+				System.out.println("something bad happened\n\\t Moving forward to cross line");
+				AutoRoutines.error();
+				break;
 		}
 		// */
 		/// *
-		new Thread()
-		{
+		new Thread() {
 			public void run()
 			{
 				try
@@ -181,18 +171,16 @@ public class Robot extends IterativeRobot
 	}
 
 	/**
-	 * This function is called once each time the robot enters tele-operated
-	 * mode
+	 * This function is called once each time the robot enters tele-operated mode
 	 */
 	@Override
 	public void teleopInit()
 	{
 		/*
-		 * This doesn't work because the offsets constantly change Map<Integer,
-		 * Double> driverOffsets = new HashMap<>();
-		 * driverOffsets.put(OI.leftXAxis, OI.driver.getRawAxis(OI.leftXAxis));
-		 * driverOffsets.put(OI.leftYAxis, OI.driver.getRawAxis(OI.leftYAxis));
-		 * driverOffsets.put(OI.rightXAxis,
+		 * This doesn't work because the offsets constantly change Map<Integer, Double>
+		 * driverOffsets = new HashMap<>(); driverOffsets.put(OI.leftXAxis,
+		 * OI.driver.getRawAxis(OI.leftXAxis)); driverOffsets.put(OI.leftYAxis,
+		 * OI.driver.getRawAxis(OI.leftYAxis)); driverOffsets.put(OI.rightXAxis,
 		 * OI.driver.getRawAxis(OI.rightXAxis));
 		 * OI.driver.setAxisOffsets(driverOffsets);
 		 */
@@ -207,8 +195,7 @@ public class Robot extends IterativeRobot
 		}
 
 		// claw.init();
-		shiftLatch = new Latch(OI.shiftFast)
-		{
+		shiftLatch = new Latch(OI.shiftFast) {
 
 			@Override
 			public void go()
@@ -222,8 +209,7 @@ public class Robot extends IterativeRobot
 				drive.setPistons(false);
 			}
 		};
-		raiseLatch = new Latch(OI.clawUp)
-		{
+		raiseLatch = new Latch(OI.clawUp) {
 			@Override
 			public void go()
 			{
@@ -235,8 +221,7 @@ public class Robot extends IterativeRobot
 			{
 			}
 		};
-		resetLatch = new Latch(OI.clawDrop)
-		{
+		resetLatch = new Latch(OI.clawDrop) {
 			@Override
 			public void go()
 			{
