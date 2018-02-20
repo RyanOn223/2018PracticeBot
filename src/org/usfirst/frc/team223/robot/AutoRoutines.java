@@ -24,6 +24,7 @@ public class AutoRoutines
 	// Done Don't touch
 	private static void crossLine(char pos, boolean goLeft) throws InterruptedException
 	{
+		System.out.println("crossing line");
 		switch (pos)
 		{
 		case 'L':
@@ -31,7 +32,7 @@ public class AutoRoutines
 		{
 			if (pos == 'L' == goLeft)
 			{
-				driveAuto.go(Constants.TO_MIDDLE, 2000);
+				driveAuto.go(Constants.TO_MIDDLE, 4000);
 				driveAuto.turn(goLeft ? 90 : -90);
 			}
 			else
@@ -61,6 +62,7 @@ public class AutoRoutines
 
 	public static void error()
 	{
+		System.out.println("error");
 		new Thread()
 		{
 			public void run()
@@ -80,6 +82,7 @@ public class AutoRoutines
 
 	public static void leverFar(char pos, boolean invert)
 	{
+		System.out.println("far Switch");
 		new Thread()
 		{
 			public void run()
@@ -105,6 +108,7 @@ public class AutoRoutines
 
 	public static void leverNear(char pos, boolean invert)
 	{
+		System.out.println("near switch");
 		new Thread()
 		{
 			public void run()
@@ -131,6 +135,7 @@ public class AutoRoutines
 
 	public static void scaleNear(char pos, boolean invert)
 	{
+		System.out.println("scale near");
 		new Thread()
 		{
 			public void run()
@@ -157,6 +162,7 @@ public class AutoRoutines
 
 	public static void scaleFar(char pos, boolean invert)
 	{
+		System.out.println("Scale far");
 		new Thread()
 		{
 			public void run()

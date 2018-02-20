@@ -116,8 +116,6 @@ public class Robot extends IterativeRobot
 		case 'R':
 		case 'M':
 		{
-		
-
 			// if switch is on the left and so is robot after crossing line
 			if (!ignoreSwitch && 'L' == lever == invert)
 			{
@@ -155,7 +153,7 @@ public class Robot extends IterativeRobot
 			break;
 		}
 		// */
-		/// *
+		/*
 		new Thread()
 		{
 			public void run()

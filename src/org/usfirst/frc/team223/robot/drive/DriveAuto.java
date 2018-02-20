@@ -91,7 +91,7 @@ public class DriveAuto extends DriveBase
 	};
 
 	// default pids change in general init
-	private double rp = 0.0155;
+	private double rp = 0.0195;
 	private double ri = 0.00000;
 	private double rd = 0.00;
 
