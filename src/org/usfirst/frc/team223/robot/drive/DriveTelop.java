@@ -12,17 +12,24 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 
 public class DriveTelop extends DriveBase
 {	
-	private BetterController controller;
+	private BetterController rightController;
+	private BetterController leftController;
 
 	private PIDOutput rightOut = new PIDOutput() {
 		@Override
 		public void pidWrite(double output)
 		{
-			left=-output;
 			right=output;
 		}
 	};
-	private PIDSource src = new PIDSource() {
+	private PIDOutput leftOut = new PIDOutput() {
+		@Override
+		public void pidWrite(double output)
+		{
+			left=output;
+		}
+	};
+	private PIDSource rightSrc = new PIDSource() {
 		@Override
 		public void setPIDSourceType(PIDSourceType pidSource)
 		{
@@ -37,25 +44,49 @@ public class DriveTelop extends DriveBase
 		@Override
 		public double pidGet()
 		{
-			return ahrs.getAngle();
+			return drive.getRightSpeed();
+		}
+	};
+	
+	private PIDSource leftSrc = new PIDSource() {
+		@Override
+		public void setPIDSourceType(PIDSourceType pidSource)
+		{
+		}
+
+		@Override
+		public PIDSourceType getPIDSourceType()
+		{
+			return PIDSourceType.kDisplacement;
+		}
+
+		@Override
+		public double pidGet()
+		{
+			return drive.getLeftSpeed();
 		}
 	};
 	private double left=0;
 	private double right=0;
-	private double p = 0.0085;
+	private double p = 0.01;
 	private double i = 0.00000;
-	private double d = 0.00;
+	private double d = 0.0002;
 
 	public DriveTelop(DriveTrain drive,AHRS ahrs)
 	{
 		super(drive,ahrs);
-		controller=new BetterController(p,i,d,src,rightOut);
-		addController("c",controller);
-	}
+		rightController=new BetterController(p,i,d,rightSrc,rightOut);
+		leftController=new BetterController(p,i,d,leftSrc,leftOut);
+		
+		addController("l",leftController);
+		addController("r",rightController);
+}
 
 	public void init()
 	{
-		controller.startPID(0);
+		leftController.startPID(0);
+		rightController.startPID(0);
+
 	}
 	
 	/** Set the controllers based on joystick axis inputs.*/
@@ -65,17 +96,15 @@ public class DriveTelop extends DriveBase
 				 -(stick.getAxis(OI.leftYAxis) + stick.getAxis(OI.rightXAxis)));
 	}
 	
-	
-	private double getSetPrev=0;
 	/**
 	 * uses rotation pid to drive straight
 	 * @param stick joystick
 	 */
 	public void cheesePID(BetterJoystick stick)
 	{
-		//Sets new setpoint of pid to current angle plus value of joystick
-		controller.setSetpoint(controller.getSetpoint()+5*stick.getAxis(OI.rightXAxis));
-		//Then sets motors to value of outputs plus forward and back
-		drive.setMotors(-(stick.getAxis(OI.leftYAxis)+left),-(stick.getAxis(OI.leftYAxis)+right));
+		leftController.setSetpoint(-300*(stick.getAxis(OI.leftYAxis) - stick.getAxis(OI.rightXAxis)));
+		rightController.setSetpoint( -300*(stick.getAxis(OI.leftYAxis) + stick.getAxis(OI.rightXAxis)));
+		
+		drive.setMotors(left,right);
 	}
 }

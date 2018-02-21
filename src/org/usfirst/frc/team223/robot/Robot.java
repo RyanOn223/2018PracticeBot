@@ -202,7 +202,7 @@ public class Robot extends IterativeRobot
 		catch (InterruptedException e)
 		{
 		}
-
+		driveTelop.init();
 		// claw.init();
 		shiftLatch = new Latch(OI.shiftFast)
 		{
@@ -254,7 +254,6 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopPeriodic()
 	{
-
 		shiftLatch.get();
 		if (!raiseLatch.get())
 		{
@@ -275,8 +274,8 @@ public class Robot extends IterativeRobot
 	public void writeToDash()
 	{
 		SmartDashboard.putNumber("ele", elevator.getPosition());
-		SmartDashboard.putNumber("right", drive.getRightPosition());
-		SmartDashboard.putNumber("left", drive.getLeftPosition());
+		SmartDashboard.putNumber("right", drive.getRightSpeed());
+		SmartDashboard.putNumber("left", drive.getLeftSpeed());
 	}
 
 	/**
@@ -297,6 +296,7 @@ public class Robot extends IterativeRobot
 		plate.resetEncoders();
 		elevator.resetEncoders();
 		claw.resetEncoders();
-		claw.setPID(p.getDouble("pk", .0111), p.getDouble("ik", 0.0001), p.getDouble("dk", .0));
+		driveTelop.setPID("r",p.getDouble("pk", .01), p.getDouble("ik", 0.000), p.getDouble("dk", .0020));
+		driveTelop.setPID("l",p.getDouble("pk", .01), p.getDouble("ik", 0.000), p.getDouble("dk", .0002));
 	}
 }
