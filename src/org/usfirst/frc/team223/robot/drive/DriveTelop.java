@@ -1,6 +1,6 @@
 package org.usfirst.frc.team223.robot.drive;
 
-import org.usfirst.frc.team223.robot.OI;
+import org.usfirst.frc.team223.robot.constants.OI;
 import org.usfirst.frc.team223.robot.utils.BetterController;
 import org.usfirst.frc.team223.robot.utils.BetterJoystick;
 
@@ -18,7 +18,6 @@ public class DriveTelop extends DriveBase
 		@Override
 		public void pidWrite(double output)
 		{
-			System.out.println(ahrs.getAngle()+" deg\n\t"+controller.getSetpoint()+"\n\t"+output);
 			left=-output;
 			right=output;
 		}
@@ -62,8 +61,8 @@ public class DriveTelop extends DriveBase
 	/** Set the controllers based on joystick axis inputs.*/
 	public void cheese(BetterJoystick stick)
 	{
-		drive.setMotors((stick.getAxis(OI.leftYAxis) - stick.getAxis(OI.rightXAxis)*2/3) ,
-				 (stick.getAxis(OI.leftYAxis) + stick.getAxis(OI.rightXAxis)*2/3));
+		drive.setMotors(-(stick.getAxis(OI.leftYAxis) - stick.getAxis(OI.rightXAxis)) ,
+				 -(stick.getAxis(OI.leftYAxis) + stick.getAxis(OI.rightXAxis)));
 	}
 	
 	
@@ -77,6 +76,6 @@ public class DriveTelop extends DriveBase
 		//Sets new setpoint of pid to current angle plus value of joystick
 		controller.setSetpoint(controller.getSetpoint()+5*stick.getAxis(OI.rightXAxis));
 		//Then sets motors to value of outputs plus forward and back
-		drive.setMotors(stick.getAxis(OI.leftYAxis)+left,stick.getAxis(OI.leftYAxis)+right);
+		drive.setMotors(-(stick.getAxis(OI.leftYAxis)+left),-(stick.getAxis(OI.leftYAxis)+right));
 	}
 }

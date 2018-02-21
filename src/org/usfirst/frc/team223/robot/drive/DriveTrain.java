@@ -1,6 +1,6 @@
 package org.usfirst.frc.team223.robot.drive;
 
-import org.usfirst.frc.team223.robot.RobotMap;
+import org.usfirst.frc.team223.robot.constants.RobotMap;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -33,19 +33,24 @@ public class DriveTrain
 		talonR1.setInverted(true);
 	}
 	
-	public void setLeft(double l)
+	public void setLeft(double L)
 	{
-		talonL0.set(ControlMode.PercentOutput,l);
+		//if(L>0)L=Math.min(L,.6);
+		//if(L<0)L=Math.max(L,-.6);
+		talonL0.set(ControlMode.PercentOutput,L);
 	}
-	public void setRight(double r)
+	public void setRight(double R)
 	{
-		talonR1.set(ControlMode.PercentOutput,r);
+	//	if(R>0)R=Math.min(R,.6);
+	//	if(R<0)R=Math.max(R,-.6);
+		talonR1.set(ControlMode.PercentOutput,R);
 	}
 	
 	public void setMotors(double L,double R)
 	{
-		talonL0.set(ControlMode.PercentOutput,-L);
-		talonR1.set(ControlMode.PercentOutput,-R);
+		//System.out.println(R+" "+L);
+		setLeft(L);
+		setRight(R);
 	}
 	/**
 	 *  set speed of all motors to zero
@@ -65,7 +70,6 @@ public class DriveTrain
 		talonL0.setSelectedSensorPosition(0, 0, 0);
 		talonR1.setSelectedSensorPosition(0, 0, 0);
 	}
-	
 	
 	public double getLeftSpeed()
 	{
