@@ -124,6 +124,7 @@ public class Robot extends IterativeRobot
 			break;
 		case 'D':
 			System.err.println("BAD DATA FROM DASH BOARD!\n\t Moving forward to cross line");
+
 			AutoRoutines.error();
 			break;
 		case 'F':
@@ -136,6 +137,7 @@ public class Robot extends IterativeRobot
 			break;
 		}
 		// */
+
 		/// *
 		new Thread()
 		{
@@ -144,14 +146,13 @@ public class Robot extends IterativeRobot
 				try
 				{ // wait for general init
 					Thread.sleep(200);
-					driveAuto.go(Constants.FAR_DISTANCE, 4000);
+					driveAuto.turn(90);
 				}
 				catch (InterruptedException e)
 				{
 				}
 			}
 		}.start();// */
-
 	}
 
 	/**
@@ -201,7 +202,7 @@ public class Robot extends IterativeRobot
 		catch (InterruptedException e)
 		{
 		}
-
+		driveTelop.init();
 		// claw.init();
 		shiftLatch = new Latch(OI.shiftFast)
 		{
@@ -253,7 +254,6 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopPeriodic()
 	{
-
 		shiftLatch.get();
 		if (!raiseLatch.get())
 		{
@@ -274,8 +274,8 @@ public class Robot extends IterativeRobot
 	public void writeToDash()
 	{
 		SmartDashboard.putNumber("ele", elevator.getPosition());
-		SmartDashboard.putNumber("right", drive.getRightPosition());
-		SmartDashboard.putNumber("left", drive.getLeftPosition());
+		SmartDashboard.putNumber("right", drive.getRightSpeed());
+		SmartDashboard.putNumber("left", drive.getLeftSpeed());
 	}
 
 	/**
@@ -296,6 +296,7 @@ public class Robot extends IterativeRobot
 		plate.resetEncoders();
 		elevator.resetEncoders();
 		claw.resetEncoders();
-		claw.setPID(p.getDouble("pk", .0111), p.getDouble("ik", 0.0001), p.getDouble("dk", .0));
+		driveTelop.setPID("r",p.getDouble("pk", .01), p.getDouble("ik", 0.000), p.getDouble("dk", .0020));
+		driveTelop.setPID("l",p.getDouble("pk", .01), p.getDouble("ik", 0.000), p.getDouble("dk", .0002));
 	}
 }
