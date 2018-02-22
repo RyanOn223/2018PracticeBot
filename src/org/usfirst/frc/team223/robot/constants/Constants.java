@@ -33,13 +33,13 @@ public class Constants
 
 	//Far AutoRoutine Distances
 	
-	public static final double FLEVER_DISTANCE=24*DRIVE_CNT_TO_IN;
-	public static final double FSCALE_DISTANCE=24*DRIVE_CNT_TO_IN;
 	
+	public static final double FSCALE_DISTANCE=174*DRIVE_CNT_TO_IN;
+	public static final double FLEVER_DISTANCE=(FSCALE_DISTANCE+46)*DRIVE_CNT_TO_IN;	
 	// ----------------------------------
 	
-	public static final double SCALE_CREEP=12*DRIVE_CNT_TO_IN;
-	public static final double LEVER_CREEP=12*DRIVE_CNT_TO_IN;
+	public static final double SCALE_CREEP=50*DRIVE_CNT_TO_IN;
+	public static final double LEVER_CREEP=33*DRIVE_CNT_TO_IN;
 	
 	public static final double ERROR_DISTANCE=120*DRIVE_CNT_TO_IN;
 }

@@ -66,12 +66,12 @@ public class AutoRoutines
 		driveAuto.go(Constants.ERROR_DISTANCE, 2000);
 	}
 
-	public static void leverFar(char pos, boolean invert) throws InterruptedException
+	public static void leverFar(char pos, boolean left) throws InterruptedException
 	{
 		System.out.println("far Switch");
 
-		crossLine(pos, invert,true);
-		driveAuto.turn(invert ? 90 : -90);
+		crossLine(pos, left,true);
+		driveAuto.turn(left ? 90 : -90);
 
 		plate.setHeight(Constants.SCALE_HEIGHT);
 
@@ -109,15 +109,15 @@ public class AutoRoutines
 		claw.out();
 	}
 
-	public static void scaleFar(char pos, boolean invert) throws InterruptedException
+	public static void scaleFar(char pos, boolean left) throws InterruptedException
 	{
 		System.out.println("Scale far");
 
-		crossLine(pos, invert,true);
+		crossLine(pos, left,true);
 		plate.setHeight(Constants.SCALE_HEIGHT);
 
 		driveAuto.go(Constants.FSCALE_DISTANCE, 2000);
-		driveAuto.turn(0);
+		driveAuto.turn(left?-70:70);
 		elevator.setHeight(Constants.ELEVATOR_HEIGHT);
 		Thread.sleep(1000);
 		driveAuto.go(Constants.SCALE_CREEP, 2000);

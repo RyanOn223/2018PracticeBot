@@ -95,7 +95,7 @@ public class Robot extends IterativeRobot
 					int routine = p.getInt("routine", 3);
 
 					// invert true means go left false means go right
-					boolean invert = p.getBoolean("left", false);
+					boolean left = p.getBoolean("left", false);
 
 					boolean ignoreSwitch = (routine & 1) == 1;
 					boolean ignoreScale = (routine & 2) == 2;
@@ -133,25 +133,25 @@ public class Robot extends IterativeRobot
 					{
 						// if switch is on the left and so is robot after
 						// crossing line
-						if (!ignoreSwitch && 'L' == lever == invert)
+						if (!ignoreSwitch && 'L' == lever == left)
 						{
-							AutoRoutines.leverNear(location, invert);
+							AutoRoutines.leverNear(location, left);
 						}
-						else if (!ignoreScale && 'L' == scale == invert)
+						else if (!ignoreScale && 'L' == scale == left)
 						{
-							AutoRoutines.scaleNear(location, invert);
+							AutoRoutines.scaleNear(location, left);
 						}
 						else if (!ignoreSwitch)
 						{
-							AutoRoutines.leverFar(location, invert);
+							AutoRoutines.leverFar(location, left);
 						}
 						else if (!ignoreScale)
 						{
-							AutoRoutines.scaleFar(location, invert);
+							AutoRoutines.scaleFar(location, left);
 						}
 						else
 						{
-							AutoRoutines.crossLineThread(location, invert);
+							AutoRoutines.crossLineThread(location, left);
 						}
 						break;
 					}
