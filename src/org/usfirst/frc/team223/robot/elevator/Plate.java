@@ -65,13 +65,11 @@ public class Plate
 	private int pos=0;
 	public void setSpeed(double L)
 	{
-		//System.out.println("2:"+top.get()+" 4:"+bottom.get());
-
 		if (L < 0)
 		{
-			//if (!bottom.get())
+			if (!bottom.get())
 			{
-				//pos = -1;
+				//pos = -1;//Dissabled
 			}
 			if (!top.get())
 			{

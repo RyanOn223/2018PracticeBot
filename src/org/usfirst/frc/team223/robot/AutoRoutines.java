@@ -21,8 +21,7 @@ public class AutoRoutines
 		elevator = e;
 	}
 
-	// Done Don't touch
-	private static void crossLine(char pos, boolean goLeft) throws InterruptedException
+	private static void crossLine(char pos, boolean goLeft,boolean far) throws InterruptedException
 	{
 		System.out.println("crossing line");
 		switch (pos)
@@ -33,7 +32,6 @@ public class AutoRoutines
 			if (pos == 'L' == goLeft)
 			{
 				driveAuto.go(Constants.TO_MIDDLE, 4000);
-				driveAuto.turn(goLeft ? 90 : -90);
 			}
 			else
 			{
@@ -42,7 +40,6 @@ public class AutoRoutines
 				driveAuto.go(Constants.FAR_ACROSS, 4000);
 				driveAuto.turn(0);
 				driveAuto.go(Constants.TO_MIDDLE - Constants.START_CREEP, 4000);
-				driveAuto.turn(goLeft ? 90 : -90);
 			}
 			break;
 		}
@@ -54,157 +51,83 @@ public class AutoRoutines
 			driveAuto.go(Constants.MIDDLE_ACROSS, 4000);
 			driveAuto.turn(0);
 			driveAuto.go(Constants.TO_MIDDLE - Constants.START_CREEP, 4000);
-			driveAuto.turn(goLeft ? 90 : -90);
 			break;
 		}
 		}
 	}
 
-	public static void error()
+	public static void error() throws InterruptedException
 	{
 		System.out.println("error");
-		new Thread()
-		{
-			public void run()
-			{
-				try
-				{
-					// wait for general init
-					Thread.sleep(200);
-					driveAuto.go(Constants.ERROR_DISTANCE, 2000);
-				}
-				catch (InterruptedException e)
-				{
-				}
-			}
-		}.start();
+
+		driveAuto.go(Constants.ERROR_DISTANCE, 2000);
 	}
 
-	public static void leverFar(char pos, boolean invert)
+	public static void leverFar(char pos, boolean invert) throws InterruptedException
 	{
 		System.out.println("far Switch");
-		new Thread()
-		{
-			public void run()
-			{
-				try
-				{
-					// wait for general init
-					Thread.sleep(200);
-					crossLine(pos, invert);
-					plate.setHeight(Constants.SCALE_HEIGHT);
 
-					driveAuto.go(Constants.FLEVER_DISTANCE, 2000);
-					driveAuto.turn(180);
-					driveAuto.go(Constants.LEVER_CREEP, 2000);
-					claw.out();
-				}
-				catch (InterruptedException e)
-				{
-				}
-			}
-		}.start();
+		crossLine(pos, invert,true);
+		driveAuto.turn(invert ? 90 : -90);
+
+		plate.setHeight(Constants.SCALE_HEIGHT);
+
+		driveAuto.go(Constants.FLEVER_DISTANCE, 2000);
+		driveAuto.turn(180);
+		driveAuto.go(Constants.LEVER_CREEP, 2000);
+		claw.out();
 	}
 
-	public static void leverNear(char pos, boolean invert)
+	public static void leverNear(char pos, boolean invert) throws InterruptedException
 	{
 		System.out.println("near switch");
-		new Thread()
-		{
-			public void run()
-			{
-				try
-				{
-					Thread.sleep(200);
-					crossLine(pos, invert);
+		
+		crossLine(pos, invert,false);
+		driveAuto.turn(invert ? 90 : -90);
 
-					plate.setHeight(Constants.SCALE_HEIGHT);
+		plate.setHeight(Constants.SCALE_HEIGHT);
 
-					driveAuto.go(Constants.NLEVER_DISTANCE, 2000);
-					driveAuto.turn(180);
-					driveAuto.go(Constants.LEVER_CREEP, 2000);
+		driveAuto.go(Constants.NLEVER_DISTANCE, 2000);
+		driveAuto.turn(180);
+		driveAuto.go(Constants.LEVER_CREEP, 2000);
 
-					claw.out();
-				}
-				catch (InterruptedException e)
-				{
-				}
-			}
-		}.start();
+		claw.out();
 	}
 
-	public static void scaleNear(char pos, boolean invert)
+	public static void scaleNear(char pos, boolean invert) throws InterruptedException
 	{
 		System.out.println("scale near");
-		new Thread()
-		{
-			public void run()
-			{
-				try
-				{
-					// wait for general init
-					Thread.sleep(200);
-					crossLine(pos, invert);
 
-					plate.setHeight(Constants.SCALE_HEIGHT);
+		crossLine(pos, invert,false);
 
-					driveAuto.go(Constants.NSCALE_DISTANCE, 4000);
-					driveAuto.turn(0);
-					elevator.setHeight(Constants.ELEVATOR_HEIGHT);
-					Thread.sleep(1000);
-					driveAuto.go(Constants.SCALE_CREEP, 4000);
-					claw.out();
-				}
-				catch (InterruptedException e)
-				{
-				}
-			}
-		}.start();
+		plate.setHeight(Constants.SCALE_HEIGHT);
+
+		driveAuto.go(Constants.NSCALE_DISTANCE, 4000);
+		driveAuto.turn(0);
+		
+		elevator.setHeight(Constants.ELEVATOR_HEIGHT);
+		Thread.sleep(1000);
+		driveAuto.go(Constants.SCALE_CREEP, 4000);
+		claw.out();
 	}
 
-	public static void scaleFar(char pos, boolean invert)
+	public static void scaleFar(char pos, boolean invert) throws InterruptedException
 	{
 		System.out.println("Scale far");
-		new Thread()
-		{
-			public void run()
-			{
-				try
-				{
-					// wait for general init
-					Thread.sleep(200);
-					crossLine(pos, invert);
-					plate.setHeight(Constants.SCALE_HEIGHT);
 
-					driveAuto.go(Constants.FSCALE_DISTANCE, 2000);
-					driveAuto.turn(0);
-					elevator.setHeight(Constants.ELEVATOR_HEIGHT);
-					Thread.sleep(1000);
-					driveAuto.go(Constants.SCALE_CREEP, 2000);
-					claw.out();
-				}
-				catch (InterruptedException e)
-				{
-				}
-			}
-		}.start();
+		crossLine(pos, invert,true);
+		plate.setHeight(Constants.SCALE_HEIGHT);
+
+		driveAuto.go(Constants.FSCALE_DISTANCE, 2000);
+		driveAuto.turn(0);
+		elevator.setHeight(Constants.ELEVATOR_HEIGHT);
+		Thread.sleep(1000);
+		driveAuto.go(Constants.SCALE_CREEP, 2000);
+		claw.out();
 	}
 
-	public static void crossLineThread(char location, boolean invert)
+	public static void crossLineThread(char location, boolean invert) throws InterruptedException
 	{
-		new Thread()
-		{
-			public void run()
-			{
-				try
-				{
-					crossLine(location, invert);
-				}
-				catch (InterruptedException e)
-				{
-					e.printStackTrace();
-				}
-			}
-		}.start();
+		crossLine(location, invert,true);
 	}
 }

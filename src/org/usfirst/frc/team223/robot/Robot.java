@@ -78,82 +78,105 @@ public class Robot extends IterativeRobot
 	{
 		generalInit();
 
-		/// *gets string from dashboard, puts it in uppercase, takes first
-		/// letter
-		char location = p.getString("position", "D").toUpperCase().toCharArray()[0];
-		int routine = p.getInt("routine", 3);
-
-		// invert true means go left false means go right
-		boolean invert = p.getBoolean("left", false);
 		
-		boolean ignoreSwitch = (routine & 1) == 1;
-		boolean ignoreScale = (routine & 2) == 2;
-		String gameData = DriverStation.getInstance().getGameSpecificMessage();
 
-		char lever='Q';
-		char scale='Q';
-
-		if (gameData != null)
+		new Thread()
 		{
-			try
+			public void run()
 			{
-				lever = gameData.charAt(0);
-				scale = gameData.charAt(1);
-			}
-			catch (IndexOutOfBoundsException e){}
-		}		
+				try
+				{
+					// wait for general init and fms
+					Thread.sleep(1000);
+					
+					/// *gets string from dashboard, puts it in uppercase, takes first
+					/// letter
+					char location = p.getString("position", "D").toUpperCase().toCharArray()[0];
+					int routine = p.getInt("routine", 3);
 
-		// makes sure lever and scale are both L or R
-		if (!((lever == 'L' || lever == 'R') && (scale == 'L' || scale == 'R')))
-		{
-			location = 'F';
-		}
+					// invert true means go left false means go right
+					boolean invert = p.getBoolean("left", false);
 
-		switch (location)
-		{
+					boolean ignoreSwitch = (routine & 1) == 1;
+					boolean ignoreScale = (routine & 2) == 2;
+					
+					String gameData = DriverStation.getInstance().getGameSpecificMessage();
 
-		case 'L':
-		case 'R':
-		case 'M':
-		{
-			// if switch is on the left and so is robot after crossing line
-			if (!ignoreSwitch && 'L' == lever == invert)
-			{
-				AutoRoutines.leverNear(location,invert);
+					char lever = 'Q';
+					char scale = 'Q';
+
+					if (gameData != null)
+					{
+						try
+						{
+							lever = gameData.charAt(0);
+							scale = gameData.charAt(1);
+						}
+						catch (IndexOutOfBoundsException e)
+						{
+							location='F';
+						}
+					}
+
+					// makes sure lever and scale are both L or R
+					if (!((lever == 'L' || lever == 'R') && (scale == 'L' || scale == 'R')))
+					{
+						location = 'F';
+					}
+
+					switch (location)
+					{
+
+					case 'L':
+					case 'R':
+					case 'M':
+					{
+						// if switch is on the left and so is robot after
+						// crossing line
+						if (!ignoreSwitch && 'L' == lever == invert)
+						{
+							AutoRoutines.leverNear(location, invert);
+						}
+						else if (!ignoreScale && 'L' == scale == invert)
+						{
+							AutoRoutines.scaleNear(location, invert);
+						}
+						else if (!ignoreSwitch)
+						{
+							AutoRoutines.leverFar(location, invert);
+						}
+						else if (!ignoreScale)
+						{
+							AutoRoutines.scaleFar(location, invert);
+						}
+						else
+						{
+							AutoRoutines.crossLineThread(location, invert);
+						}
+						break;
+					}
+					case 'D':
+						System.err.println("BAD DATA FROM DASH BOARD!\n\t Moving forward to cross line");
+						AutoRoutines.error();
+						break;
+					case 'F':
+						System.err.println("BAD DATA FROM FMS!\n\t Moving forward to cross line");
+						AutoRoutines.error();
+						break;
+					default:
+						System.out.println("something bad happened\n\\t Moving forward to cross line");
+						AutoRoutines.error();
+						break;
+					}
+				}
+				catch (InterruptedException e1)
+				{
+				}
 			}
-			else if (!ignoreScale && 'L' == scale == invert)
-			{
-				AutoRoutines.scaleNear(location,invert);
-			}
-			else if (!ignoreSwitch)
-			{
-				AutoRoutines.leverFar(location,invert);
-			}
-			else if (!ignoreScale)
-			{
-				AutoRoutines.scaleFar(location,invert);
-			}
-			else
-			{
-				AutoRoutines.crossLineThread(location, invert);
-			}
-			break;
-		}
-		case 'D':
-			System.err.println("BAD DATA FROM DASH BOARD!\n\t Moving forward to cross line");
-			AutoRoutines.error();
-			break;
-		case 'F':
-			System.err.println("BAD DATA FROM FMS!\n\t Moving forward to cross line");
-			AutoRoutines.error();
-			break;
-		default:
-			System.out.println("something bad happened\n\\t Moving forward to cross line");
-			AutoRoutines.error();
-			break;
-		}
+		}.start();
+
 		// */
-		/*
+		/// *
 		new Thread()
 		{
 			public void run()
