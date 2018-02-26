@@ -46,7 +46,7 @@ public class DriveAuto extends DriveBase
 		{
 			// rotate(output);
 			leftRotate = output;
-			rightRotate =- output;
+			rightRotate = -output;
 		}
 	};
 
@@ -91,7 +91,7 @@ public class DriveAuto extends DriveBase
 	};
 
 	// default pids change in general init
-	private double rp = 0.0155;
+	private double rp = 0.0175;
 	private double ri = 0.00000;
 	private double rd = 0.00;
 
@@ -119,7 +119,7 @@ public class DriveAuto extends DriveBase
 	public void turn(double degrees) throws InterruptedException
 	{
 		rotateController.startPID(degrees);
-		Thread.sleep(1000);
+		Thread.sleep(2000);
 		this.stopControllers();
 	}
 
@@ -134,7 +134,7 @@ public class DriveAuto extends DriveBase
 
 	public void update()
 	{
-		//System.out.println(leftDrive+" "+rightDrive);
+		// System.out.println(leftDrive+" "+rightDrive);
 		drive.setMotors(leftRotate + leftDrive, rightRotate + rightDrive);
 	}
 

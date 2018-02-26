@@ -7,12 +7,10 @@ public class GeneralUtils
 	 */
 	public static double degreeBounds(double d)
 	{
-		int num=((int)d)/360;
-		d=d-num*360;
-		if(d<-180)
-			d+=360;
-		else if(d>180)
-			d-=360;
+		int num = ((int) d) / 360;
+		d = d - num * 360;
+		if (d < -180) d += 360;
+		else if (d > 180) d -= 360;
 		return d;
 	}
 }

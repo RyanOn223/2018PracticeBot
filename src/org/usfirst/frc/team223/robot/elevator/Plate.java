@@ -62,14 +62,15 @@ public class Plate
 		controller.startPID(e);
 	}
 
-	private int pos=0;
+	private int pos = 0;
+
 	public void setSpeed(double L)
 	{
 		if (L < 0)
 		{
 			if (!bottom.get())
 			{
-				//pos = -1;
+				// pos = -1;//Dissabled
 			}
 			if (!top.get())
 			{
@@ -83,7 +84,6 @@ public class Plate
 		}
 		if (L > 0)
 		{
-			System.out.println(" hi");
 			if (!top.get())
 			{
 				pos = 1;

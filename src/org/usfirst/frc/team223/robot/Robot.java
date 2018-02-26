@@ -70,75 +70,113 @@ public class Robot extends IterativeRobot
 	}
 
 	/**
-	 * This function is run once each time the robot enters autonomous mode
+	 * This function is run once each time the robot enters autonomous mode. I
+	 * apologize for this spaghetti
 	 */
 	@Override
 	public void autonomousInit()
 	{
 		generalInit();
 
-		/// *gets string from dashboard, puts it in uppercase, takes first
-		/// letter
-		char location = p.getString("position", "D").toUpperCase().toCharArray()[0];
-		int routine = p.getInt("routine", 0);
-
-		boolean invert = p.getBoolean("left", false);
-
-		String gameData = DriverStation.getInstance().getGameSpecificMessage();
-
-		char lever = gameData.charAt(0);
-		char scale = gameData.charAt(1);
-
-		// makes sure lever and scale are both L or R
-		if (!((lever == 'L' || lever == 'R') && (scale == 'L' || scale == 'R')))
+		new Thread()
 		{
-			location = 'F';
-		}
-
-		switch (location)
-		{
-		// left right
-		case 'L':
-		case 'R':
-		{
-			if (lever == location && routine != 1)
+			public void run()
 			{
-				AutoRoutines.near(location == 'L');
-			}
-			else
-			{
-				if (scale == location)
+				try
 				{
-					AutoRoutines.far(location == 'L');
-				}
-				else
-				{
-					AutoRoutines.none(location == 'L');
-				}
-			}
-			break;
-		}
-		// middle
-		case 'M':
-			AutoRoutines.middle(lever == 'L');
-			break;
-		case 'D':
-			System.err.println("BAD DATA FROM DASH BOARD!\n\t Moving forward to cross line");
+					// wait for general init and fms
+					Thread.sleep(1000);
 
-			AutoRoutines.error();
-			break;
-		case 'F':
-			System.err.println("BAD DATA FROM FMS!\n\t Moving forward to cross line");
-			AutoRoutines.error();
-			break;
-		default:
-			System.out.println("something bad happened\n\\t Moving forward to cross line");
-			AutoRoutines.error();
-			break;
-		}
+					/// *gets string from dashboard, puts it in uppercase, takes
+					/// first
+					/// letter
+					char location = p.getString("position", "D").toUpperCase().toCharArray()[0];
+					int routine = p.getInt("routine", 3);
+
+					// invert true means go left false means go right
+					boolean left = p.getBoolean("left", false);
+
+					boolean ignoreSwitch = (routine & 1) == 1;
+					boolean ignoreScale = (routine & 2) == 2;
+
+					String gameData = DriverStation.getInstance().getGameSpecificMessage();
+
+					char lever = 'Q';
+					char scale = 'Q';
+
+					if (gameData != null)
+					{
+						try
+						{
+							lever = gameData.charAt(0);
+							scale = gameData.charAt(1);
+						}
+						catch (IndexOutOfBoundsException e)
+						{
+							location = 'F';
+						}
+					}
+
+					// makes sure lever and scale are both L or R
+					if (!((lever == 'L' || lever == 'R') && (scale == 'L' || scale == 'R')))
+					{
+						location = 'F';
+					}
+
+					switch (location)
+					{
+
+					case 'L':
+					case 'R':
+					case 'M':
+					{
+						// if switch is on the left and so is robot after
+
+						if (!ignoreSwitch && 'L' == lever == left)
+						{
+							AutoRoutines.leverNear(location, left);
+						}
+						else if (!ignoreScale && 'L' == scale == left)
+						{
+							AutoRoutines.scaleNear(location, left);
+						}
+						else if (!ignoreSwitch)
+						{
+							AutoRoutines.leverFar(location, left);
+						}
+						else if (!ignoreScale)
+						{
+							AutoRoutines.scaleFar(location, left);
+						}
+						else
+						{
+							AutoRoutines.crossLineThread(location, left);
+						}
+						break;
+					}
+					case 'D':
+						System.err.println("BAD DATA FROM DASH BOARD!\n\t Moving forward to cross line");
+						AutoRoutines.error();
+						break;
+					case 'F':
+						System.err.println("BAD DATA FROM FMS!\n\t Moving forward to cross line");
+						AutoRoutines.error();
+						break;
+					default:
+						System.out.println("something bad happened\n\\t Moving forward to cross line");
+						AutoRoutines.error();
+						break;
+					}
+				}
+				catch (InterruptedException e1)
+				{
+				}
+			}
+		}.start();
 		// */
 
-		/// *
+		/*
+
 		new Thread()
 		{
 			public void run()
@@ -276,6 +314,7 @@ public class Robot extends IterativeRobot
 		SmartDashboard.putNumber("ele", elevator.getPosition());
 		SmartDashboard.putNumber("right", drive.getRightSpeed());
 		SmartDashboard.putNumber("left", drive.getLeftSpeed());
+		SmartDashboard.putNumber("angle", ahrs.getAngle());
 	}
 
 	/**
@@ -296,7 +335,7 @@ public class Robot extends IterativeRobot
 		plate.resetEncoders();
 		elevator.resetEncoders();
 		claw.resetEncoders();
-		driveTelop.setPID("r",p.getDouble("pk", .01), p.getDouble("ik", 0.000), p.getDouble("dk", .0020));
+		driveTelop.setPID("r",p.getDouble("pk", .01), p.getDouble("ik", 0.000), p.getDouble("dk", .0002));
 		driveTelop.setPID("l",p.getDouble("pk", .01), p.getDouble("ik", 0.000), p.getDouble("dk", .0002));
 	}
 }

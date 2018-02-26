@@ -28,9 +28,10 @@ public abstract class Latch
 	}
 
 	private boolean on = false;
-	
+
 	/**
 	 * Runs go when pressed and stop when released
+	 * 
 	 * @returns on/off
 	 */
 	private boolean hold()
@@ -57,6 +58,7 @@ public abstract class Latch
 
 	/**
 	 * Runs go when on button is pressed and stop when the other is pressed
+	 * 
 	 * @returns on/off
 	 */
 	private boolean latch()
@@ -80,5 +82,6 @@ public abstract class Latch
 	}
 
 	abstract public void go();
+
 	abstract public void stop();
 }
