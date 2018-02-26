@@ -85,7 +85,7 @@ public class Elevator
 
 	public void setSpeed(double L)
 	{
-		//System.out.println("0:"+top.get()+" 1:"+bottom.get());
+		// System.out.println("0:"+top.get()+" 1:"+bottom.get());
 		if (L < 0)
 		{
 			if (!bottom.get())

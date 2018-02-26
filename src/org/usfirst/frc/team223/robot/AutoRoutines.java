@@ -21,12 +21,12 @@ public class AutoRoutines
 		elevator = e;
 	}
 
-	private static void crossLine(char pos, boolean goLeft,boolean far) throws InterruptedException
+	private static void crossLine(char pos, boolean goLeft, boolean far) throws InterruptedException
 	{
 		System.out.println("crossing line");
-		
-		double finishDistance=far?Constants.TO_MIDDLE:Constants.TO_SWITCH;
-		
+
+		double finishDistance = far ? Constants.TO_MIDDLE : Constants.TO_SWITCH;
+
 		switch (pos)
 		{
 		case 'L':
@@ -70,7 +70,7 @@ public class AutoRoutines
 	{
 		System.out.println("far Switch");
 
-		crossLine(pos, left,true);
+		crossLine(pos, left, true);
 		driveAuto.turn(left ? 90 : -90);
 
 		plate.setHeight(Constants.SCALE_HEIGHT);
@@ -84,9 +84,9 @@ public class AutoRoutines
 	public static void leverNear(char pos, boolean invert) throws InterruptedException
 	{
 		System.out.println("near switch");
-		
-		crossLine(pos, invert,false);
-		
+
+		crossLine(pos, invert, false);
+
 		plate.setHeight(Constants.SCALE_HEIGHT);
 		driveAuto.turn(invert ? 90 : -90);
 
@@ -98,14 +98,14 @@ public class AutoRoutines
 	{
 		System.out.println("scale near");
 
-		crossLine(pos, invert,false);
+		crossLine(pos, invert, false);
 		plate.setHeight(Constants.SCALE_HEIGHT);
 		elevator.setHeight(Constants.ELEVATOR_HEIGHT);
 		Thread.sleep(1000);
-		
+
 		driveAuto.turn(invert ? Constants.NLSCALE_ROTATE : -Constants.NLSCALE_ROTATE);
 		driveAuto.go(Constants.NSCALE_DISTANCE, 4000);
-		
+
 		claw.out();
 	}
 
@@ -113,19 +113,19 @@ public class AutoRoutines
 	{
 		System.out.println("Scale far");
 
-		crossLine(pos, left,true);
+		crossLine(pos, left, true);
 		plate.setHeight(Constants.SCALE_HEIGHT);
 
 		driveAuto.go(Constants.FSCALE_DISTANCE, 2000);
-		driveAuto.turn(left?-70:70);
+		driveAuto.turn(left ? Constants.FSCALE_TURN : -Constants.FSCALE_TURN);
 		elevator.setHeight(Constants.ELEVATOR_HEIGHT);
 		Thread.sleep(1000);
 		driveAuto.go(Constants.SCALE_CREEP, 2000);
 		claw.out();
 	}
 
-	public static void crossLineThread(char location, boolean invert) throws InterruptedException
+	public static void crossLineThread(char location, boolean left) throws InterruptedException
 	{
-		crossLine(location, invert,true);
+		crossLine(location, left, true);
 	}
 }

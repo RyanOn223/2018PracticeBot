@@ -46,7 +46,7 @@ public class DriveAuto extends DriveBase
 		{
 			// rotate(output);
 			leftRotate = output;
-			rightRotate =- output;
+			rightRotate = -output;
 		}
 	};
 
@@ -134,7 +134,7 @@ public class DriveAuto extends DriveBase
 
 	public void update()
 	{
-		//System.out.println(leftDrive+" "+rightDrive);
+		// System.out.println(leftDrive+" "+rightDrive);
 		drive.setMotors(leftRotate + leftDrive, rightRotate + rightDrive);
 	}
 

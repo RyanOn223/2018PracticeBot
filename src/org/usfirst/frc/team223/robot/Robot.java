@@ -78,8 +78,6 @@ public class Robot extends IterativeRobot
 	{
 		generalInit();
 
-		
-
 		new Thread()
 		{
 			public void run()
@@ -88,8 +86,9 @@ public class Robot extends IterativeRobot
 				{
 					// wait for general init and fms
 					Thread.sleep(1000);
-					
-					/// *gets string from dashboard, puts it in uppercase, takes first
+
+					/// *gets string from dashboard, puts it in uppercase, takes
+					/// first
 					/// letter
 					char location = p.getString("position", "D").toUpperCase().toCharArray()[0];
 					int routine = p.getInt("routine", 3);
@@ -99,7 +98,7 @@ public class Robot extends IterativeRobot
 
 					boolean ignoreSwitch = (routine & 1) == 1;
 					boolean ignoreScale = (routine & 2) == 2;
-					
+
 					String gameData = DriverStation.getInstance().getGameSpecificMessage();
 
 					char lever = 'Q';
@@ -114,7 +113,7 @@ public class Robot extends IterativeRobot
 						}
 						catch (IndexOutOfBoundsException e)
 						{
-							location='F';
+							location = 'F';
 						}
 					}
 
@@ -132,7 +131,7 @@ public class Robot extends IterativeRobot
 					case 'M':
 					{
 						// if switch is on the left and so is robot after
-						// crossing line
+
 						if (!ignoreSwitch && 'L' == lever == left)
 						{
 							AutoRoutines.leverNear(location, left);
@@ -176,7 +175,7 @@ public class Robot extends IterativeRobot
 		}.start();
 
 		// */
-		/// *
+		/*
 		new Thread()
 		{
 			public void run()
