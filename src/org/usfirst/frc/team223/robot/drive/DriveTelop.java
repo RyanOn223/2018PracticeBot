@@ -38,7 +38,7 @@ public class DriveTelop extends DriveBase
 		@Override
 		public PIDSourceType getPIDSourceType()
 		{
-			return PIDSourceType.kDisplacement;
+			return PIDSourceType.kRate;
 		}
 
 		@Override
@@ -57,7 +57,7 @@ public class DriveTelop extends DriveBase
 		@Override
 		public PIDSourceType getPIDSourceType()
 		{
-			return PIDSourceType.kDisplacement;
+			return PIDSourceType.kRate;
 		}
 
 		@Override
