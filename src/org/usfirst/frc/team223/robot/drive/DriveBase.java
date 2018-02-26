@@ -11,41 +11,42 @@ public class DriveBase
 {
 	protected DriveTrain drive;
 	protected AHRS ahrs;
-	
-	private Map<String, BetterController> controllers=new HashMap<String, BetterController>();
-	
+
+	private Map<String, BetterController> controllers = new HashMap<String, BetterController>();
+
 	public DriveBase(DriveTrain drive, AHRS ahrs)
 	{
-		this.drive=drive;
-		this.ahrs=ahrs;
+		this.drive = drive;
+		this.ahrs = ahrs;
 	}
+
 	protected void rotate(double output)
 	{
 		drive.setMotors(output, -output);
 	}
-	
+
 	public void addController(String key, BetterController value)
 	{
 		controllers.put(key, value);
 	}
-	
+
 	public void stopControllers()
 	{
-		for(BetterController c:controllers.values())
+		for (BetterController c : controllers.values())
 		{
 			c.disable();
 			c.reset();
 		}
 	}
-	
+
 	public double getSet(String key)
 	{
 		return controllers.get(key).getSetpoint();
 	}
-	
-	public void setPID(String key,double p, double i, double d)
+
+	public void setPID(String key, double p, double i, double d)
 	{
-		BetterController c=controllers.get(key);
+		BetterController c = controllers.get(key);
 		c.reset();
 		c.setPID(p, i, d);
 	}

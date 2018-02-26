@@ -12,147 +12,120 @@ public class AutoRoutines
 	static Claw claw;
 	static Plate plate;
 	static Elevator elevator;
-	public static void init(DriveAuto d,Claw c, Plate p,Elevator e)
+
+	public static void init(DriveAuto d, Claw c, Plate p, Elevator e)
 	{
 		driveAuto = d;
-		claw=c;
-		plate=p;
-		elevator=e;
-	}
-	
-	/**
-	 * @param distance initial Distance
-	 * @param creep How far to move after turn
-	 * @param robotLeft Position of robot
-	 */
-	public static void near(boolean robotLeft)
-	{
-		new Thread()
-		{
-			public void run()
-			{
-				try
-				{
-					// wait for general init
-					Thread.sleep(200);
-
-					plate.setHeight(Constants.SCALE_HEIGHT);					
-					
-					driveAuto.go(Constants.NEAR_DISTANCE,2000);
-					driveAuto.turn(robotLeft ? 90 : -90);
-					driveAuto.go(Constants.NEAR_CREEP,2000);
-					claw.out();
-				}
-				catch (InterruptedException e)
-				{
-				}
-			}
-		}.start();
-	}
-	
-	/**
-	 * @param distance initial Distance
-	 * @param creep How far to move after turn
-	 * @param height How high to lift plate.  Must be larger than 34 in.
-	 * @param robotLeft Position of robot
-	 */
-	public static void far(boolean robotLeft)
-	{
-		new Thread()
-		{
-			public void run()
-			{
-				try
-				{
-					// wait for general init
-					Thread.sleep(200);
-					
-					plate.setHeight(Constants.SCALE_HEIGHT);
-					
-					driveAuto.go(Constants.FAR_DISTANCE,4000);
-					driveAuto.turn(robotLeft ? 90 : -90);
-					
-					elevator.setSpeed(1);
-					elevator.checkTop();//wait for elevator at top
-					
-					driveAuto.go(Constants.FAR_CREEP,2000);
-					claw.out();
-				}
-				catch (InterruptedException e)
-				{
-				}
-			}
-		}.start();
-	}
-	
-	public static void middle(boolean buttonLeft)
-	{
-		new Thread()
-		{
-			public void run()
-			{
-				try
-				{
-					// wait for general init
-					Thread.sleep(200);
-					
-					plate.setHeight(Constants.SWITCH_HEIGHT);
-					
-					driveAuto.go(Constants.MIDDLE_DISTANCE,2000);
-					driveAuto.turn(buttonLeft?-90:90);
-					driveAuto.go(Constants.MIDDLE_LEFT,2000);
-					driveAuto.turn(0);
-					driveAuto.go(Constants.MIDDLE_CREEP,2000);
-					driveAuto.turn(buttonLeft?90:-90);
-					claw.out();
-				}
-				catch (InterruptedException e)
-				{
-				}
-			}
-		}.start();
-	}
-	public static void error()
-	{
-		new Thread()
-		{
-			public void run()
-			{
-				try
-				{
-					// wait for general init
-					Thread.sleep(200);
-					driveAuto.go(Constants.ERROR_DISTANCE,2000);
-				}
-				catch (InterruptedException e)
-				{
-				}
-			}
-		}.start();
+		claw = c;
+		plate = p;
+		elevator = e;
 	}
 
-	public static void none(boolean left)
+	private static void crossLine(char pos, boolean goLeft, boolean far) throws InterruptedException
 	{
-		new Thread()
+		System.out.println("crossing line");
+
+		double finishDistance = far ? Constants.TO_MIDDLE : Constants.TO_SWITCH;
+
+		switch (pos)
 		{
-			public void run()
+		case 'L':
+		case 'R':
+		{
+			if (pos == 'L' == goLeft)
 			{
-				try
-				{
-					// wait for general init
-					Thread.sleep(200);
-					driveAuto.go(Constants.TO_MIDDLE,2000);
-					driveAuto.turn(left?90:-90);
-					driveAuto.go(Constants.ACROSS_DISTANCE, 2000);
-					driveAuto.turn(180);
-					driveAuto.go(Constants.NONE_CREEP, 1000);
-					claw.out();
-				}
-				catch (InterruptedException e)
-				{
-				}
+				driveAuto.go(finishDistance, 4000);
 			}
-		}.start();
-		
+			else
+			{
+				driveAuto.go(Constants.START_CREEP, 4000);
+				driveAuto.turn(goLeft ? -90 : 90);
+				driveAuto.go(Constants.FAR_ACROSS, 4000);
+				driveAuto.turn(0);
+				driveAuto.go(finishDistance - Constants.START_CREEP, 4000);
+			}
+			break;
+		}
+		case 'M':
+		{
+			driveAuto.go(Constants.START_CREEP, 4000);
+
+			driveAuto.turn(goLeft ? -90 : 90);
+			driveAuto.go(Constants.MIDDLE_ACROSS, 4000);
+			driveAuto.turn(0);
+			driveAuto.go(finishDistance - Constants.START_CREEP, 4000);
+			break;
+		}
+		}
+	}
+
+	public static void error() throws InterruptedException
+	{
+
+	System.out.println("error");
+	driveAuto.go(Constants.ERROR_DISTANCE, 2000);
+	}
+
+	public static void leverFar(char pos, boolean left) throws InterruptedException
+	{
+		System.out.println("far Switch");
+
+		crossLine(pos, left, true);
+		driveAuto.turn(left ? 90 : -90);
+
+		plate.setHeight(Constants.SCALE_HEIGHT);
+
+		driveAuto.go(Constants.FLEVER_DISTANCE, 2000);
+		driveAuto.turn(180);
+		driveAuto.go(Constants.LEVER_CREEP, 2000);
+		claw.out();
+	}
+
+	public static void leverNear(char pos, boolean invert) throws InterruptedException
+	{
+		System.out.println("near switch");
+
+		crossLine(pos, invert, false);
+
+		plate.setHeight(Constants.SCALE_HEIGHT);
+		driveAuto.turn(invert ? 90 : -90);
+
+		driveAuto.go(Constants.NLEVER_DISTANCE, 2000);
+		claw.out();
+	}
+
+	public static void scaleNear(char pos, boolean invert) throws InterruptedException
+	{
+		System.out.println("scale near");
+
+		crossLine(pos, invert, false);
+		plate.setHeight(Constants.SCALE_HEIGHT);
+		elevator.setHeight(Constants.ELEVATOR_HEIGHT);
+		Thread.sleep(1000);
+
+		driveAuto.turn(invert ? Constants.NLSCALE_ROTATE : -Constants.NLSCALE_ROTATE);
+		driveAuto.go(Constants.NSCALE_DISTANCE, 4000);
+
+		claw.out();
+	}
+
+	public static void scaleFar(char pos, boolean left) throws InterruptedException
+	{
+		System.out.println("Scale far");
+
+		crossLine(pos, left, true);
+		plate.setHeight(Constants.SCALE_HEIGHT);
+
+		driveAuto.go(Constants.FSCALE_DISTANCE, 2000);
+		driveAuto.turn(left ? Constants.FSCALE_TURN : -Constants.FSCALE_TURN);
+		elevator.setHeight(Constants.ELEVATOR_HEIGHT);
+		Thread.sleep(1000);
+		driveAuto.go(Constants.SCALE_CREEP, 2000);
+		claw.out();
+	}
+
+	public static void crossLineThread(char location, boolean left) throws InterruptedException
+	{
+		crossLine(location, left, true);
 	}
 }
