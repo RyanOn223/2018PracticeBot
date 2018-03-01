@@ -12,6 +12,7 @@ import org.usfirst.frc.team223.vision.VisionServer;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -52,6 +53,9 @@ public class Robot extends IterativeRobot
 	@Override
 	public void robotInit()
 	{
+		CameraServer.getInstance().addAxisCamera("10.2.23.63");
+		CameraServer.getInstance().startAutomaticCapture();
+		
 		p = Preferences.getInstance();
 		c = new Compressor(RobotMap.pcmID);
 
