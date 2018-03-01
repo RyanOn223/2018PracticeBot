@@ -26,8 +26,11 @@ public class OI
 
 	static JoystickButton bottom = new JoystickButton(operator, 3);
 	static JoystickButton top = new JoystickButton(operator, 4);
-	static JoystickButton middle = new JoystickButton(operator, 2);
-
+	
+	//for disabling all "smart" features    remember to change value
+	public static JoystickButton panic = new JoystickButton(operator, 1000);
+	public static JoystickButton calm = new JoystickButton(operator, 1000);
+	
 	public static JoystickButton clawDrop = new JoystickButton(operator, 1);
 	public static JoystickButton clawUp = new JoystickButton(operator, 4);
 

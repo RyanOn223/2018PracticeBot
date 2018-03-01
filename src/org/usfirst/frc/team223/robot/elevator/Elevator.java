@@ -2,6 +2,7 @@ package org.usfirst.frc.team223.robot.elevator;
 
 import org.usfirst.frc.team223.robot.constants.RobotMap;
 import org.usfirst.frc.team223.robot.utils.BetterController;
+import org.usfirst.frc.team223.robot.utils.Panic;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -89,22 +90,46 @@ public class Elevator
 	public void setSpeed(double L)
 	{
 		//System.out.println("0: " + top.get() + " 1: " + bottom.get() + " " + pos);
+		if(Panic.panic)
+		{
+			talon0.set(ControlMode.PercentOutput, L);
+			return;
+		}
 		if (L < 0)
 		{
-			talon0.set(ControlMode.PercentOutput, 0);
-			return;
+			if (!bottom.get())
+			{
+				pos = -1;
+			}
+			if (!top.get())
+			{
+				pos = 0;
+				setPistons(false);
+			}
+			if (pos < 0)
+			{
+				talon0.set(ControlMode.PercentOutput, 0);
+				setPistons(true);
+				return;
+			}
 		}
-		if(L>0&&!top.get())
+		if (L > 0)
 		{
-			solenoid.set(true);
-			talon0.set(ControlMode.PercentOutput, 0);
-			return;
-		}
-		if(L<0&&!bottom.get())
-		{
-			solenoid.set(true);
-			talon0.set(ControlMode.PercentOutput, 0);
-			return;
+			if (!top.get())
+			{
+				pos = 1;
+			}
+			if (!bottom.get())
+			{
+				pos = 0;
+				setPistons(false);
+			}
+			if (pos > 0)
+			{
+				talon0.set(ControlMode.PercentOutput, 0);
+				setPistons(true);
+				return;
+			}
 		}
 		talon0.set(ControlMode.PercentOutput, L);
 	}

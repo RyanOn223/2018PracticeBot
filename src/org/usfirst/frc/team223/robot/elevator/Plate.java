@@ -2,6 +2,7 @@ package org.usfirst.frc.team223.robot.elevator;
 
 import org.usfirst.frc.team223.robot.constants.RobotMap;
 import org.usfirst.frc.team223.robot.utils.BetterController;
+import org.usfirst.frc.team223.robot.utils.Panic;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -66,6 +67,11 @@ public class Plate
 
 	public void setSpeed(double L)
 	{
+		if(Panic.panic)
+		{
+			talon.set(ControlMode.PercentOutput, L);
+			return;
+		}
 		if (L < 0)
 		{
 			if (!bottom.get())
