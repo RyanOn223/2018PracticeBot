@@ -11,12 +11,15 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.Solenoid;
 
 public class Claw
 {
 	TalonSRX intake = new TalonSRX(RobotMap.intake);
 	TalonSRX drop = new TalonSRX(RobotMap.claw);
 
+	Solenoid solenoid=new Solenoid(RobotMap.clawSolenoid);
+	
 	private BetterController controller;
 
 	private PIDOutput out = new PIDOutput()
@@ -104,10 +107,19 @@ public class Claw
 		if (forward == reverse)
 		{
 			intake.set(ControlMode.PercentOutput, 0);
+			solenoid.set(true);
 			return;
 		}
-
-		intake.set(ControlMode.PercentOutput, forward ? -1 : 1);
+		if(!forward)
+		{
+			intake.set(ControlMode.PercentOutput, -1);
+			solenoid.set(false);
+		}
+		else
+		{
+			intake.set(ControlMode.PercentOutput, 1);
+			solenoid.set(true);
+		}
 	}
 
 	public void setAngle(int deg)

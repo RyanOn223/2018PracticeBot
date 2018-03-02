@@ -26,7 +26,8 @@ public class RobotMap
 	public static int pcmID = 51;
 	public static int driveSolenoid = 0;
 	public static int elevateSolenoid = 2;
-
+	public static int clawSolenoid = 3;
+	
 	public static int plateTop=2;
 	public static int plateBottom=3;
 	public static int elevatorBotom=1;
