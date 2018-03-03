@@ -3,14 +3,20 @@ package org.usfirst.frc.team223.robot.utils;
 public class GeneralUtils
 {
 	/**
-	 * puts the input into the range 180 to -180
+	 * puts the input into the range -target to target
 	 */
-	public static double degreeBounds(double d)
+	public static double bounds(double input,double target)
 	{
-		int num = ((int) d) / 360;
-		d = d - num * 360;
-		if (d < -180) d += 360;
-		else if (d > 180) d -= 360;
-		return d;
+		target=Math.abs(target);
+		
+		if(input<0)
+		{
+			input=Math.max(input, -target);
+		}
+		else if(input>0)
+		{
+			input=Math.min(input, target);
+		}
+		return input;
 	}
 }

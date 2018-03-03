@@ -57,7 +57,7 @@ public class Robot extends IterativeRobot
 	@Override
 	public void robotInit()
 	{
-		//CameraServer.getInstance().addAxisCamera("10.2.23.63");
+		CameraServer.getInstance().addAxisCamera("10.2.23.63");
 		//CameraServer.getInstance().startAutomaticCapture();
 
 		p = Preferences.getInstance();
@@ -154,11 +154,14 @@ public class Robot extends IterativeRobot
 						}
 						else if (!ignoreSwitch)
 						{
-							AutoRoutines.leverFar(location, left);
+							AutoRoutines.crossLineThread(location, left);
+
+							//AutoRoutines.leverFar(location, left);
 						}
 						else if (!ignoreScale)
 						{
-							AutoRoutines.scaleFar(location, left);
+							AutoRoutines.crossLineThread(location, left);
+							//AutoRoutines.scaleFar(location, left);
 						}
 						else
 						{
@@ -365,17 +368,17 @@ public class Robot extends IterativeRobot
 
 	public void writeToDash()
 	{
-		SmartDashboard.putNumber("ele A.", elevator.getCurrent());
+		/*SmartDashboard.putNumber("ele A.", elevator.getCurrent());
 		SmartDashboard.putNumber("claw A.", claw.getCurrent());
 		SmartDashboard.putNumber("plate A.", plate.getCurrent());
 		SmartDashboard.putNumber("right A.", drive.getRightCurrent());
 		SmartDashboard.putNumber("left A.", drive.getLeftCurrent());
-		
+		/*
 		SmartDashboard.putNumber("ele V.", elevator.getVoltage());
 		SmartDashboard.putNumber("claw V.", claw.getVoltage());
 		SmartDashboard.putNumber("plate V.", plate.getVoltage());
 		SmartDashboard.putNumber("right V.", drive.getRightVoltage());
-		SmartDashboard.putNumber("left V.", drive.getLeftVoltage());
+		SmartDashboard.putNumber("left V.", drive.getLeftVoltage());*/
 		
 		
 		SmartDashboard.putNumber("angle", ahrs.getAngle());

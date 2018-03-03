@@ -15,7 +15,7 @@ public class Constants
 	// Cross Line Distances------------------
 
 	public static final double TO_SWITCH = 149*DRIVE_CNT_TO_IN;
-	public static final double TO_MIDDLE = 60* DRIVE_CNT_TO_IN+ TO_SWITCH;
+	public static final double TO_MIDDLE = 64* DRIVE_CNT_TO_IN+ TO_SWITCH;
 
 	public static final double START_CREEP = 40 * DRIVE_CNT_TO_IN;
 	public static final double FAR_ACROSS = 236 * DRIVE_CNT_TO_IN;
@@ -25,7 +25,7 @@ public class Constants
 
 	public static final double NLEVER_DISTANCE = 25 * DRIVE_CNT_TO_IN;
 
-	public static final double NLSCALE_ROTATE = 15;
+	public static final double NLSCALE_ROTATE = 30;
 	public static final double NSCALE_DISTANCE = 116 * DRIVE_CNT_TO_IN;
 
 	// -----------------------------------

@@ -1,6 +1,7 @@
 package org.usfirst.frc.team223.robot.drive;
 
 import org.usfirst.frc.team223.robot.utils.BetterController;
+import org.usfirst.frc.team223.robot.utils.GeneralUtils;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.PIDOutput;
@@ -135,7 +136,12 @@ public class DriveAuto extends DriveBase
 	public void update()
 	{
 		// System.out.println(leftDrive+" "+rightDrive);
-		drive.setMotors(leftRotate + leftDrive, rightRotate + rightDrive);
+		double left=leftRotate + leftDrive;
+		double right=rightRotate + rightDrive;
+		
+		
+		
+		drive.setMotors(GeneralUtils.bounds(left, 0.7) ,GeneralUtils.bounds(right, 0.7));
 	}
 
 }
