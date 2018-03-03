@@ -54,7 +54,8 @@ public class Plate
 
 	public Plate()
 	{
-		talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+		talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0);
+		talon.setInverted(true);
 		controller = new BetterController(p, i, d, src, out);
 	}
 
@@ -67,6 +68,7 @@ public class Plate
 
 	public void setSpeed(double L)
 	{
+		//System.out.println(L);
 		if(Panic.panic)
 		{
 			talon.set(ControlMode.PercentOutput, L);
@@ -76,7 +78,7 @@ public class Plate
 		{
 			if (!bottom.get())
 			{
-				// pos = -1;//Dissabled
+				pos = -1;//Dissabled
 			}
 			if (!top.get())
 			{
@@ -146,5 +148,15 @@ public class Plate
 				}
 			}
 		}.start();
+	}
+
+	public double getCurrent()
+	{
+		return talon.getOutputCurrent();
+	}
+
+	public double getVoltage()
+	{
+		return talon.getMotorOutputVoltage();
 	}
 }

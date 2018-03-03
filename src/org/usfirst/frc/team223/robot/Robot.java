@@ -41,11 +41,12 @@ public class Robot extends IterativeRobot
 	Plate plate;
 	Claw claw;
 
-	Latch shiftLatch;
-	Latch elevatorLatch;
-	Latch raiseLatch;
-	Latch resetLatch;
-	Latch panicLatch;
+	private Latch shiftLatch;
+	private Latch elevatorLatch;
+	private Latch raiseLatch;
+	private Latch resetLatch;
+	private Latch panicLatch;
+	private Latch clampLatch;
 
 	VisionServer visionServer;
 
@@ -56,9 +57,9 @@ public class Robot extends IterativeRobot
 	@Override
 	public void robotInit()
 	{
-		CameraServer.getInstance().addAxisCamera("10.2.23.63");
-		CameraServer.getInstance().startAutomaticCapture();
-		
+		//CameraServer.getInstance().addAxisCamera("10.2.23.63");
+		//CameraServer.getInstance().startAutomaticCapture();
+
 		p = Preferences.getInstance();
 		c = new Compressor(RobotMap.pcmID);
 
@@ -85,7 +86,8 @@ public class Robot extends IterativeRobot
 	{
 		generalInit();
 
-		new Thread() {
+		new Thread()
+		{
 			public void run()
 			{
 				try
@@ -106,7 +108,7 @@ public class Robot extends IterativeRobot
 					boolean ignoreScale = (routine & 2) == 2;
 
 					String gameData = DriverStation.getInstance().getGameSpecificMessage();
-
+					
 					char lever = 'Q';
 					char scale = 'Q';
 
@@ -122,56 +124,60 @@ public class Robot extends IterativeRobot
 							location = 'F';
 						}
 					}
-
+					else
+					{
+						gameData="shit";
+					}
 					// makes sure lever and scale are both L or R
 					if (!((lever == 'L' || lever == 'R') && (scale == 'L' || scale == 'R')))
 					{
 						location = 'F';
 					}
-
+					System.out.println(location+" "+gameData+" "+routine);
 					switch (location)
 					{
 
-						case 'L':
-						case 'R':
-						case 'M':
+					case 'L':
+					case 'R':
+					case 'M':
+					{
+						// if switch is on the left and so is robot after
+						claw.setPiston(true);
+						claw.init();
+						if (!ignoreSwitch && 'L' == lever == left)
 						{
-							// if switch is on the left and so is robot after
-
-							if (!ignoreSwitch && 'L' == lever == left)
-							{
-								AutoRoutines.leverNear(location, left);
-							}
-							else if (!ignoreScale && 'L' == scale == left)
-							{
-								AutoRoutines.scaleNear(location, left);
-							}
-							else if (!ignoreSwitch)
-							{
-								AutoRoutines.leverFar(location, left);
-							}
-							else if (!ignoreScale)
-							{
-								AutoRoutines.scaleFar(location, left);
-							}
-							else
-							{
-								AutoRoutines.crossLineThread(location, left);
-							}
-							break;
+							AutoRoutines.leverNear(location, left);
 						}
-						case 'D':
-							System.err.println("BAD DATA FROM DASH BOARD!\n\t Moving forward to cross line");
-							AutoRoutines.error();
-							break;
-						case 'F':
-							System.err.println("BAD DATA FROM FMS!\n\t Moving forward to cross line");
-							AutoRoutines.error();
-							break;
-						default:
-							System.out.println("something bad happened\n\\t Moving forward to cross line");
-							AutoRoutines.error();
-							break;
+						else if (!ignoreScale && 'L' == scale == left)
+						{
+							AutoRoutines.scaleNear(location, left);
+						}
+						else if (!ignoreSwitch)
+						{
+							AutoRoutines.leverFar(location, left);
+						}
+						else if (!ignoreScale)
+						{
+							AutoRoutines.scaleFar(location, left);
+						}
+						else
+						{
+							AutoRoutines.crossLineThread(location, left);
+						}
+						break;
+					}
+					case 'D':
+						System.err.println("BAD DATA FROM DASH BOARD!\n\t Moving forward to cross line");
+						AutoRoutines.error();
+						break;
+					case 'F':
+						System.err.println("BAD DATA FROM FMS!\n\t Moving forward to cross line");
+						AutoRoutines.error();
+						break;
+					default:
+						System.out.println("something bad happened\n\\t Moving forward to cross line");
+						AutoRoutines.error();
+						break;
 					}
 				}
 				catch (InterruptedException e1)
@@ -182,19 +188,10 @@ public class Robot extends IterativeRobot
 		// */
 
 		/*
-		new Thread() {
-			public void run()
-			{
-				try
-				{ // wait for general init
-					Thread.sleep(200);
-					driveAuto.turn(90);
-				}
-				catch (InterruptedException e)
-				{
-				}
-			}
-		}.start();// */
+		 * new Thread() { public void run() { try { // wait for general init
+		 * Thread.sleep(200); driveAuto.turn(90); } catch (InterruptedException e) { } }
+		 * }.start();//
+		 */
 	}
 
 	/**
@@ -246,8 +243,8 @@ public class Robot extends IterativeRobot
 		driveTelop.init();
 		// claw.init();
 
-		shiftLatch = new Latch(OI.shiftFast) {
-
+		shiftLatch = new Latch(OI.shiftFast)
+		{
 			@Override
 			public void go()
 			{
@@ -260,8 +257,8 @@ public class Robot extends IterativeRobot
 				drive.setPistons(false);
 			}
 		};
-		elevatorLatch = new Latch(OI.elevatorLock) {
-
+		elevatorLatch = new Latch(OI.elevatorLock)
+		{
 			@Override
 			public void go()
 			{
@@ -274,7 +271,8 @@ public class Robot extends IterativeRobot
 				elevator.setPistons(false);
 			}
 		};
-		raiseLatch = new Latch(OI.clawUp) {
+		raiseLatch = new Latch(OI.clawUp)
+		{
 			@Override
 			public void go()
 			{
@@ -287,7 +285,8 @@ public class Robot extends IterativeRobot
 
 			}
 		};
-		resetLatch = new Latch(OI.clawDrop) {
+		resetLatch = new Latch(OI.clawDrop)
+		{
 			@Override
 			public void go()
 			{
@@ -300,17 +299,34 @@ public class Robot extends IterativeRobot
 				claw.disable();
 			}
 		};
-		panicLatch = new Latch(OI.panic, OI.calm) {
+		panicLatch = new Latch(OI.panic, OI.calm)
+		{
 			@Override
 			public void go()
 			{
 				Panic.panic = true;
+				claw.setPiston(false);
+				elevator.setPistons(false);
 			}
 
 			@Override
 			public void stop()
 			{
 				Panic.panic = false;
+			}
+		};
+		clampLatch = new Latch(OI.clawClamp)
+		{
+			@Override
+			public void go()
+			{
+				claw.setPiston(true);
+			}
+
+			@Override
+			public void stop()
+			{
+				claw.setPiston(false);
 			}
 		};
 	}
@@ -322,9 +338,14 @@ public class Robot extends IterativeRobot
 	public void teleopPeriodic()
 	{
 		panicLatch.get();
-		elevatorLatch.get();
-		shiftLatch.get();
 
+		shiftLatch.get();
+		if (Panic.panic)
+		{
+			clampLatch.get();
+			elevatorLatch.get();
+		}
+		
 		if (!raiseLatch.get())
 		{
 			if (!resetLatch.get())
@@ -336,7 +357,7 @@ public class Robot extends IterativeRobot
 		driveTelop.cheese(OI.driver);
 
 		elevator.setSpeed(-OI.operator.getAxis(OI.rightYAxis));
-		plate.setSpeed(-OI.operator.getRawAxis(OI.leftYAxis));
+		plate.setSpeed(-OI.operator.getAxis(OI.leftYAxis));
 
 		claw.intake(OI.intake.get(), OI.outtake.get());
 		writeToDash();
@@ -344,10 +365,21 @@ public class Robot extends IterativeRobot
 
 	public void writeToDash()
 	{
-		SmartDashboard.putNumber("ele", elevator.getPosition());
-		SmartDashboard.putNumber("right", drive.getRightSpeed());
-		SmartDashboard.putNumber("left", drive.getLeftSpeed());
+		SmartDashboard.putNumber("ele A.", elevator.getCurrent());
+		SmartDashboard.putNumber("claw A.", claw.getCurrent());
+		SmartDashboard.putNumber("plate A.", plate.getCurrent());
+		SmartDashboard.putNumber("right A.", drive.getRightCurrent());
+		SmartDashboard.putNumber("left A.", drive.getLeftCurrent());
+		
+		SmartDashboard.putNumber("ele V.", elevator.getVoltage());
+		SmartDashboard.putNumber("claw V.", claw.getVoltage());
+		SmartDashboard.putNumber("plate V.", plate.getVoltage());
+		SmartDashboard.putNumber("right V.", drive.getRightVoltage());
+		SmartDashboard.putNumber("left V.", drive.getLeftVoltage());
+		
+		
 		SmartDashboard.putNumber("angle", ahrs.getAngle());
+		SmartDashboard.putBoolean("Panic",! Panic.panic);
 	}
 
 	/**
@@ -368,7 +400,8 @@ public class Robot extends IterativeRobot
 		plate.resetEncoders();
 		elevator.resetEncoders();
 		claw.resetEncoders();
-		driveTelop.setPID("r", p.getDouble("pk", .01), p.getDouble("ik", 0.000), p.getDouble("dk", .0002));
-		driveTelop.setPID("l", p.getDouble("pk", .01), p.getDouble("ik", 0.000), p.getDouble("dk", .0002));
+		claw.disable();
+		driveTelop.setPID("r", p.getDouble("p", .01), p.getDouble("i", 0.000), p.getDouble("d", .0002));
+		driveTelop.setPID("l", p.getDouble("p", .01), p.getDouble("i", 0.000), p.getDouble("d", .0002));
 	}
 }

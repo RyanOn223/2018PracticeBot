@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj.Solenoid;
 
 public class DriveTrain
 {
-	TalonSRX talonL0 = new TalonSRX(RobotMap.driveL0);// encoder here
-	TalonSRX talonL1 = new TalonSRX(RobotMap.driveL1);// slave
+	TalonSRX talonL0 = new TalonSRX(RobotMap.driveL0);
+	TalonSRX talonL1 = new TalonSRX(RobotMap.driveL1);// encoder here
 	TalonSRX talonR0 = new TalonSRX(RobotMap.driveR0);// slave
 	TalonSRX talonR1 = new TalonSRX(RobotMap.driveR1);// encoder here
 
@@ -20,12 +20,9 @@ public class DriveTrain
 	public DriveTrain()
 	{
 		talonL1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
-		talonR0.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
-
-		// setSlaves
-		talonL1.set(ControlMode.Follower, RobotMap.driveL0);
-		talonR0.set(ControlMode.Follower, RobotMap.driveR1);
-		// done
+		talonR1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+		
+		
 
 		talonR0.setInverted(true);
 		talonR1.setInverted(true);
@@ -36,6 +33,7 @@ public class DriveTrain
 		// if(L>0)L=Math.min(L,.6);
 		// if(L<0)L=Math.max(L,-.6);
 		talonL0.set(ControlMode.PercentOutput, L);
+		talonL1.set(ControlMode.PercentOutput, L);
 	}
 
 	public void setRight(double R)
@@ -43,6 +41,7 @@ public class DriveTrain
 		// if(R>0)R=Math.min(R,.6);
 		// if(R<0)R=Math.max(R,-.6);
 		talonR1.set(ControlMode.PercentOutput, R);
+		talonR0.set(ControlMode.PercentOutput, R);
 	}
 
 	public void setMotors(double L, double R)
@@ -67,13 +66,13 @@ public class DriveTrain
 
 	public void resetEncoders()
 	{
-		talonL0.setSelectedSensorPosition(0, 0, 0);
+		talonL1.setSelectedSensorPosition(0, 0, 0);
 		talonR1.setSelectedSensorPosition(0, 0, 0);
 	}
 
 	public double getLeftSpeed()
 	{
-		return -talonL0.getSelectedSensorVelocity(0);
+		return -talonL1.getSelectedSensorVelocity(0);
 	}
 
 	public double getRightSpeed()
@@ -83,11 +82,31 @@ public class DriveTrain
 
 	public double getLeftPosition()
 	{
-		return -talonL0.getSelectedSensorPosition(0);
+		return talonL1.getSelectedSensorPosition(0);
 	}
 
 	public double getRightPosition()
 	{
 		return talonR1.getSelectedSensorPosition(0);
+	}
+
+	public double getRightCurrent()
+	{
+		return talonR0.getOutputCurrent()+talonR1.getOutputCurrent();
+	}
+
+	public double getLeftCurrent()
+	{
+		return talonL0.getOutputCurrent()+talonL1.getOutputCurrent();
+	}
+
+	public double getRightVoltage()
+	{
+		return talonR0.getMotorOutputVoltage()+talonR1.getMotorOutputVoltage();
+	}
+
+	public double getLeftVoltage()
+	{
+		return talonL0.getMotorOutputVoltage()+talonL1.getMotorOutputVoltage();
 	}
 }

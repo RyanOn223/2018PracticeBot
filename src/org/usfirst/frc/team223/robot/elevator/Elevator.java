@@ -71,8 +71,9 @@ public class Elevator
 		talon2.set(ControlMode.Follower, RobotMap.elevator0);
 		// done
 
-		talon1.setInverted(true);
+		// talon1.setInverted(true);
 		controller = new BetterController(p, i, kd, src, out);
+		
 	}
 
 	public void setHeight(double height)
@@ -82,18 +83,22 @@ public class Elevator
 
 	public void setPistons(boolean yes)
 	{
-		solenoid.set(yes);
+		solenoid.set(!yes);
 	}
-
+	public boolean getPistons() {return !solenoid.get();}
 	public int pos = 0;
 
 	public void setSpeed(double L)
 	{
-		//System.out.println("0: " + top.get() + " 1: " + bottom.get() + " " + pos);
-		if(Panic.panic)
+		// System.out.println("0: " + top.get() + " 1: " + bottom.get() + " " + pos);
+		if (Panic.panic)
 		{
 			talon0.set(ControlMode.PercentOutput, L);
 			return;
+		}
+		if (L == 0)
+		{
+			setPistons(true);
 		}
 		if (L < 0)
 		{
@@ -101,10 +106,20 @@ public class Elevator
 			{
 				pos = -1;
 			}
-			if (!top.get())
+			else if (!top.get())
 			{
 				pos = 0;
 				setPistons(false);
+			}
+			else
+			{
+				if (getPistons())
+				{
+
+					talon0.set(ControlMode.PercentOutput, -L);
+					setPistons(false);
+					return;
+				}
 			}
 			if (pos < 0)
 			{
@@ -119,11 +134,13 @@ public class Elevator
 			{
 				pos = 1;
 			}
-			if (!bottom.get())
+			else if (!bottom.get())
 			{
 				pos = 0;
 				setPistons(false);
 			}
+			else setPistons(false);
+
 			if (pos > 0)
 			{
 				talon0.set(ControlMode.PercentOutput, 0);
@@ -146,7 +163,7 @@ public class Elevator
 
 	public double getPosition()
 	{
-		return talon0.getSelectedSensorPosition(0);
+		return -talon0.getSelectedSensorPosition(0);
 	}
 
 	public void stopControllers()
@@ -175,5 +192,15 @@ public class Elevator
 				return;
 			}
 		}
+	}
+
+	public double getCurrent()
+	{
+		return talon0.getOutputCurrent()+talon1.getOutputCurrent()+talon2.getOutputCurrent();
+	}
+
+	public double getVoltage()
+	{
+		return talon0.getMotorOutputVoltage()+talon1.getMotorOutputVoltage()+talon2.getMotorOutputVoltage();
 	}
 }

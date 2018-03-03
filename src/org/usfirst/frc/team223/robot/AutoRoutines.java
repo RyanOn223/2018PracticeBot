@@ -38,22 +38,22 @@ public class AutoRoutines
 			}
 			else
 			{
-				driveAuto.go(Constants.START_CREEP, 4000);
+				driveAuto.go(Constants.START_CREEP, 1000);
 				driveAuto.turn(goLeft ? -90 : 90);
 				driveAuto.go(Constants.FAR_ACROSS, 4000);
 				driveAuto.turn(0);
-				driveAuto.go(finishDistance - Constants.START_CREEP, 4000);
+				driveAuto.go(finishDistance - Constants.START_CREEP, 2000);
 			}
 			break;
 		}
 		case 'M':
 		{
-			driveAuto.go(Constants.START_CREEP, 4000);
+			driveAuto.go(Constants.START_CREEP, 1000);
 
 			driveAuto.turn(goLeft ? -90 : 90);
 			driveAuto.go(Constants.MIDDLE_ACROSS, 4000);
 			driveAuto.turn(0);
-			driveAuto.go(finishDistance - Constants.START_CREEP, 4000);
+			driveAuto.go(finishDistance - Constants.START_CREEP, 2000);
 			break;
 		}
 		}
@@ -61,9 +61,8 @@ public class AutoRoutines
 
 	public static void error() throws InterruptedException
 	{
-
-	System.out.println("error");
-	driveAuto.go(Constants.ERROR_DISTANCE, 2000);
+		System.out.println("error");
+		driveAuto.go(Constants.ERROR_DISTANCE, 2000);
 	}
 
 	public static void leverFar(char pos, boolean left) throws InterruptedException
@@ -73,9 +72,9 @@ public class AutoRoutines
 		crossLine(pos, left, true);
 		driveAuto.turn(left ? 90 : -90);
 
-		plate.setHeight(Constants.SCALE_HEIGHT);
+		plate.setHeight(Constants.SWITCH_HEIGHT);
 
-		driveAuto.go(Constants.FLEVER_DISTANCE, 2000);
+		driveAuto.go(Constants.FLEVER_DISTANCE, 4000);
 		driveAuto.turn(180);
 		driveAuto.go(Constants.LEVER_CREEP, 2000);
 		claw.out();
@@ -87,7 +86,7 @@ public class AutoRoutines
 
 		crossLine(pos, invert, false);
 
-		plate.setHeight(Constants.SCALE_HEIGHT);
+		plate.setHeight(Constants.SWITCH_HEIGHT);
 		driveAuto.turn(invert ? 90 : -90);
 
 		driveAuto.go(Constants.NLEVER_DISTANCE, 2000);
@@ -104,7 +103,7 @@ public class AutoRoutines
 		Thread.sleep(1000);
 
 		driveAuto.turn(invert ? Constants.NLSCALE_ROTATE : -Constants.NLSCALE_ROTATE);
-		driveAuto.go(Constants.NSCALE_DISTANCE, 4000);
+		driveAuto.go(Constants.NSCALE_DISTANCE, 2000);
 
 		claw.out();
 	}
@@ -116,7 +115,7 @@ public class AutoRoutines
 		crossLine(pos, left, true);
 		plate.setHeight(Constants.SCALE_HEIGHT);
 
-		driveAuto.go(Constants.FSCALE_DISTANCE, 2000);
+		driveAuto.go(Constants.FSCALE_DISTANCE, 4000);
 		driveAuto.turn(left ? Constants.FSCALE_TURN : -Constants.FSCALE_TURN);
 		elevator.setHeight(Constants.ELEVATOR_HEIGHT);
 		Thread.sleep(1000);
@@ -126,6 +125,7 @@ public class AutoRoutines
 
 	public static void crossLineThread(char location, boolean left) throws InterruptedException
 	{
-		crossLine(location, left, true);
+		System.out.println("Only cross line");
+		crossLine(location, left, false);
 	}
 }

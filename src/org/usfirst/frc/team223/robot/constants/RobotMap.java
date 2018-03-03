@@ -8,8 +8,8 @@ package org.usfirst.frc.team223.robot.constants;
  */
 public class RobotMap
 {
-	public static int driveL1 = 1;
-	public static int driveL0 = 2;// encoder on this one
+	public static int driveL1 = 1;// encoder on this one
+	public static int driveL0 = 2;
 
 	public static int driveR1 = 6;//encoder on this one
 	public static int driveR0 = 7;

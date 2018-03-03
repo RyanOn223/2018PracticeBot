@@ -3,6 +3,7 @@ package org.usfirst.frc.team223.robot.elevator;
 import org.usfirst.frc.team223.robot.constants.Constants;
 import org.usfirst.frc.team223.robot.constants.RobotMap;
 import org.usfirst.frc.team223.robot.utils.BetterController;
+import org.usfirst.frc.team223.robot.utils.Panic;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -18,7 +19,7 @@ public class Claw
 	TalonSRX intake = new TalonSRX(RobotMap.intake);
 	TalonSRX drop = new TalonSRX(RobotMap.claw);
 
-	Solenoid solenoid=new Solenoid(RobotMap.clawSolenoid);
+	Solenoid solenoid=new Solenoid(RobotMap.pcmID,RobotMap.clawSolenoid);
 	
 	private BetterController controller;
 
@@ -59,11 +60,12 @@ public class Claw
 		intake.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
 		drop.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
 		controller = new BetterController(p, i, d, src, out);
+		intake.setInverted(true);
 	}
 
 	public void init()
 	{
-		controller.startPID(-45 * Constants.CLAW_CNT_TO_DEG);
+		controller.startPID(-90* Constants.CLAW_CNT_TO_DEG);
 	}
 
 	public void setSpeed(double L)
@@ -94,12 +96,12 @@ public class Claw
 
 	public void in()
 	{
-		intake.set(ControlMode.PercentOutput, 1);
+		intake.set(ControlMode.PercentOutput, -1);
 	}
 
 	public void out()
 	{
-		intake.set(ControlMode.PercentOutput, -1);
+		intake.set(ControlMode.PercentOutput, 1);
 	}
 
 	public void intake(boolean forward, boolean reverse)
@@ -107,21 +109,24 @@ public class Claw
 		if (forward == reverse)
 		{
 			intake.set(ControlMode.PercentOutput, 0);
-			solenoid.set(true);
+			if(!Panic.panic)solenoid.set(true);
 			return;
 		}
-		if(!forward)
+		if(forward)
 		{
 			intake.set(ControlMode.PercentOutput, -1);
-			solenoid.set(false);
+			if(!Panic.panic)solenoid.set(false);
 		}
 		else
 		{
 			intake.set(ControlMode.PercentOutput, 1);
-			solenoid.set(true);
+			if(!Panic.panic)solenoid.set(true);
 		}
 	}
-
+	public void setPiston(boolean yes)
+	{
+		solenoid.set(yes);
+	}
 	public void setAngle(int deg)
 	{
 		controller.startPID(deg * Constants.CLAW_CNT_TO_DEG);
@@ -140,5 +145,20 @@ public class Claw
 	public void disable()
 	{
 		controller.disable();
+	}
+
+	public boolean isEnabled()
+	{
+		return controller.isEnabled();
+	}
+
+	public double getCurrent()
+	{
+		return intake.getOutputCurrent();
+	}
+
+	public double getVoltage()
+	{
+		return intake.getMotorOutputVoltage();
 	}
 }
