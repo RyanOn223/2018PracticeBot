@@ -19,6 +19,7 @@ public abstract class Latch
 	{
 		b1 = on;
 		this.hold = true;
+		stop();
 	}
 
 	public boolean get()
@@ -41,12 +42,14 @@ public abstract class Latch
 			if (!on)
 			{
 				on = true;
+				System.out.println("hi");
 				go();
 				return true;
 			}
 		}
 		else if (on)
 		{
+			System.out.println("by");
 			on = false;
 			stop();
 		}

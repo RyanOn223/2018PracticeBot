@@ -99,13 +99,19 @@ public class AutoRoutines
 
 		crossLine(pos, invert, false);
 		plate.setHeight(Constants.SCALE_HEIGHT);
-		elevator.setHeight(Constants.ELEVATOR_HEIGHT);
+		
+		//elevator.setHeight(Constants.ELEVATOR_HEIGHT); broken again
+		System.out.println(elevator.getPistons());
+		elevator.setSpeed(1);
 		Thread.sleep(1000);
-
+		elevator.setSpeed(.15);
 		driveAuto.turn(invert ? Constants.NLSCALE_ROTATE : -Constants.NLSCALE_ROTATE);
 		driveAuto.go(Constants.NSCALE_DISTANCE, 2000);
 
 		claw.out();
+		Thread.sleep(1000);
+		elevator.setSpeed(0);
+		driveAuto.go(-12*Constants.DRIVE_CNT_TO_IN,1000);
 	}
 
 	public static void scaleFar(char pos, boolean left) throws InterruptedException

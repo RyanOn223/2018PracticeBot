@@ -343,11 +343,14 @@ public class Robot extends IterativeRobot
 		panicLatch.get();
 
 		shiftLatch.get();
+		
 		if (Panic.panic)
 		{
 			clampLatch.get();
-			elevatorLatch.get();
+			
 		}
+		elevatorLatch.get();
+		
 		
 		if (!raiseLatch.get())
 		{
@@ -401,7 +404,9 @@ public class Robot extends IterativeRobot
 		ahrs.reset();
 		drive.resetEncoders();
 		plate.resetEncoders();
+		plate.stopControllers();
 		elevator.resetEncoders();
+		elevator.setPistons(false);
 		claw.resetEncoders();
 		claw.disable();
 		driveTelop.setPID("r", p.getDouble("p", .01), p.getDouble("i", 0.000), p.getDouble("d", .0002));

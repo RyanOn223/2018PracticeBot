@@ -90,13 +90,12 @@ public class Elevator
 
 	public void setSpeed(double L)
 	{
-		// System.out.println("0: " + top.get() + " 1: " + bottom.get() + " " + pos);
-		if (Panic.panic)
+		//if (Panic.panic)
 		{
 			talon0.set(ControlMode.PercentOutput, L);
 			return;
 		}
-		if (L == 0)
+		/*if (L == 0)
 		{
 			setPistons(true);
 		}
@@ -148,7 +147,7 @@ public class Elevator
 				return;
 			}
 		}
-		talon0.set(ControlMode.PercentOutput, L);
+		talon0.set(ControlMode.PercentOutput, L);*/
 	}
 
 	public void resetEncoders()
