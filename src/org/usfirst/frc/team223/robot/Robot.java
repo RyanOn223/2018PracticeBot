@@ -54,7 +54,7 @@ public class Robot extends IterativeRobot
 	public void robotInit()
 	{
 		CameraServer.getInstance().addAxisCamera("10.2.23.63");
-		CameraServer.getInstance().startAutomaticCapture();
+		//CameraServer.getInstance().startAutomaticCapture();
 		
 		p = Preferences.getInstance();
 		c = new Compressor(RobotMap.pcmID);
