@@ -15,7 +15,7 @@ public class Constants
 	// Cross Line Distances------------------
 
 	public static final double TO_SWITCH = 149;
-	public static final double TO_MIDDLE = (63 + TO_SWITCH) * DRIVE_CNT_TO_IN;
+	public static final double TO_MIDDLE = 70 * DRIVE_CNT_TO_IN + TO_SWITCH;
 
 	public static final double START_CREEP = 40 * DRIVE_CNT_TO_IN;
 	public static final double FAR_ACROSS = 236 * DRIVE_CNT_TO_IN;// unknown
@@ -33,7 +33,7 @@ public class Constants
 	// Far AutoRoutine Distances
 
 	public static final double FSCALE_DISTANCE = 174 * DRIVE_CNT_TO_IN;
-	public static final double FLEVER_DISTANCE = (FSCALE_DISTANCE + 46) * DRIVE_CNT_TO_IN;
+	public static final double FLEVER_DISTANCE = FSCALE_DISTANCE + 46 * DRIVE_CNT_TO_IN;
 	public static final double FSCALE_TURN=-20;
 	
 	// ----------------------------------
