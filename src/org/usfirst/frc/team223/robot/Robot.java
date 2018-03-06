@@ -58,7 +58,7 @@ public class Robot extends IterativeRobot
 	public void robotInit()
 	{
 		CameraServer.getInstance().addAxisCamera("10.2.23.63");
-		//CameraServer.getInstance().startAutomaticCapture();
+		// CameraServer.getInstance().startAutomaticCapture();
 
 		p = Preferences.getInstance();
 		c = new Compressor(RobotMap.pcmID);
@@ -100,7 +100,7 @@ public class Robot extends IterativeRobot
 					/// letter
 					char location = p.getString("position", "D").toUpperCase().toCharArray()[0];
 					int routine = p.getInt("routine", 3);
-
+					boolean forceFar=p.getBoolean("far", false);
 					// invert true means go left false means go right
 					boolean left = p.getBoolean("left", false);
 
@@ -108,7 +108,7 @@ public class Robot extends IterativeRobot
 					boolean ignoreScale = (routine & 2) == 2;
 
 					String gameData = DriverStation.getInstance().getGameSpecificMessage();
-					
+
 					char lever = 'Q';
 					char scale = 'Q';
 
@@ -142,15 +142,16 @@ public class Robot extends IterativeRobot
 					case 'M':
 					{
 						// if switch is on the left and so is robot after
-						claw.setPiston(true);
-						claw.init();
-						if (!ignoreSwitch && 'L' == lever == left)
+						if (!forceFar)
 						{
-							AutoRoutines.leverNear(location, left);
-						}
-						else if (!ignoreScale && 'L' == scale == left)
-						{
-							AutoRoutines.scaleNear(location, left);
+							if (!ignoreSwitch && 'L' == lever == left)
+							{
+								AutoRoutines.leverNear(location, left);
+							}
+							else if (!ignoreScale && 'L' == scale == left)
+							{
+								AutoRoutines.scaleNear(location, left);
+							}
 						}
 						else if (!ignoreSwitch)
 						{
