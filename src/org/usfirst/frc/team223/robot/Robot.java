@@ -155,14 +155,14 @@ public class Robot extends IterativeRobot
 						}
 						else if (!ignoreSwitch)
 						{
-							AutoRoutines.crossLineThread(location, left);
+							//AutoRoutines.crossLineThread(location, left);
 
-							//AutoRoutines.leverFar(location, left);
+							AutoRoutines.leverFar(location, left);
 						}
 						else if (!ignoreScale)
 						{
-							AutoRoutines.crossLineThread(location, left);
-							//AutoRoutines.scaleFar(location, left);
+							//AutoRoutines.crossLineThread(location, left);
+							AutoRoutines.scaleFar(location, left);
 						}
 						else
 						{
