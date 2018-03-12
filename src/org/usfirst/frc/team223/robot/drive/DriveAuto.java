@@ -120,7 +120,16 @@ public class DriveAuto extends DriveBase
 	public void turn(double degrees) throws InterruptedException
 	{
 		rotateController.startPID(degrees);
-		Thread.sleep(2500);
+		if (degrees == 180)
+		{
+			while (true)
+			{
+				Thread.sleep(10);
+				if (Math.abs(Math.abs(ahrs.getAngle()) - 180) < 10) break;
+			}
+		}
+		else
+			Thread.sleep(2500);
 		this.stopControllers();
 	}
 
@@ -136,12 +145,10 @@ public class DriveAuto extends DriveBase
 	public void update()
 	{
 		// System.out.println(leftDrive+" "+rightDrive);
-		double left=leftRotate + leftDrive;
-		double right=rightRotate + rightDrive;
-		
-		
-		
-		drive.setMotors(GeneralUtils.bounds(left, 0.7) ,GeneralUtils.bounds(right, 0.7));
+		double left = leftRotate + leftDrive;
+		double right = rightRotate + rightDrive;
+
+		drive.setMotors(GeneralUtils.bounds(left, 0.7), GeneralUtils.bounds(right, 0.7));
 	}
 
 }

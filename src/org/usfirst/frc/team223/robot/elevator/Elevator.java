@@ -95,6 +95,9 @@ public class Elevator
 			talon0.set(ControlMode.PercentOutput, L);
 			return;
 		}
+		
+	//	System.out.println(!bottom.get()+" "+!top.get());		
+		
 		/*if (L == 0)
 		{
 			setPistons(true);

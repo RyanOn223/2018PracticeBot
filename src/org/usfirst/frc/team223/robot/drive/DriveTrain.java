@@ -21,9 +21,7 @@ public class DriveTrain
 	public DriveTrain()
 	{
 		talonL1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
-		talonR1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
-		
-		
+		talonR1.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);		
 
 		talonR0.setInverted(true);
 		talonR1.setInverted(true);

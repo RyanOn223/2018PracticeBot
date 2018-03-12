@@ -51,9 +51,9 @@ public class AutoRoutines
 			driveAuto.go(Constants.START_CREEP, 1000);
 
 			driveAuto.turn(goLeft ? -90 : 90);
-			driveAuto.go(Constants.MIDDLE_ACROSS, 4000);
+			driveAuto.go(Constants.MIDDLE_ACROSS, 2000);
 			driveAuto.turn(0);
-			driveAuto.go(finishDistance - Constants.START_CREEP, 2000);
+			driveAuto.go(finishDistance - Constants.START_CREEP-12, 2000);
 			break;
 		}
 		}
@@ -111,7 +111,9 @@ public class AutoRoutines
 		claw.out();
 		Thread.sleep(1000);
 		elevator.setSpeed(0);
-		driveAuto.go(-12*Constants.DRIVE_CNT_TO_IN,1000);
+		driveAuto.go(-24*Constants.DRIVE_CNT_TO_IN,1000);
+		plate.setSpeed(-1);
+		Thread.sleep(2500);
 	}
 
 	public static void scaleFar(char pos, boolean left) throws InterruptedException
