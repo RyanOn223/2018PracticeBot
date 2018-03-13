@@ -6,7 +6,14 @@ import java.util.Map;
 import org.usfirst.frc.team223.robot.utils.BetterController;
 
 import com.kauailabs.navx.frc.AHRS;
-
+/**
+ * Base for both driver classes
+ * 
+ * Used for controller management
+ * 
+ * @author Ryan
+ *
+ */
 public class DriveBase
 {
 	protected DriveTrain drive;

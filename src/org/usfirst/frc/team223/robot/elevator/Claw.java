@@ -166,11 +166,6 @@ public class Claw
 		intake.set(ControlMode.PercentOutput, 0);
 	}
 
-	public void disable()
-	{
-		controller.disable();
-	}
-
 	public boolean isEnabled()
 	{
 		return controller.isEnabled();

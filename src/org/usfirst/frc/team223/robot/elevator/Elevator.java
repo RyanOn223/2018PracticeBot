@@ -98,7 +98,10 @@ public class Elevator
 		
 	//	System.out.println(!bottom.get()+" "+!top.get());		
 		
-		/*if (L == 0)
+		/*
+		will be re-implemented when break works
+		
+		if (L == 0)
 		{
 			setPistons(true);
 		}

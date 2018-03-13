@@ -7,13 +7,17 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.Solenoid;
-
+/**
+ * Controls motors and shifting for drive train
+ * 
+ * @author ProgrammingLaptop
+ *
+ */
 public class DriveTrain
 {
 	TalonSRX talonL0 = new TalonSRX(RobotMap.driveL0);
 	TalonSRX talonL1 = new TalonSRX(RobotMap.driveL1);// encoder here
 	TalonSRX talonR0 = new TalonSRX(RobotMap.driveR0);
-	
 	TalonSRX talonR1 = new TalonSRX(RobotMap.driveR1);// encoder here
 
 	Solenoid solenoid = new Solenoid(RobotMap.pcmID, RobotMap.driveSolenoid);

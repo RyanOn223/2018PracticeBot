@@ -6,19 +6,22 @@ import org.usfirst.frc.team223.robot.elevator.Claw;
 import org.usfirst.frc.team223.robot.elevator.Elevator;
 import org.usfirst.frc.team223.robot.elevator.Plate;
 
+import com.kauailabs.navx.frc.AHRS;
+
 public class AutoRoutines
 {
 	static DriveAuto driveAuto;
 	static Claw claw;
 	static Plate plate;
 	static Elevator elevator;
-
-	public static void init(DriveAuto d, Claw c, Plate p, Elevator e)
+	static AHRS ahrs;
+	public static void init(DriveAuto d, Claw c, Plate p, Elevator e,AHRS a)
 	{
 		driveAuto = d;
 		claw = c;
 		plate = p;
 		elevator = e;
+		ahrs=a;
 	}
 
 	private static void crossLine(char pos, boolean goLeft, boolean far) throws InterruptedException
@@ -34,7 +37,7 @@ public class AutoRoutines
 		{
 			if (pos == 'L' == goLeft)
 			{
-				driveAuto.go(finishDistance, 4000);
+				driveAuto.go(finishDistance, 3000);
 			}
 			else
 			{
@@ -53,7 +56,7 @@ public class AutoRoutines
 			driveAuto.turn(goLeft ? -90 : 90);
 			driveAuto.go(Constants.MIDDLE_ACROSS, 2000);
 			driveAuto.turn(0);
-			driveAuto.go(finishDistance - Constants.START_CREEP-12, 2000);
+			driveAuto.go(finishDistance - Constants.START_CREEP, 2000);
 			break;
 		}
 		}
@@ -75,7 +78,9 @@ public class AutoRoutines
 		plate.setHeight(Constants.SWITCH_HEIGHT);
 
 		driveAuto.go(Constants.FLEVER_DISTANCE, 4000);
-		driveAuto.turn(180);
+		
+		ahrs.reset();//this is because the controller doesn't work well with 180 degrees
+		driveAuto.turn(left?90:-90);
 		driveAuto.go(Constants.LEVER_CREEP, 2000);
 		claw.out();
 	}
@@ -104,13 +109,15 @@ public class AutoRoutines
 		System.out.println(elevator.getPistons());
 		elevator.setSpeed(1);
 		Thread.sleep(1000);
-		elevator.setSpeed(.15);
+		elevator.setSpeed(.15);//this is so itdoesn't fall down
 		driveAuto.turn(invert ? Constants.NLSCALE_ROTATE : -Constants.NLSCALE_ROTATE);
 		driveAuto.go(Constants.NSCALE_DISTANCE, 2000);
 
 		claw.out();
 		Thread.sleep(1000);
 		elevator.setSpeed(0);
+		
+		//backup and put plate down
 		driveAuto.go(-24*Constants.DRIVE_CNT_TO_IN,1000);
 		plate.setSpeed(-1);
 		Thread.sleep(2500);
