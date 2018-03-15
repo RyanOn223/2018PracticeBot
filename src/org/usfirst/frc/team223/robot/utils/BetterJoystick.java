@@ -14,7 +14,13 @@ public class BetterJoystick extends Joystick
 	{
 		super(port);
 	}
-
+	
+	/**
+	 * Applies bounds and dead band for joy stick axis
+	 * 
+	 * @param axis id of axis for joystick
+	 * @return value of joystick
+	 */
 	public double getAxis(int axis)
 	{
 		if (axisOffsets.get(axis) == null) return super.getRawAxis(axis);

@@ -19,8 +19,8 @@ public class Claw
 	TalonSRX intake = new TalonSRX(RobotMap.intake);
 	TalonSRX drop = new TalonSRX(RobotMap.claw);
 
-	Solenoid solenoid=new Solenoid(RobotMap.pcmID,RobotMap.clawSolenoid);
-	
+	Solenoid solenoid = new Solenoid(RobotMap.pcmID, RobotMap.clawSolenoid);
+
 	private BetterController controller;
 
 	private PIDOutput out = new PIDOutput()
@@ -65,7 +65,7 @@ public class Claw
 
 	public void init()
 	{
-		controller.startPID(-90* Constants.CLAW_CNT_TO_DEG);
+		controller.startPID(-90 * Constants.CLAW_CNT_TO_DEG);
 	}
 
 	public void setSpeed(double L)
@@ -104,29 +104,53 @@ public class Claw
 		intake.set(ControlMode.PercentOutput, 1);
 	}
 
+	private final int reset = 25;
+	private int sleep = 0;
+
 	public void intake(boolean forward, boolean reverse)
 	{
 		if (forward == reverse)
 		{
-			intake.set(ControlMode.PercentOutput, 0);
-			if(!Panic.panic)solenoid.set(true);
+			intake.set(ControlMode.PercentOutput, sleep--<0?-.1:-1);
+
+			if (!Panic.panic)
+			{
+				setPiston(true);
+			}
 			return;
 		}
-		if(forward)
+		if (forward)
 		{
 			intake.set(ControlMode.PercentOutput, -1);
-			if(!Panic.panic)solenoid.set(false);
+
+			if (!Panic.panic)
+			{
+				setPiston(false);
+				sleep = reset;
+			}
 		}
 		else
 		{
 			intake.set(ControlMode.PercentOutput, 1);
-			if(!Panic.panic)solenoid.set(true);
+
+			if (!Panic.panic)
+			{
+				setPiston(true);
+			}
+
 		}
 	}
+
+	public boolean getPiston()
+	{
+		return !solenoid.get();
+	}
+
 	public void setPiston(boolean yes)
 	{
-		solenoid.set(yes);
+		solenoid.set(!yes);
 	}
+
 	public void setAngle(int deg)
 	{
 		controller.startPID(deg * Constants.CLAW_CNT_TO_DEG);
@@ -140,11 +164,6 @@ public class Claw
 	public void stopIntake()
 	{
 		intake.set(ControlMode.PercentOutput, 0);
-	}
-
-	public void disable()
-	{
-		controller.disable();
 	}
 
 	public boolean isEnabled()

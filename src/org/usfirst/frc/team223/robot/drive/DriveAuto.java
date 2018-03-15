@@ -136,12 +136,10 @@ public class DriveAuto extends DriveBase
 	public void update()
 	{
 		// System.out.println(leftDrive+" "+rightDrive);
-		double left=leftRotate + leftDrive;
-		double right=rightRotate + rightDrive;
-		
-		
-		
-		drive.setMotors(GeneralUtils.bounds(left, 0.7) ,GeneralUtils.bounds(right, 0.7));
+		double left = leftRotate + leftDrive;
+		double right = rightRotate + rightDrive;
+
+		drive.setMotors(left, right);
 	}
 
 }

@@ -42,14 +42,14 @@ public abstract class Latch
 			if (!on)
 			{
 				on = true;
-				System.out.println("hi");
+				//System.out.println("hi");
 				go();
 				return true;
 			}
 		}
 		else if (on)
 		{
-			System.out.println("by");
+			//System.out.println("by");
 			on = false;
 			stop();
 		}

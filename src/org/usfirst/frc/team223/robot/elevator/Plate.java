@@ -74,6 +74,7 @@ public class Plate
 			talon.set(ControlMode.PercentOutput, L);
 			return;
 		}
+		
 		if (L < 0)
 		{
 			if (!bottom.get())
