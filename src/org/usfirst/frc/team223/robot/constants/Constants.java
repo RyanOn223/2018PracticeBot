@@ -2,7 +2,7 @@ package org.usfirst.frc.team223.robot.constants;
 
 public class Constants
 {
-	public static final double ELE_CNT_TO_IN = 256;// 36 in max height
+	public static final double ELE_CNT_TO_IN = 981;// 36 in max height
 	public static final double PLATE_CNT_TO_IN = 23232;// not calculazsted
 	public static final double DRIVE_CNT_TO_IN = 25.1;
 	public static final double CLAW_CNT_TO_DEG = 36;
@@ -38,6 +38,11 @@ public class Constants
 	
 	// ----------------------------------
 
+	// Two Cube Auto retreat 
+	
+	public static final double TURN_AROUND= 166;
+	public static final double DRIVE_BACK= 70*DRIVE_CNT_TO_IN;
+	
 	public static final double SCALE_CREEP = 50 * DRIVE_CNT_TO_IN;
 	public static final double LEVER_CREEP = 33 * DRIVE_CNT_TO_IN;
 

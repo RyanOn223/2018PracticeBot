@@ -111,7 +111,7 @@ public class Robot extends IterativeRobot
 					
 					//for testing only
 					boolean forceFar = p.getBoolean("far", false);
-					
+					boolean two=p.getBoolean("two", false);
 					boolean ignoreSwitch = (routine & 1) == 1;
 					boolean ignoreScale = (routine & 2) == 2;
 
@@ -156,7 +156,7 @@ public class Robot extends IterativeRobot
 						// if switch is on the left and so is robot after
 						if (!forceFar && !ignoreScale&&	'L' == scale == left)
 						{
-							AutoRoutines.scaleNear(location, left);
+							AutoRoutines.scaleNear(location, left,( 'L' == lever == left)&&two);
 						}
 
 						else if (!forceFar && !ignoreSwitch &&	'L' == lever == left)
@@ -364,7 +364,7 @@ public class Robot extends IterativeRobot
 	public void teleopPeriodic()
 	{
 		panicLatch.get();
-		
+		//shiftLatch.get();
 		//only use manual if not in panic mode
 		if (Panic.panic) clampLatch.get();
 		elevatorLatch.get();
@@ -431,7 +431,7 @@ public class Robot extends IterativeRobot
 		claw.resetEncoders();
 		claw.stopControllers();
 		
-		driveTelop.setPID("r", p.getDouble("p", .01), p.getDouble("i", 0.000), p.getDouble("d", .0002));
-		driveTelop.setPID("l", p.getDouble("p", .01), p.getDouble("i", 0.000), p.getDouble("d", .0002));
+		//driveTelop.setPID("r", p.getDouble("p", .01), p.getDouble("i", 0.000), p.getDouble("d", .0002));
+		//driveTelop.setPID("l", p.getDouble("p", .01), p.getDouble("i", 0.000), p.getDouble("d", .0002));
 	}
 }

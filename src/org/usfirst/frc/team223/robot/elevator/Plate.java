@@ -131,7 +131,7 @@ public class Plate
 		controller.reset();
 	}
 
-	public void checkTop()
+	public void checkBottom()
 	{
 		new Thread()
 		{
@@ -140,7 +140,7 @@ public class Plate
 			{
 				while (true)
 				{
-					if (!top.get())
+					if (!bottom.get())
 					{
 						talon.set(ControlMode.PercentOutput, 0);
 						return;
