@@ -119,7 +119,7 @@ public class AutoRoutines
 		elevator.setSpeed(-1);
 
 		// backup and put plate down
-		driveAuto.go(-24 * Constants.DRIVE_CNT_TO_IN, 1000);
+		//driveAuto.go(-24 * Constants.DRIVE_CNT_TO_IN, 1000);
 		elevator.setSpeed(0);
 		plate.stopControllers();
 		plate.setSpeed(-1);

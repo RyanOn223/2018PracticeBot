@@ -368,15 +368,9 @@ public class Robot extends IterativeRobot
 		//only use manual if not in panic mode
 		if (Panic.panic) clampLatch.get();
 		elevatorLatch.get();
+		claw.setSpeed(OI.operator.getAxis(OI.rightTrigger) - OI.operator.getAxis(OI.leftTrigger));
 
-		// if (!raiseLatch.get())
-		{
-			// if (!resetLatch.get())
-			{
-				claw.setSpeed(OI.operator.getAxis(OI.rightTrigger) - OI.operator.getAxis(OI.leftTrigger));
-			}
-		}
-
+//System.out.println(ahrs.getYaw()+" "+ahrs.getPitch()+" "+ahrs.getRoll());		
 		driveTelop.cheese(OI.driver);
 
 		elevator.setSpeed(-OI.operator.getAxis(OI.rightYAxis));

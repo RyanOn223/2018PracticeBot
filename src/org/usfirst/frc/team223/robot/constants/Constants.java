@@ -40,7 +40,7 @@ public class Constants
 
 	// Two Cube Auto retreat 
 	
-	public static final double TURN_AROUND= 166;
+	public static final double TURN_AROUND= 150;
 	public static final double DRIVE_BACK= 70*DRIVE_CNT_TO_IN;
 	
 	public static final double SCALE_CREEP = 50 * DRIVE_CNT_TO_IN;
