@@ -154,16 +154,16 @@ public class Robot extends IterativeRobot
 					case 'M':
 					{
 						// if switch is on the left and so is robot after
-						if (!forceFar && !ignoreScale&&	'L' == scale == left)
-						{
-							AutoRoutines.scaleNear(location, left,( 'L' == lever == left)&&two);
-						}
+						
 		
-						else if (!forceFar && !ignoreSwitch &&	'L' == lever == left)
+						if (!forceFar && !ignoreSwitch &&	'L' == lever == left)
 						{
 							AutoRoutines.leverNear(location, left);
 						}
-
+						else if (!forceFar && !ignoreScale&&	'L' == scale == left)
+						{
+							AutoRoutines.scaleNear(location, left,( 'L' == lever == left)&&two);
+						}
 						else if (!ignoreSwitch)
 						{
 							AutoRoutines.crossLineThread(location, left);
