@@ -158,7 +158,7 @@ public class Robot extends IterativeRobot
 						{
 							AutoRoutines.scaleNear(location, left,( 'L' == lever == left)&&two);
 						}
-
+		
 						else if (!forceFar && !ignoreSwitch &&	'L' == lever == left)
 						{
 							AutoRoutines.leverNear(location, left);
