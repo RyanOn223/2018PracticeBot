@@ -10,7 +10,7 @@ public class Constants
 	public static final int SCALE_HEIGHT = 345678;// unknwn
 	public static final double SWITCH_HEIGHT = 345*PLATE_CNT_TO_IN;// unknown
 
-	public static final double ELEVATOR_HEIGHT = 36*ELE_CNT_TO_IN;
+	public static final double ELEVATOR_HEIGHT = 20*ELE_CNT_TO_IN;
 
 	// Cross Line Distances------------------
 

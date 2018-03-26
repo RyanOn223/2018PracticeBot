@@ -72,7 +72,7 @@ public class Robot extends IterativeRobot
 		plate = new Plate();
 		claw = new Claw();
 
-		AutoRoutines.init(driveAuto, claw, plate, elevator,ahrs);
+		AutoRoutines.init(driveAuto, claw, plate, elevator, ahrs);
 		/*
 		 * visionServer = new VisionServer(50); visionServer.start();
 		 */
@@ -86,32 +86,32 @@ public class Robot extends IterativeRobot
 	public void autonomousInit()
 	{
 		generalInit();
-		///*
+		/// *
 		new Thread()
 		{
 			public void run()
 			{
 				try
 				{
-					//claw starts now and works based on time because encoder is nonexistant
+					// claw starts now and works based on time because encoder is nonexistant
 					claw.setSpeed(-1);
-					
+
 					// wait for general init and fms
 					Thread.sleep(1000);
-					
+
 					claw.setSpeed(0);
-					
+
 					// gets string from dashboard, puts it in uppercase
 					// takes first letter
 					char location = p.getString("position", "D").toUpperCase().toCharArray()[0];
 					int routine = p.getInt("routine", 3);
-					
+
 					// invert true means go left false means go right
 					boolean left = p.getBoolean("left", false);
-					
-					//for testing only
+
+					// for testing only
 					boolean forceFar = p.getBoolean("far", false);
-					boolean two=p.getBoolean("two", false);
+					boolean two = p.getBoolean("two", false);
 					boolean ignoreSwitch = (routine & 1) == 1;
 					boolean ignoreScale = (routine & 2) == 2;
 
@@ -120,7 +120,7 @@ public class Robot extends IterativeRobot
 					char lever = 'Q';
 					char scale = 'Q';
 
-					//put game into lever and scale location
+					// put game into lever and scale location
 					if (gameData != null)
 					{
 						try
@@ -137,15 +137,15 @@ public class Robot extends IterativeRobot
 					{
 						gameData = "no game data";
 					}
-					
+
 					// makes sure lever and scale are both L or R
 					if (!((lever == 'L' || lever == 'R') && (scale == 'L' || scale == 'R')))
 					{
 						location = 'F';
 					}
-					
+
 					System.out.println(location + " " + gameData + " " + routine);
-					
+
 					switch (location)
 					{
 
@@ -154,12 +154,12 @@ public class Robot extends IterativeRobot
 					case 'M':
 					{
 						// if switch is on the left and so is robot after
-						if (!forceFar && !ignoreScale&&	'L' == scale == left)
+						if (!forceFar && !ignoreScale && 'L' == scale == left)
 						{
-							AutoRoutines.scaleNear(location, left,( 'L' == lever == left)&&two);
+							AutoRoutines.scaleNear(location, left, ('L' == lever == left) && two);
 						}
 
-						else if (!forceFar && !ignoreSwitch &&	'L' == lever == left)
+						else if (!forceFar && !ignoreSwitch && 'L' == lever == left)
 						{
 							AutoRoutines.leverNear(location, left);
 						}
@@ -202,7 +202,7 @@ public class Robot extends IterativeRobot
 		}.start();
 		// */
 
-		/*for testing
+		// /*for testing
 		new Thread()
 		{
 			public void run()
@@ -212,11 +212,17 @@ public class Robot extends IterativeRobot
 					// wait for general init
 					Thread.sleep(200);
 					driveAuto.turn(180);
+					// System.out.println(Constants.DRIVE_CNT_TO_IN*12*6);
+					// elevator.setHeight(Constants.ELEVATOR_HEIGHT);
+					// driveAuto.go(Constants.DRIVE_CNT_TO_IN*12*6, 5000);
+					System.out.println("done");
 				}
-				catch (InterruptedException e){}
+				catch (InterruptedException e)
+				{
+				}
 			}
 		}.start();
-		//*/
+		// */
 	}
 
 	/**
@@ -322,7 +328,8 @@ public class Robot extends IterativeRobot
 			@Override
 			public void stop()
 			{
-				claw.stopControllers();;
+				claw.stopControllers();
+				;
 			}
 		};
 		panicLatch = new Latch(OI.panic, OI.calm)
@@ -364,13 +371,13 @@ public class Robot extends IterativeRobot
 	public void teleopPeriodic()
 	{
 		panicLatch.get();
-		//shiftLatch.get();
-		//only use manual if not in panic mode
+		// shiftLatch.get();
+		// only use manual if not in panic mode
 		if (Panic.panic) clampLatch.get();
 		elevatorLatch.get();
 		claw.setSpeed(OI.operator.getAxis(OI.rightTrigger) - OI.operator.getAxis(OI.leftTrigger));
 
-//System.out.println(ahrs.getYaw()+" "+ahrs.getPitch()+" "+ahrs.getRoll());		
+		// System.out.println(ahrs.getYaw()+" "+ahrs.getPitch()+" "+ahrs.getRoll());
 		driveTelop.cheese(OI.driver);
 
 		elevator.setSpeed(-OI.operator.getAxis(OI.rightYAxis));
@@ -387,11 +394,11 @@ public class Robot extends IterativeRobot
 		 * SmartDashboard.putNumber("claw A.", claw.getCurrent());
 		 * SmartDashboard.putNumber("plate A.", plate.getCurrent());
 		 */
-		SmartDashboard.putNumber("right A.", drive.getRightCurrent());
-		SmartDashboard.putNumber("left A.", drive.getLeftCurrent());
+		SmartDashboard.putNumber("right A.", drive.getRightPosition());
+		SmartDashboard.putNumber("left A.", drive.getLeftPosition());
 
+		SmartDashboard.putNumber("ele V.", elevator.getPosition());
 		/*
-		 * SmartDashboard.putNumber("ele V.", elevator.getVoltage());
 		 * SmartDashboard.putNumber("claw V.", claw.getVoltage());
 		 * SmartDashboard.putNumber("plate V.", plate.getVoltage());
 		 * SmartDashboard.putNumber("right V.", drive.getRightVoltage());
@@ -415,6 +422,7 @@ public class Robot extends IterativeRobot
 	 */
 	public void generalInit()
 	{
+		Panic.panic = false;
 		ahrs.reset();
 		drive.resetEncoders();
 		plate.resetEncoders();
@@ -424,8 +432,12 @@ public class Robot extends IterativeRobot
 		elevator.setPistons(false);
 		claw.resetEncoders();
 		claw.stopControllers();
-		
-		//driveTelop.setPID("r", p.getDouble("p", .01), p.getDouble("i", 0.000), p.getDouble("d", .0002));
-		//driveTelop.setPID("l", p.getDouble("p", .01), p.getDouble("i", 0.000), p.getDouble("d", .0002));
+
+		// driveAuto.setPID("r", p.getDouble("p", .01), p.getDouble("i", 0.000),
+		// p.getDouble("d", .0002));
+		// elevator.setPID(p.getDouble("p", .001), p.getDouble("i", 0.000),
+		// p.getDouble("d", .003));
+		driveAuto.setPID("rotate", p.getDouble("p", .001), p.getDouble("i", 0.000), p.getDouble("d", .003));
+
 	}
 }

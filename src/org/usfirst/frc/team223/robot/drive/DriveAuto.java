@@ -2,6 +2,7 @@ package org.usfirst.frc.team223.robot.drive;
 
 import org.usfirst.frc.team223.robot.utils.BetterController;
 import org.usfirst.frc.team223.robot.utils.GeneralUtils;
+import org.usfirst.frc.team223.robot.utils.Panic;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.PIDOutput;
@@ -25,8 +26,8 @@ public class DriveAuto extends DriveBase
 		@Override
 		public void pidWrite(double output)
 		{
-			if (output > 0) output = Math.min(output, .6);
-			if (output < 0) output = Math.max(output, -.6);
+			// if (output > 0) output = Math.min(output, .6);
+			// if (output < 0) output = Math.max(output, -.6);
 			leftDrive = output;
 		}
 	};
@@ -35,8 +36,8 @@ public class DriveAuto extends DriveBase
 		@Override
 		public void pidWrite(double output)
 		{
-			if (output > 0) output = Math.min(output, .6);
-			if (output < 0) output = Math.max(output, -.6);
+			// if (output > 0) output = Math.min(output, .6);
+			// if (output < 0) output = Math.max(output, -.6);
 			rightDrive = output;
 		}
 	};
@@ -91,19 +92,39 @@ public class DriveAuto extends DriveBase
 		}
 	};
 
+	private PIDSource rotateSrc = new PIDSource()
+	{
+		@Override
+		public void setPIDSourceType(PIDSourceType pidSource)
+		{
+		}
+
+		@Override
+		public PIDSourceType getPIDSourceType()
+		{
+			return PIDSourceType.kDisplacement;
+		}
+
+		@Override
+		public double pidGet()
+		{
+			return ahrs.getAngle();
+		}
+	};
+
 	// default pids change in general init
 	private double rp = 0.0175;
 	private double ri = 0.00000;
-	private double rd = 0.002;
+	private double rd = 0.004;
 
-	private double ap = 0.001;
+	private double ap = 0.0015;
 	private double ai = 0.000;
 	private double ad = 0.003;
 
 	public DriveAuto(DriveTrain drive, AHRS ahrs)
 	{
 		super(drive, ahrs);
-		rotateController = new BetterController(rp, ri, rd, ahrs, rotateOut);
+		rotateController = new BetterController(rp, ri, rd, rotateSrc, rotateOut);
 		leftController = new BetterController(ap, ai, ad, leftSrc, leftOut);
 		rightController = new BetterController(ap, ai, ad, rightSrc, rightOut);
 		addController("rotate", rotateController);
@@ -126,10 +147,19 @@ public class DriveAuto extends DriveBase
 
 	public void go(double set, int millisec) throws InterruptedException
 	{
-		leftController.startPID(set + drive.getLeftPosition());
-		rightController.startPID(set + drive.getRightPosition());
+		int i = 0;
+		double leftSetPoint = set + drive.getLeftPosition();
+		double rightSetPoint = set + drive.getRightPosition();
+
+		leftController.startPID(leftSetPoint);
+		rightController.startPID(rightSetPoint);
 		rotateController.startPID(ahrs.getAngle());
-		Thread.sleep(millisec);
+		while (drive.getLeftPosition() < leftSetPoint)
+		{
+			Thread.sleep(20);
+		}
+		Panic.panic = true;
+		System.out.println("AAAAAAAAAAAAAAAAAAAAaaa");
 		this.stopControllers();
 	}
 
