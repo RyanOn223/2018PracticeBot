@@ -106,16 +106,13 @@ public class Robot extends IterativeRobot
 					char location = p.getString("position", "D").toUpperCase().toCharArray()[0];
 					int routine = p.getInt("routine", 3);
 
-					// invert true means go left false means go right
-					boolean left = p.getBoolean("left", false);
-
 					// for testing only
 					boolean forceFar = p.getBoolean("far", false);
 					boolean two = p.getBoolean("two", false);
 					boolean ignoreSwitch = (routine & 1) == 1;
 					boolean ignoreScale = (routine & 2) == 2;
 
-					String gameData = DriverStation.getInstance().getGameSpecificMessage();
+					String gameData =DriverStation.getInstance().getGameSpecificMessage();
 
 					char lever = 'Q';
 					char scale = 'Q';
@@ -151,34 +148,39 @@ public class Robot extends IterativeRobot
 
 					case 'L':
 					case 'R':
-					case 'M':
+					
 					{
 						// if switch is on the left and so is robot after
-						if (!forceFar && !ignoreScale && 'L' == scale == left)
+						if (!forceFar && !ignoreScale && scale == location)
 						{
-							AutoRoutines.scaleNear(location, left, ('L' == lever == left) && two);
+							AutoRoutines.scaleNear(location=='L',('L' ==location &&'L'== lever) && two);
 						}
 
-						else if (!forceFar && !ignoreSwitch && 'L' == lever == left)
+						else if (!forceFar && !ignoreSwitch && lever == location)
 						{
-							AutoRoutines.leverNear(location, left);
+							AutoRoutines.leverNear(location=='L');
 						}
 
 						else if (!ignoreSwitch)
 						{
-							AutoRoutines.crossLineThread(location, left);
+							AutoRoutines.crossLineThread(location);
 
 							// AutoRoutines.leverFar(location, left);
 						}
 						else if (!ignoreScale)
 						{
-							AutoRoutines.crossLineThread(location, left);
+							AutoRoutines.crossLineThread(location);
 							// AutoRoutines.scaleFar(location, left);
 						}
 						else
 						{
-							AutoRoutines.crossLineThread(location, left);
+							AutoRoutines.crossLineThread(location);
 						}
+						break;
+					}
+					case 'M':
+					{
+						
 						break;
 					}
 					case 'D':

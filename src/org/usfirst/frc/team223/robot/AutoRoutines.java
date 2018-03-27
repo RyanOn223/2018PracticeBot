@@ -25,10 +25,10 @@ public class AutoRoutines
 		ahrs = a;
 	}
 
-	private static void crossLine(char pos, boolean goLeft, boolean far) throws InterruptedException
+	private static void crossLine(char pos, boolean far) throws InterruptedException
 	{
 		System.out.println("crossing line");
-
+		boolean left='L'==pos;
 		double finishDistance = far ? Constants.TO_MIDDLE : Constants.TO_SWITCH;
 
 		switch (pos)
@@ -36,25 +36,14 @@ public class AutoRoutines
 		case 'L':
 		case 'R':
 		{
-			if (pos == 'L' == goLeft)
-			{
-				driveAuto.go(finishDistance, 3000);
-			}
-			else
-			{
-				driveAuto.go(Constants.START_CREEP, 1000);
-				driveAuto.turn(goLeft ? -90 : 90);
-				driveAuto.go(Constants.FAR_ACROSS, 4000);
-				driveAuto.turn(0);
-				driveAuto.go(finishDistance - Constants.START_CREEP, 2000);
-			}
+			driveAuto.go(finishDistance, 3000);
 			break;
 		}
 		case 'M':
 		{
 			driveAuto.go(Constants.START_CREEP, 1000);
 
-			driveAuto.turn(goLeft ? -90 : 90);
+			driveAuto.turn(left ? -90 : 90);
 			driveAuto.go(Constants.MIDDLE_ACROSS, 2000);
 			driveAuto.turn(0);
 			driveAuto.go(finishDistance - Constants.START_CREEP, 2000);
@@ -69,41 +58,24 @@ public class AutoRoutines
 		driveAuto.go(Constants.ERROR_DISTANCE, 2000);
 	}
 
-	public static void leverFar(char pos, boolean left) throws InterruptedException
-	{
-		System.out.println("far Switch");
-
-		crossLine(pos, left, true);
-		driveAuto.turn(left ? 90 : -90);
-
-		plate.setHeight(Constants.SWITCH_HEIGHT);
-
-		driveAuto.go(Constants.FLEVER_DISTANCE, 4000);
-
-		ahrs.reset();// this is because the controller doesn't work well with 180 degrees
-		driveAuto.turn(left ? 90 : -90);
-		driveAuto.go(Constants.LEVER_CREEP, 2000);
-		claw.out();
-	}
-
-	public static void leverNear(char pos, boolean invert) throws InterruptedException
+	public static void leverNear(boolean left) throws InterruptedException
 	{
 		System.out.println("near switch");
 
-		crossLine(pos, invert, false);
+		driveAuto.go(Constants.TO_SWITCH, 3000);
 
 		plate.setHeight(Constants.SWITCH_HEIGHT);
-		driveAuto.turn(invert ? 90 : -90);
+		driveAuto.turn(left ? 90 : -90);
 
 		driveAuto.go(Constants.NLEVER_DISTANCE, 2000);
 		claw.out();
 	}
 
-	public static void scaleNear(char pos, boolean left, boolean twoCube) throws InterruptedException
+	public static void scaleNear(boolean left, boolean twoCube) throws InterruptedException
 	{
 		System.out.println("scale near");
 
-		crossLine(pos, left, false);
+		driveAuto.go(Constants.TO_SWITCH, 3000);
 		plate.setHeight(Constants.SCALE_HEIGHT);
 
 		// elevator.setHeight(Constants.ELEVATOR_HEIGHT); broken again
@@ -124,6 +96,8 @@ public class AutoRoutines
 		plate.stopControllers();
 		plate.setSpeed(-1);
 		plate.checkBottom();
+		
+		
 		if (twoCube) twoCube(left);
 		Thread.sleep(2500);
 
@@ -143,12 +117,28 @@ public class AutoRoutines
 		driveAuto.go(Constants.LEVER_CREEP, 100);
 		claw.out();
 	}
+	
+	public static void leverFar(char pos,boolean left) throws InterruptedException
+	{
+		System.out.println("far Switch");
 
-	public static void scaleFar(char pos, boolean left) throws InterruptedException
+		driveAuto.go(Constants.TO_MIDDLE, 3000);
+		driveAuto.turn(left ? 90 : -90);
+
+		plate.setHeight(Constants.SWITCH_HEIGHT);
+
+		driveAuto.go(Constants.FLEVER_DISTANCE, 4000);
+
+		ahrs.reset();// this is because the controller doesn't work well with 180 degrees
+		driveAuto.turn(left ? 90 : -90);
+		driveAuto.go(Constants.LEVER_CREEP, 2000);
+		claw.out();
+	}
+	public static void scaleFar(char pos,boolean left) throws InterruptedException
 	{
 		System.out.println("Scale far");
 
-		crossLine(pos, left, true);
+		driveAuto.go(Constants.TO_MIDDLE, 3000);
 		plate.setHeight(Constants.SCALE_HEIGHT);
 
 		driveAuto.go(Constants.FSCALE_DISTANCE, 4000);
@@ -159,9 +149,9 @@ public class AutoRoutines
 		claw.out();
 	}
 
-	public static void crossLineThread(char location, boolean left) throws InterruptedException
+	public static void crossLineThread(char location) throws InterruptedException
 	{
 		System.out.println("Only cross line");
-		crossLine(location, left, false);
+		crossLine(location, false);
 	}
 }
