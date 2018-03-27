@@ -163,24 +163,24 @@ public class Robot extends IterativeRobot
 
 						else if (!ignoreSwitch)
 						{
-							AutoRoutines.crossLineThread(location);
+							AutoRoutines.crossLine(location);
 
 							// AutoRoutines.leverFar(location, left);
 						}
 						else if (!ignoreScale)
 						{
-							AutoRoutines.crossLineThread(location);
+							AutoRoutines.crossLine(location);
 							// AutoRoutines.scaleFar(location, left);
 						}
 						else
 						{
-							AutoRoutines.crossLineThread(location);
+							AutoRoutines.crossLine(location);
 						}
 						break;
 					}
 					case 'M':
 					{
-						
+						AutoRoutines.middle(lever=='L',two);
 						break;
 					}
 					case 'D':
@@ -237,18 +237,7 @@ public class Robot extends IterativeRobot
 		writeToDash();
 	}
 
-	/**
-	 * Called When Disabled
-	 */
-	@Override
-	public void disabledInit()
-	{
-		driveTelop.stopControllers();
-		driveAuto.stopControllers();
-		elevator.stopControllers();
-		plate.stopControllers();
-		claw.stopControllers();
-	}
+	
 
 	/**
 	 * This function is called once each time the robot enters tele-operated mode
@@ -256,17 +245,8 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopInit()
 	{
-		/*
-		 * This doesn't work because the offsets constantly change Map<Integer, Double>
-		 * driverOffsets = new HashMap<>(); driverOffsets.put(OI.leftXAxis,
-		 * OI.driver.getRawAxis(OI.leftXAxis)); driverOffsets.put(OI.leftYAxis,
-		 * OI.driver.getRawAxis(OI.leftYAxis)); driverOffsets.put(OI.rightXAxis,
-		 * OI.driver.getRawAxis(OI.rightXAxis));
-		 * OI.driver.setAxisOffsets(driverOffsets);
-		 */
-
 		generalInit();
-		try
+		/*try
 		{// wait for encoder reset
 			Thread.sleep(200);
 		}
@@ -275,7 +255,7 @@ public class Robot extends IterativeRobot
 		}
 
 		// driveTelop.init();
-		// claw.init();
+		// claw.init();*/
 
 		shiftLatch = new Latch(OI.shiftFast)
 		{
@@ -411,13 +391,7 @@ public class Robot extends IterativeRobot
 		SmartDashboard.putBoolean("Panic", !Panic.panic);
 	}
 
-	/**
-	 * This function is called periodically during test mode
-	 */
-	@Override
-	public void testPeriodic()
-	{
-	}
+	
 
 	/**
 	 * Called Whenever robot is initialized
@@ -441,5 +415,24 @@ public class Robot extends IterativeRobot
 		// p.getDouble("d", .003));
 		driveAuto.setPID("rotate", p.getDouble("p", .001), p.getDouble("i", 0.000), p.getDouble("d", .003));
 
+	}
+	/**
+	 * This function is called periodically during test mode
+	 */
+	@Override
+	public void testPeriodic()
+	{
+	}
+	/**
+	 * Called When Disabled
+	 */
+	@Override
+	public void disabledInit()
+	{
+		driveTelop.stopControllers();
+		driveAuto.stopControllers();
+		elevator.stopControllers();
+		plate.stopControllers();
+		claw.stopControllers();
 	}
 }

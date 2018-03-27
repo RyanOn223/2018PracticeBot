@@ -25,28 +25,22 @@ public class AutoRoutines
 		ahrs = a;
 	}
 
-	private static void crossLine(char pos, boolean far) throws InterruptedException
+	public static void crossLine(char pos) throws InterruptedException
 	{
-		System.out.println("crossing line");
-		boolean left='L'==pos;
-		double finishDistance = far ? Constants.TO_MIDDLE : Constants.TO_SWITCH;
+		System.out.println("only crossing line");
 
 		switch (pos)
 		{
 		case 'L':
 		case 'R':
 		{
-			driveAuto.go(finishDistance, 3000);
+			driveAuto.go(Constants.TO_SWITCH, 3000);
 			break;
 		}
-		case 'M':
+		default :
 		{
-			driveAuto.go(Constants.START_CREEP, 1000);
-
-			driveAuto.turn(left ? -90 : 90);
-			driveAuto.go(Constants.MIDDLE_ACROSS, 2000);
-			driveAuto.turn(0);
-			driveAuto.go(finishDistance - Constants.START_CREEP, 2000);
+			error();
+			
 			break;
 		}
 		}
@@ -149,9 +143,9 @@ public class AutoRoutines
 		claw.out();
 	}
 
-	public static void crossLineThread(char location) throws InterruptedException
+
+	public static void middle(boolean left,boolean two)
 	{
-		System.out.println("Only cross line");
-		crossLine(location, false);
+		
 	}
 }

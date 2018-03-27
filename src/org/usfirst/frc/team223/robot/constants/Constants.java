@@ -38,6 +38,20 @@ public class Constants
 	
 	// ----------------------------------
 
+	// Middle AutoRoutine Distances
+
+		public static final double LEFT_MIDDLE_ANGLE =- 174;
+		public static final double RIGHT_MIDDLE_ANGLE = 174;
+
+		public static final double MIDDLE_START_DISTANCE = 10*DRIVE_CNT_TO_IN;
+		public static final double MIDDLE_END_DISTANCE=10*DRIVE_CNT_TO_IN;
+		
+	// ----------------------------------
+
+	
+	
+	
+	
 	// Two Cube Auto retreat 
 	
 	public static final double TURN_AROUND= 150;
