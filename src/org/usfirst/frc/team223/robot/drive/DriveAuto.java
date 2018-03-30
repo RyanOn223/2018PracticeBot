@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 public class DriveAuto extends DriveBase
 {
 	// private AHRS ahrs;
+	private boolean fast = false;
+
 	private BetterController rotateController;
 	private BetterController leftController;
 	private BetterController rightController;
@@ -26,8 +28,11 @@ public class DriveAuto extends DriveBase
 		@Override
 		public void pidWrite(double output)
 		{
-			// if (output > 0) output = Math.min(output, .6);
-			// if (output < 0) output = Math.max(output, -.6);
+			if (!fast)
+			{
+				if (output > 0) output = Math.min(output, .6);
+				if (output < 0) output = Math.max(output, -.6);
+			}
 			leftDrive = output;
 		}
 	};
@@ -36,8 +41,11 @@ public class DriveAuto extends DriveBase
 		@Override
 		public void pidWrite(double output)
 		{
-			// if (output > 0) output = Math.min(output, .6);
-			// if (output < 0) output = Math.max(output, -.6);
+			if (!fast)
+			{
+				if (output > 0) output = Math.min(output, .6);
+				if (output < 0) output = Math.max(output, -.6);
+			}
 			rightDrive = output;
 		}
 	};
@@ -147,17 +155,22 @@ public class DriveAuto extends DriveBase
 
 	public void go(double set, int millisec) throws InterruptedException
 	{
-		int i = 0;
 		double leftSetPoint = set + drive.getLeftPosition();
 		double rightSetPoint = set + drive.getRightPosition();
 
 		leftController.startPID(leftSetPoint);
 		rightController.startPID(rightSetPoint);
 		rotateController.startPID(ahrs.getAngle());
-		while (drive.getLeftPosition() < leftSetPoint)
+
+		if (fast) while (drive.getLeftPosition() < leftSetPoint)
 		{
 			Thread.sleep(20);
 		}
+		else
+		{
+			Thread.sleep(millisec);
+		}
+
 		Panic.panic = true;
 		System.out.println("AAAAAAAAAAAAAAAAAAAAaaa");
 		this.stopControllers();
@@ -170,6 +183,11 @@ public class DriveAuto extends DriveBase
 		double right = rightRotate + rightDrive;
 
 		drive.setMotors(left, right);
+	}
+
+	public void setFast(boolean fast)
+	{
+		this.fast = fast;
 	}
 
 }

@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
@@ -18,7 +19,6 @@ public class Claw
 {
 	TalonSRX intake = new TalonSRX(RobotMap.intake);
 	TalonSRX drop = new TalonSRX(RobotMap.claw);
-
 	Solenoid solenoid = new Solenoid(RobotMap.pcmID, RobotMap.clawSolenoid);
 
 	private BetterController controller;
@@ -137,7 +137,6 @@ public class Claw
 			{
 				setPiston(true);
 			}
-
 		}
 	}
 
@@ -146,6 +145,11 @@ public class Claw
 		return !solenoid.get();
 	}
 
+	
+	/**
+	 * false open
+	 * true closed
+	 */
 	public void setPiston(boolean yes)
 	{
 		solenoid.set(!yes);

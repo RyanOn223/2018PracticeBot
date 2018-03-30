@@ -105,14 +105,17 @@ public class Robot extends IterativeRobot
 					// takes first letter
 					char location = p.getString("position", "D").toUpperCase().toCharArray()[0];
 					int routine = p.getInt("routine", 3);
-
+					
+					driveAuto.setFast(p.getBoolean("fast", false));
 					// for testing only
 					boolean forceFar = p.getBoolean("far", false);
+					boolean switchPrior = p.getBoolean("switchPrio", true);
 					boolean two = p.getBoolean("two", false);
 					boolean ignoreSwitch = (routine & 1) == 1;
 					boolean ignoreScale = (routine & 2) == 2;
+					boolean wideScale=p.getBoolean("wide", false);
 
-					String gameData =DriverStation.getInstance().getGameSpecificMessage();
+					String gameData = DriverStation.getInstance().getGameSpecificMessage();
 
 					char lever = 'Q';
 					char scale = 'Q';
@@ -148,39 +151,65 @@ public class Robot extends IterativeRobot
 
 					case 'L':
 					case 'R':
-					
 					{
 						// if switch is on the left and so is robot after
-						if (!forceFar && !ignoreScale && scale == location)
+						if (switchPrior)
 						{
-							AutoRoutines.scaleNear(location=='L',('L' ==location &&'L'== lever) && two);
-						}
+							if (!forceFar && !ignoreSwitch && lever == location)
+							{
+								AutoRoutines.leverNear(location == 'L');
+							}
+							else if (!forceFar && !ignoreScale && scale == location)
+							{
+								AutoRoutines.scaleNear(location == 'L', ('L' == location && 'L' == lever) && two,wideScale);
+							}
+							else if (!ignoreSwitch)
+							{
+								//AutoRoutines.crossLine(location);
 
-						else if (!forceFar && !ignoreSwitch && lever == location)
-						{
-							AutoRoutines.leverNear(location=='L');
-						}
-
-						else if (!ignoreSwitch)
-						{
-							AutoRoutines.crossLine(location);
-
-							// AutoRoutines.leverFar(location, left);
-						}
-						else if (!ignoreScale)
-						{
-							AutoRoutines.crossLine(location);
-							// AutoRoutines.scaleFar(location, left);
+								AutoRoutines.leverFar(location == 'L');
+							}
+							else if (!ignoreScale)
+							{
+								//AutoRoutines.crossLine(location);
+								 AutoRoutines.scaleFar(location=='L');
+							}
+							else
+							{
+								AutoRoutines.crossLine(location);
+							}
 						}
 						else
 						{
-							AutoRoutines.crossLine(location);
+							if (!forceFar && !ignoreScale && scale == location)
+							{
+								AutoRoutines.scaleNear(location == 'L', ('L' == location && 'L' == lever) && two,wideScale);
+							}
+							else if (!forceFar && !ignoreSwitch && lever == location)
+							{
+								AutoRoutines.leverNear(location == 'L');
+							}
+							else if (!ignoreScale)
+							{
+								//AutoRoutines.crossLine(location);
+								AutoRoutines.scaleFar(location=='L');
+							}
+							else if (!ignoreSwitch)
+							{
+								//AutoRoutines.crossLine(location);
+
+								AutoRoutines.leverFar(location == 'L');
+							}
+							else
+							{
+								AutoRoutines.crossLine(location);
+							}
 						}
 						break;
 					}
 					case 'M':
 					{
-						AutoRoutines.middle(lever=='L',two);
+						AutoRoutines.middle(lever == 'L', two);
 						break;
 					}
 					case 'D':
@@ -204,27 +233,15 @@ public class Robot extends IterativeRobot
 		}.start();
 		// */
 
-		// /*for testing
-		new Thread()
-		{
-			public void run()
-			{
-				try
-				{
-					// wait for general init
-					Thread.sleep(200);
-					driveAuto.turn(180);
-					// System.out.println(Constants.DRIVE_CNT_TO_IN*12*6);
-					// elevator.setHeight(Constants.ELEVATOR_HEIGHT);
-					// driveAuto.go(Constants.DRIVE_CNT_TO_IN*12*6, 5000);
-					System.out.println("done");
-				}
-				catch (InterruptedException e)
-				{
-				}
-			}
-		}.start();
-		// */
+		/*
+		 * for testing new Thread() { public void run() { try { // wait for general init
+		 * Thread.sleep(200); driveAuto.turn(180); //
+		 * System.out.println(Constants.DRIVE_CNT_TO_IN*12*6); //
+		 * elevator.setHeight(Constants.ELEVATOR_HEIGHT); //
+		 * driveAuto.go(Constants.DRIVE_CNT_TO_IN*12*6, 5000);
+		 * System.out.println("done"); } catch (InterruptedException e) { } } }.start();
+		 * //
+		 */
 	}
 
 	/**
@@ -237,8 +254,6 @@ public class Robot extends IterativeRobot
 		writeToDash();
 	}
 
-	
-
 	/**
 	 * This function is called once each time the robot enters tele-operated mode
 	 */
@@ -246,16 +261,12 @@ public class Robot extends IterativeRobot
 	public void teleopInit()
 	{
 		generalInit();
-		/*try
-		{// wait for encoder reset
-			Thread.sleep(200);
-		}
-		catch (InterruptedException e)
-		{
-		}
-
-		// driveTelop.init();
-		// claw.init();*/
+		/*
+		 * try {// wait for encoder reset Thread.sleep(200); } catch
+		 * (InterruptedException e) { }
+		 * 
+		 * // driveTelop.init(); // claw.init();
+		 */
 
 		shiftLatch = new Latch(OI.shiftFast)
 		{
@@ -391,8 +402,6 @@ public class Robot extends IterativeRobot
 		SmartDashboard.putBoolean("Panic", !Panic.panic);
 	}
 
-	
-
 	/**
 	 * Called Whenever robot is initialized
 	 */
@@ -416,6 +425,7 @@ public class Robot extends IterativeRobot
 		driveAuto.setPID("rotate", p.getDouble("p", .001), p.getDouble("i", 0.000), p.getDouble("d", .003));
 
 	}
+
 	/**
 	 * This function is called periodically during test mode
 	 */
@@ -423,6 +433,7 @@ public class Robot extends IterativeRobot
 	public void testPeriodic()
 	{
 	}
+
 	/**
 	 * Called When Disabled
 	 */
